@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Agner Díaz — Portfolio</title>
+  <meta name="description" content="Sitio profesional de Agner Díaz. Próximamente." />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body>
+  <header class="container header">
+    <a class="brand" href="/" aria-label="Home">agnerdiaz.com</a>
+
+    <nav class="nav">
+      <a class="nav-link" href="/links">Links</a>
+      <button id="langBtn" class="chip" type="button" aria-label="Cambiar idioma">ES</button>
+      <button id="themeBtn" class="chip" type="button" aria-label="Cambiar tema">🌙</button>
+    </nav>
+  </header>
+
+  <main class="container main">
+    <section class="card">
+      <p class="eyebrow" data-i18n="eyebrow">Portafolio profesional</p>
+      <h1 class="title" data-i18n="title">Agner Díaz</h1>
+      <p class="subtitle" data-i18n="subtitle">
+        Sitio en construcción. Muy pronto tendrás aquí mi portafolio, proyectos y contacto.
+      </p>
+
+      <div class="actions">
+        <a class="btn primary" href="/links" data-i18n="ctaLinks">Ver links</a>
+        <button class="btn" type="button" id="copyEmailBtn" data-i18n="ctaCopyEmail">Copiar email</button>
+      </div>
+
+      <p class="hint" id="copyHint" aria-live="polite"></p>
+    </section>
+
+    <section class="card muted">
+      <h2 class="h2" data-i18n="nextTitle">Próximo</h2>
+      <ul class="list">
+        <li data-i18n="next1">Home completo (proyectos, experiencia, stack).</li>
+        <li data-i18n="next2">Formulario de contacto con anti-spam (gratis).</li>
+        <li data-i18n="next3">Página /links fija para QR del CV.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="container footer">
+    <span>© <span id="year"></span> Agner Díaz</span>
+    <a class="footer-link" href="/links">/links</a>
+  </footer>
+
+  <script src="/assets/app.js" defer></script>
+</body>
+</html>
