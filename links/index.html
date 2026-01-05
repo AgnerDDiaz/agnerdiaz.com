@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Agner Díaz — Links</title>
+  <meta name="description" content="Links oficiales de Agner Díaz." />
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body>
+  <header class="container header">
+    <a class="brand" href="/" aria-label="Home">agnerdiaz.com</a>
+
+    <nav class="nav">
+      <a class="nav-link" href="/" data-i18n="homeBtn">Home</a>
+      <button id="langBtn" class="chip" type="button" aria-label="Cambiar idioma">ES</button>
+      <button id="themeBtn" class="chip" type="button" aria-label="Cambiar tema">🌙</button>
+    </nav>
+  </header>
+
+  <main class="container main" style="grid-template-columns: 1fr;">
+    <section class="card">
+      <p class="eyebrow" data-i18n="eyebrow">Directorio</p>
+      <h1 class="title" data-i18n="title">Links</h1>
+      <p class="subtitle" data-i18n="subtitle">
+        Este es el enlace fijo para el QR de mi CV.
+      </p>
+
+      <div class="actions" style="margin-top:16px;">
+        <a class="btn primary" href="https://agnerdiaz.com/" target="_self" rel="noopener" data-i18n="goHome">
+          Ir a Home
+        </a>
+      </div>
+
+      <hr style="border:0;border-top:1px solid var(--border);margin:18px 0;">
+
+      <div class="actions" style="flex-direction:column; align-items:stretch;">
+        <a class="btn" href="https://linkedin.com/in/agnerdiaz" target="_blank" rel="noopener">
+          LinkedIn
+        </a>
+        <a class="btn" href="https://github.com/AgnerDDiaz" target="_blank" rel="noopener">
+          GitHub
+        </a>
+        <a class="btn" href="https://drive.google.com/drive/folders/1eJ83WTuES7liV8fNLRx8emLSHnnUtRNS?usp=sharing" target="_blank" rel="noopener" data-i18n="certs">
+          Certificados
+        </a>
+        <div class="card muted" style="margin-top:12px;">
+          <p class="eyebrow" style="margin-bottom:6px;" data-i18n="appsTitle">Apps</p>
+          <p class="subtitle" style="margin:0;" data-i18n="finclarity">
+            FinClarity (coming soon)
+          </p>
+        </div>
+      </div>
+
+      <p class="hint" style="margin-top:14px;" data-i18n="note">
+        Consejo: guarda este link como QR fijo (no dinámico).
+      </p>
+    </section>
+  </main>
+
+  <footer class="container footer">
+    <span>© <span id="year"></span> Agner Díaz</span>
+    <a class="footer-link" href="/">/</a>
+  </footer>
+
+  <script>
+    // Small page-specific i18n keys + reuse theme/lang logic from assets/app.js style
+    (() => {
+      const yearEl = document.getElementById("year");
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+      const dict = {
+        es: {
+          homeBtn: "Home",
+          eyebrow: "Directorio",
+          title: "Links",
+          subtitle: "Este es el enlace fijo para el QR de mi CV.",
+          goHome: "Ir a Home",
+          certs: "Certificados",
+          appsTitle: "Apps",
+          finclarity: "FinClarity (próximamente)",
+          note: "Consejo: guarda este link como QR fijo (no dinámico)."
+        },
+        en: {
+          homeBtn: "Home",
+          eyebrow: "Directory",
+          title: "Links",
+          subtitle: "This is the fixed link for my CV QR code.",
+          goHome: "Go to Home",
+          certs: "Certificates",
+          appsTitle: "Apps",
+          finclarity: "FinClarity (coming soon)",
+          note: "Tip: keep this as a static QR link (not dynamic)."
+        }
+      };
+
+      const langBtn = document.getElementById("langBtn");
+      const themeBtn = document.getElementById("themeBtn");
+
+      const getSaved = (k, fallback) => localStorage.getItem(k) || fallback;
+      const setSaved = (k, v) => localStorage.setItem(k, v);
+
+      const browserLang = (navigator.language || "es").toLowerCase().startsWith("en") ? "en" : "es";
+      let lang = getSaved("lang", browserLang);
+      let theme = getSaved("theme", "dark");
+
+      const applyLang = () => {
+        const t = dict[lang] || dict.es;
+        document.documentElement.lang = lang;
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          const key = el.getAttribute("data-i18n");
+          if (t[key]) el.textContent = t[key];
+        });
+        if (langBtn) langBtn.textContent = lang.toUpperCase();
+        setSaved("lang", lang);
+      };
+
+      const applyTheme = () => {
+        document.documentElement.setAttribute("data-theme", theme);
+        if (themeBtn) themeBtn.textContent = theme === "light" ? "☀️" : "🌙";
+        setSaved("theme", theme);
+      };
+
+      langBtn?.addEventListener("click", () => {
+        lang = lang === "es" ? "en" : "es";
+        applyLang();
+      });
+
+      themeBtn?.addEventListener("click", () => {
+        theme = theme === "dark" ? "light" : "dark";
+        applyTheme();
+      });
+
+      applyTheme();
+      applyLang();
+    })();
+  </script>
+</body>
+</html>
