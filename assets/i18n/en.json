@@ -1,0 +1,100 @@
+{
+    "a11y": {
+      "openMenu": "Open menu",
+      "closeMenu": "Close menu"
+    },
+    "nav": {
+      "home": "Home",
+      "about": "About",
+      "experience": "Experience",
+      "projects": "Projects",
+      "skills": "Technologies",
+      "certs": "Certifications",
+      "contact": "Contact",
+      "lang": "Language"
+    },
+    "hero": {
+      "role": "Software Engineer",
+      "lead": "Software Engineering student (INTEC). I build mobile, web, and backend solutions with an analytical mindset, high quality standards, and extreme attention to detail. I get involved in business logic to create useful, scalable products centered on user experience. I enjoy collaborating, recognizing strengths, and turning problems into clear solutions.",
+      "ctaContact": "Contact me",
+      "ctaProjects": "View projects"
+    },
+    "about": {
+        "title": "About",
+        "text": [
+            "I am a Software Engineer and Developer, graduating soon from Instituto Tecnológico de Santo Domingo (INTEC) in April 2026.",
+            "I am passionate about building digital products that don’t just “work”, but feel clear, solid, and enjoyable to use. That’s why I place strong emphasis on quality, attention to detail, and a modern user experience.",
+            "My approach starts with understanding business logic: I analyze the problem, identify opportunities for improvement, and design efficient and scalable solutions. I have participated in projects covering the full software development lifecycle—from analysis and design to testing and implementation—and I stand out for clear technical documentation and a quality-focused mindset.",
+            "On the technical side, I work with mobile development using Flutter (Dart), web development with React, and databases such as PostgreSQL, MySQL, and SQLite. I rely on best practices, version control with Git/GitHub, testing and integration, and Agile/Scrum methodologies, applying a CI/CD mindset whenever the context requires it.",
+            "Among my projects, FinClarity stands out—a Flutter-based personal finance app featuring visual analytics and budgeting, built with a local database and a modular architecture. I have also developed MercaVerde, a B2C/B2B Flutter marketplace focused on reducing food waste, integrating a Supabase backend, PostgreSQL, secure payments, and real-time geolocation.",
+            "On a personal level, I am a cooperative and results-driven professional. I enjoy working in teams, recognizing strengths, and adding structure so ideas can be transformed into real deliverables. This combination of analytical thinking, attention to detail, and product-oriented mindset guides everything I design, build, and deliver."
+        ]
+    },
+    "experience": {
+      "title": "Experience",
+      "dgii": {
+        "title": "Internship — DGII",
+        "date": "November 2025 — Present",
+        "desc": "During my internship at DGII, I worked on an internal project to improve an institutional system, focused on optimizing turnaround times and providing clearer, more traceable process tracking. Based on an improvement analysis, we proposed and implemented a solution that strengthens operational efficiency and workflow management through close collaboration with my team. We also prioritized a more intuitive UI/UX, contributing to more agile processes and higher user and customer-service satisfaction."
+      },
+      "banreservas": {
+        "title": "Internship — Banreservas",
+        "date": "October 2025 — December 2025",
+        "desc": "During my internship at Banreservas, I developed a proposal to implement a user-personalized financial chatbot designed to provide more precise and useful support. The approach is based on leveraging relevant customer information to answer questions contextually, avoiding generic or incorrect responses and delivering more accurate financial recommendations. This initiative aims to improve user experience, optimize customer support, and strengthen service quality through a scalable solution aligned with real needs for each customer profile."
+      },
+      "hershey": {
+        "title": "Supervisor — Hershey",
+        "date": "May 2024 — September 2025",
+        "desc": "As a Supervisor at Hershey, I strengthened key leadership and day-to-day operations skills in a fast-paced environment. I developed strong capabilities in team management, effective delegation, working under pressure, and coordinating multiple responsibilities at once—while keeping a focus on service quality and teamwork. This experience was especially valuable for my professional growth, reinforcing my organization, decision-making, and people-management skills in demanding situations."
+      },
+      "more": "See more"
+    },
+    "projects": {
+      "title": "Projects",
+      "featured": "Featured",
+      "finclarity": {
+        "stack": "Flutter (Dart) · SQLite · EasyLocalization · REST API (FastAPI) · Docker · Google Cloud Run · Firestore/cloud services · Git/GitHub",
+        "desc": "FinClarity is a personal finance mobile app built with Flutter that lets users record income and expenses, organize accounts and categories, and track progress through dashboards and reports. I built it with an offline-first approach using SQLite, a modular layered architecture, and my own backend (REST API) to connect services, automate flows, and prepare the product for release on iOS and Android."
+      },
+      "mercaverde": {
+        "stack": "Flutter (Dart) · Supabase (Auth, Edge Functions, Realtime) · PostgreSQL · Stripe Checkout · Firebase Cloud Messaging · Mapbox SDK · Git/GitHub",
+        "desc": "MercaVerde is a Flutter mobile app focused on reducing food waste through a B2C and B2B marketplace. I contributed to the design and development of the backend and overall system architecture, implementing authentication, role management, business logic, and purchase flows. The platform enables producers to publish surplus inventory, users to buy or subscribe to plans, process secure payments, and browse geolocated products, with real-time notifications and a scalable foundation ready for growth."
+      },
+      "more": "See all"
+    },
+    "skills": {
+      "title": "Technologies"
+    },
+    "certs": {
+      "title": "Certifications"
+    },
+    "education": {
+      "title": "Education"
+    },
+    "languages": {
+      "title": "Languages"
+    },
+    "contact": {
+      "title": "Contact",
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "send": "Send"
+    },
+    "links": {
+        "goPortfolio": "Portfolio",
+        "kicker": "Directory",
+        "title": "Links",
+        "subtitle": "Quick access to my portfolio and professional profiles.",
+        "portfolioBtn": "Go to my portfolio",
+        "linkedinBtn": "LinkedIn",
+        "githubBtn": "GitHub",
+        "certsBtn": "Certifications",
+        "note": "Tip: save this link as a shortcut to share.",
+        "role": "SOFTWARE ENGINEER",
+        "footerBuilt": "Built with HTML/CSS/JS"
+
+
+    }
+}
+  

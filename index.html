@@ -1,56 +1,317 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="color-scheme" content="light dark" />
-  <title>Agner Díaz — Portfolio</title>
-  <meta name="description" content="Sitio profesional de Agner Díaz. Próximamente." />
-  <link rel="icon" href="/favicon.ico" />
-  <link rel="stylesheet" href="/assets/styles.css" />
-</head>
-<body>
-  <header class="container header">
-    <a class="brand" href="/" aria-label="Home">agnerdiaz.com</a>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <nav class="nav">
-      <a class="nav-link" href="/links">Links</a>
-      <button id="langBtn" class="chip" type="button" aria-label="Cambiar idioma">ES</button>
-      <button id="themeBtn" class="chip" type="button" aria-label="Cambiar tema">🌙</button>
-    </nav>
+  <title>Agner Diaz | Ingeniero de Software & Flutter Developer</title>
+  <meta name="description" content="Portafolio de Agner Diaz. Ingeniero de Software (INTEC) y desarrollador Flutter con experiencia en proyectos reales, arquitectura limpia, bases de datos y soluciones escalables." />
+  <meta name="keywords" content="Agner Diaz, Flutter Developer, Software Engineer, INTEC, Desarrollo Móvil, República Dominicana, Backend, SQL" />
+
+  <meta property="og:title" content="Agner Diaz | Flutter Developer" />
+  <meta property="og:description" content="Ingeniero de Software y desarrollador Flutter. Ver proyectos y experiencia." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/assets/img/og.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("theme");
+        if (saved === "dark" || saved === "light") {
+          document.documentElement.setAttribute("data-theme", saved);
+          return;
+        }
+        var hasMatch = typeof window.matchMedia === "function";
+        if (hasMatch && window.matchMedia("(prefers-color-scheme: light)").matches) {
+          document.documentElement.setAttribute("data-theme", "light");
+        } else {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main" data-i18n="a11y.skip">Saltar al contenido</a>
+
+  <header class="nav">
+    <div class="container nav__inner">
+      <a class="brand" href="/" aria-label="Ir al inicio">
+        <span class="brand__dot"></span>
+        <span class="brand__text">Agner<span class="brand__accent">Diaz</span></span>
+      </a>
+
+      <button class="nav__toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav__menu" id="navMenu" aria-label="Navegación principal">
+        <a href="#about" data-i18n="nav.about">Sobre mí</a>
+        <a href="#experience" data-i18n="nav.experience">Experiencia</a>
+        <a href="#projects" data-i18n="nav.projects">Proyectos</a>
+        <a href="#skills" data-i18n="nav.skills">Tecnologías</a>
+        <a href="#certs" data-i18n="nav.certs">Certificaciones</a>
+        <a href="#education" data-i18n="nav.education">Educación</a>
+        
+        <a class="btn btn--ghost" href="#contact" data-i18n="nav.contact">Contacto</a>
+
+        <button class="icon-btn" id="langToggle" type="button" aria-label="Cambiar idioma">ES</button>
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Cambiar tema">☾</button>
+      </nav>
+    </div>
   </header>
 
-  <main class="container main">
-    <section class="card">
-      <p class="eyebrow" data-i18n="eyebrow">Portafolio profesional</p>
-      <h1 class="title" data-i18n="title">Agner Díaz</h1>
-      <p class="subtitle" data-i18n="subtitle">
-        Sitio en construcción. Muy pronto tendrás aquí mi portafolio, proyectos y contacto.
-      </p>
+  <main id="main">
+    <section class="hero">
+      <div class="container hero__grid">
+        <div class="hero__left">
+          
+          <h1 class="title">
+            AGNER <span class="title__accent">DIAZ</span>
+          </h1>
 
-      <div class="actions">
-        <a class="btn primary" href="/links" data-i18n="ctaLinks">Ver links</a>
-        <button class="btn" type="button" id="copyEmailBtn" data-i18n="ctaCopyEmail">Copiar email</button>
+          <p class="subtitle" data-i18n="hero.role">Flutter Developer / Software Engineer</p>
+
+          <p class="lead" data-i18n="hero.lead">
+            </p>
+
+          <div class="social">
+            <a class="social__icon" href="https://linkedin.com/in/agnerdiaz" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0.5 8.2H4.5V24H0.5V8.2zM8.2 8.2H12V10.3H12.1C12.6 9.4 13.9 8.4 16 8.4C20.1 8.4 24 10.6 24 16.1V24H20V16.7C20 14.2 19.1 12.6 16.9 12.6C15.2 12.6 14.2 13.8 13.8 14.9C13.7 15.3 13.7 15.9 13.7 16.5V24H9.7V8.2H8.2z"/>
+              </svg>
+            </a>
+            <a class="social__icon" href="https://github.com/AgnerDDiaz" target="_blank" rel="noreferrer" aria-label="GitHub">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.833.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.27.098-2.646 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.376.202 2.394.1 2.647.64.7 1.028 1.595 1.028 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.523 2 12 2z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="hero__right">
+          <div class="avatar">
+            <img src="/assets/img/profile.jpg" alt="Agner Diaz" />
+          </div>
+        </div>
       </div>
-
-      <p class="hint" id="copyHint" aria-live="polite"></p>
     </section>
 
-    <section class="card muted">
-      <h2 class="h2" data-i18n="nextTitle">Próximo</h2>
-      <ul class="list">
-        <li data-i18n="next1">Home completo (proyectos, experiencia, stack).</li>
-        <li data-i18n="next2">Formulario de contacto con anti-spam (gratis).</li>
-        <li data-i18n="next3">Página /links fija para QR del CV.</li>
-      </ul>
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section__head">
+          <h2 data-i18n="about.title">SOBRE MÍ</h2>
+        </div>
+        <div class="card">
+          <p data-i18n="about.text">
+            </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="experience">
+      <div class="container">
+        <div class="section__head">
+          <h2 data-i18n="experience.title">EXPERIENCIA</h2>
+        </div>
+        <div class="grid grid--3">
+          <article class="card">
+            <h3 data-i18n="experience.dgii.title">Pasante — DGII</h3>
+            <p class="muted" data-i18n="experience.dgii.date">Nov 2025 — Presente</p>
+            <p class="card__text" data-i18n="experience.dgii.desc"></p>
+          </article>
+          <article class="card">
+            <h3 data-i18n="experience.banreservas.title">Pasante — Banreservas</h3>
+            <p class="muted" data-i18n="experience.banreservas.date">Oct 2025 — Dic 2025</p>
+            <p class="card__text" data-i18n="experience.banreservas.desc"></p>
+          </article>
+          <article class="card">
+            <h3 data-i18n="experience.hershey.title">Supervisor — Hershey</h3>
+            <p class="muted" data-i18n="experience.hershey.date">May 2024 — Sep 2025</p>
+            <p class="card__text" data-i18n="experience.hershey.desc"></p>
+          </article>
+        </div>
+        
+        <div style="margin-top:16px;">
+          <a class="card card--link" href="https://linkedin.com/in/agnerdiaz" target="_blank" rel="noreferrer" data-i18n="experience.more">
+            Ver más experiencia en LinkedIn
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="projects">
+      <div class="container">
+        <div class="section__head">
+          <h2 data-i18n="projects.title">PROYECTOS</h2>
+        </div>
+
+        <div class="grid grid--2">
+          <article class="card card--featured">
+            <div class="badge" data-i18n="projects.featured">DESTACADO</div>
+            <h3>FinClarity</h3>
+            <p class="muted" data-i18n="projects.finclarity.stack">Flutter • Analytics • Budgeting • SQLite</p>
+            <p data-i18n="projects.finclarity.desc">
+              App móvil de gestión financiera personal...
+            </p>
+            </article>
+
+          <article class="card">
+            <h3>MercaVerde</h3>
+            <p class="muted" data-i18n="projects.mercaverde.stack">Flutter • Supabase • Postgres</p>
+            <p data-i18n="projects.mercaverde.desc">
+              Marketplace B2C/B2B...
+            </p>
+            </article>
+        </div>
+
+        <div style="margin-top:16px;">
+          <a class="card card--link" href="https://github.com/AgnerDDiaz" target="_blank" rel="noreferrer" data-i18n="projects.more.title">
+            Ver más proyectos
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="skills">
+      <div class="container">
+        <div class="section__head">
+          <h2 data-i18n="skills.title">TECNOLOGÍAS</h2>
+        </div>
+
+        <div class="card">
+          <div class="skills-grid">
+            <div class="skill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/flutter/flutter-original.svg" alt="Flutter" /><span>Flutter</span></div>
+            <div class="skill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dart/dart-original.svg" alt="Dart" /><span>Dart</span></div>
+            <div class="skill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" alt="C#" /><span>C#</span></div>
+            <div class="skill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" alt="JavaScript" /><span>JavaScript</span></div>
+            <div class="skill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" alt="React" /><span>React</span></div>
+            <div class="skill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" alt="Tailwind" /><span>Tailwind</span></div>
+            <div class="skill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" alt="PostgreSQL" /><span>Postgres</span></div>
+            <div class="skill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/supabase/supabase-original.svg" alt="Supabase" /><span>Supabase</span></div>
+            <div class="skill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" alt="MySQL" /><span>MySQL</span></div>
+            <div class="skill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sqlite/sqlite-original.svg" alt="SQLite" /><span>SQLite</span></div>
+            <div class="skill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" alt="Git" /><span>Git</span></div>
+            <div class="skill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg" alt="GitHub" /><span>GitHub</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="certs">
+      <div class="container">
+        <div class="section__head">
+          <h2 data-i18n="certs.title">CERTIFICACIONES</h2>
+        </div>
+
+        <div class="grid grid--3">
+          <article class="card cert">
+            <img class="cert__img" src="/assets/img/certs/sas.png" alt="SAS" />
+            <div class="cert__body"><h3 data-i18n="certs.sas">SAS</h3></div>
+          </article>
+          <article class="card cert">
+            <img class="cert__img" src="/assets/img/certs/fortinet-fca.png" alt="Fortinet" />
+            <div class="cert__body"><h3 data-i18n="certs.fortinet">Fortinet</h3></div>
+          </article>
+          <article class="card cert">
+            <img class="cert__img" src="/assets/img/certs/huawei-cloud-basics.png" alt="Huawei" />
+            <div class="cert__body"><h3 data-i18n="certs.huawei">Huawei</h3></div>
+          </article>
+        </div>
+
+        <div style="margin-top:16px;">
+          <a class="card card--link" href="https://drive.google.com/drive/folders/1eJ83WTuES7liV8fNLRx8emLSHnnUtRNS?usp=sharing" target="_blank" rel="noreferrer" data-i18n="certs.more">
+            Ver todas las certificaciones
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="education">
+      <div class="container">
+        <div class="section__head">
+          <h2 data-i18n="education.title">EDUCACIÓN</h2>
+        </div>
+        <div class="card">
+          <h3 data-i18n="education.intec.title">INTEC — Ingeniería de Software</h3>
+          <p class="muted" data-i18n="education.intec.date">Noviembre 2021 — Abril 2026</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="languages">
+      <div class="container">
+        <div class="section__head">
+          <h2 data-i18n="languages.title">IDIOMAS</h2>
+        </div>
+        <div class="grid grid--2">
+          <div class="card lang-card">
+            <div class="lang-name" data-i18n="languages.es.name">Español</div>
+            <div class="lang-level" data-i18n="languages.es.level">Nativo</div>
+          </div>
+          <div class="card lang-card">
+            <div class="lang-name" data-i18n="languages.en.name">Inglés</div>
+            <div class="lang-level" data-i18n="languages.en.level">Técnico Intermedio</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section__head">
+          <h2 data-i18n="contact.title">CONTACTO</h2>
+        </div>
+
+        <div class="card">
+          <h3 data-i18n="contact.how">Envíame un mensaje</h3>
+          
+          <form class="form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/?sent=1#contact">
+            <input type="hidden" name="form-name" value="contact" />
+            <p class="hidden">
+              <label>Don’t fill this out: <input name="bot-field" /></label>
+            </p>
+
+            <label class="field">
+              <span data-i18n="contact.form.subjectLabel">Asunto</span>
+              <input name="subject" type="text" required data-i18n-placeholder="contact.form.subjectPh" placeholder="Ej: Oportunidad Laboral" />
+            </label>
+
+            <label class="field">
+              <span data-i18n="contact.form.messageLabel">Mensaje</span>
+              <textarea name="message" rows="6" required data-i18n-placeholder="contact.form.messagePh" placeholder="Escribe tu mensaje..."></textarea>
+            </label>
+
+            <button class="btn btn--primary" type="submit" data-i18n="contact.form.send">Enviar mensaje</button>
+
+            <p class="muted form__success" id="formSuccess" hidden data-i18n="contact.sent">
+              ¡Listo! Mensaje enviado.
+            </p>
+          </form>
+        </div>
+      </div>
     </section>
   </main>
 
-  <footer class="container footer">
-    <span>© <span id="year"></span> Agner Díaz</span>
-    <a class="footer-link" href="/links">/links</a>
+  <footer class="footer">
+    <div class="container">
+      <p class="muted">
+        © <span id="year"></span>
+        <span data-i18n="footer.rest">Agner Diaz • Desarrollado con HTML/CSS/JS</span>
+      </p>
+    </div>
   </footer>
 
-  <script src="/assets/app.js" defer></script>
+  <script src="/assets/i18n/i18n.js"></script>
+  <script src="/assets/js/main.js"></script>
 </body>
 </html>

@@ -5,136 +5,101 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
   <title>Agner Díaz — Links</title>
-  <meta name="description" content="Links oficiales de Agner Díaz." />
-  <link rel="stylesheet" href="/assets/styles.css" />
+  <meta name="description" content="Directorio oficial de links de Agner Díaz." />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
 </head>
-<body>
-  <header class="container header">
-    <a class="brand" href="/" aria-label="Home">agnerdiaz.com</a>
 
-    <nav class="nav">
-      <a class="nav-link" href="/" data-i18n="homeBtn">Home</a>
-      <button id="langBtn" class="chip" type="button" aria-label="Cambiar idioma">ES</button>
-      <button id="themeBtn" class="chip" type="button" aria-label="Cambiar tema">🌙</button>
-    </nav>
+<body class="links-page">
+  <header class="nav">
+    <div class="container nav__inner">
+      <a class="brand" href="/" aria-label="Ir al inicio">
+        <span class="brand__dot"></span>
+        <span class="brand__text">Agner<span class="brand__accent">Diaz</span></span>
+      </a>
+
+      <!-- ✅ Hamburguesa igual que en main -->
+      <button class="nav__toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <!-- ✅ Menú igual que en main (se abre en móvil con .is-open) -->
+      <nav class="nav__menu" id="navMenu" aria-label="Menú Links">
+        <a class="btn btn--ghost" href="/" data-i18n="links.goPortfolio">Portafolio</a>
+
+        <!-- Botones igual que en main -->
+        <button class="icon-btn" id="langToggle" type="button" aria-label="Cambiar idioma">ES</button>
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Cambiar tema">☾</button>
+      </nav>
+    </div>
   </header>
 
-  <main class="container main" style="grid-template-columns: 1fr;">
-    <section class="card">
-      <p class="eyebrow" data-i18n="eyebrow">Directorio</p>
-      <h1 class="title" data-i18n="title">Links</h1>
-      <p class="subtitle" data-i18n="subtitle">
-        Este es el enlace fijo para el QR de mi CV.
-      </p>
+  <main id="main">
+    <section class="section">
+      <div class="container" style="max-width: 900px;">
+        <div class="card links-card">
+          <div class="links-hero">
+            <div class="avatar links-avatar">
+              <img src="/assets/img/profile.jpg" alt="Agner Díaz" />
+            </div>
 
-      <div class="actions" style="margin-top:16px;">
-        <a class="btn primary" href="https://agnerdiaz.com/" target="_self" rel="noopener" data-i18n="goHome">
-          Ir a Home
-        </a>
-      </div>
+            <div class="links-heroText">
+              <p class="kicker links-kicker" data-i18n="links.kicker">Directorio</p>
 
-      <hr style="border:0;border-top:1px solid var(--border);margin:18px 0;">
+              <h1 class="links-name">
+                <span class="links-nameMain">AGNER</span>
+                <span class="links-nameAccent"> DIAZ</span>
+              </h1>
 
-      <div class="actions" style="flex-direction:column; align-items:stretch;">
-        <a class="btn" href="https://linkedin.com/in/agnerdiaz" target="_blank" rel="noopener">
-          LinkedIn
-        </a>
-        <a class="btn" href="https://github.com/AgnerDDiaz" target="_blank" rel="noopener">
-          GitHub
-        </a>
-        <a class="btn" href="https://drive.google.com/drive/folders/1eJ83WTuES7liV8fNLRx8emLSHnnUtRNS?usp=sharing" target="_blank" rel="noopener" data-i18n="certs">
-          Certificados
-        </a>
-        <div class="card muted" style="margin-top:12px;">
-          <p class="eyebrow" style="margin-bottom:6px;" data-i18n="appsTitle">Apps</p>
-          <p class="subtitle" style="margin:0;" data-i18n="finclarity">
-            FinClarity (coming soon)
-          </p>
+              <p class="links-role" data-i18n="links.role">INGENIERO EN SOFTWARE</p>
+            </div>
+          </div>
+
+          <div class="divider links-divider"></div>
+
+          <div class="links-actions">
+            <a class="btn btn--primary links-btn" href="/" target="_self" rel="noopener">
+              <span aria-hidden="true">🌐</span>
+              <span data-i18n="links.portfolioBtn">Ir a mi portafolio</span>
+            </a>
+
+            <a class="btn btn--soft links-btn" href="https://linkedin.com/in/agnerdiaz" target="_blank" rel="noreferrer">
+              <span aria-hidden="true" class="links-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.2h4V24h-4V8.2zM8.2 8.2h3.8v2.2h.1c.53-1 1.83-2.2 3.77-2.2 4.03 0 4.78 2.65 4.78 6.1V24h-4v-7.5c0-1.8-.03-4.1-2.5-4.1-2.5 0-2.88 1.95-2.88 4V24h-4V8.2z"/>
+                </svg>
+              </span>
+              <span data-i18n="links.linkedinBtn">LinkedIn</span>
+            </a>
+
+            <a class="btn btn--soft links-btn" href="https://github.com/AgnerDDiaz" target="_blank" rel="noreferrer">
+              <span aria-hidden="true" class="links-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.833.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.27.098-2.646 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.376.202 2.394.1 2.647.64.7 1.028 1.595 1.028 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.523 2 12 2z"/>
+                </svg>
+              </span>
+              <span data-i18n="links.githubBtn">GitHub</span>
+            </a>
+
+            <a class="btn btn--soft links-btn" href="https://drive.google.com/drive/folders/1eJ83WTuES7liV8fNLRx8emLSHnnUtRNS?usp=sharing" target="_blank" rel="noreferrer">
+              <span aria-hidden="true">🎓</span>
+              <span data-i18n="links.certsBtn">Certificaciones</span>
+            </a>
+          </div>
         </div>
       </div>
-
-      <p class="hint" style="margin-top:14px;" data-i18n="note">
-        Consejo: guarda este link como QR fijo (no dinámico).
-      </p>
     </section>
   </main>
 
-  <footer class="container footer">
-    <span>© <span id="year"></span> Agner Díaz</span>
-    <a class="footer-link" href="/">/</a>
+  <footer class="footer">
+    <div class="container">
+      <p class="muted">
+        © <span id="year"></span>
+        <span data-i18n="links.footerBuilt">Agner Díaz • Desarrollado con HTML/CSS/JS</span>
+      </p>
+    </div>
   </footer>
 
-  <script>
-    // Small page-specific i18n keys + reuse theme/lang logic from assets/app.js style
-    (() => {
-      const yearEl = document.getElementById("year");
-      if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-      const dict = {
-        es: {
-          homeBtn: "Home",
-          eyebrow: "Directorio",
-          title: "Links",
-          subtitle: "Este es el enlace fijo para el QR de mi CV.",
-          goHome: "Ir a Home",
-          certs: "Certificados",
-          appsTitle: "Apps",
-          finclarity: "FinClarity (próximamente)",
-          note: "Consejo: guarda este link como QR fijo (no dinámico)."
-        },
-        en: {
-          homeBtn: "Home",
-          eyebrow: "Directory",
-          title: "Links",
-          subtitle: "This is the fixed link for my CV QR code.",
-          goHome: "Go to Home",
-          certs: "Certificates",
-          appsTitle: "Apps",
-          finclarity: "FinClarity (coming soon)",
-          note: "Tip: keep this as a static QR link (not dynamic)."
-        }
-      };
-
-      const langBtn = document.getElementById("langBtn");
-      const themeBtn = document.getElementById("themeBtn");
-
-      const getSaved = (k, fallback) => localStorage.getItem(k) || fallback;
-      const setSaved = (k, v) => localStorage.setItem(k, v);
-
-      const browserLang = (navigator.language || "es").toLowerCase().startsWith("en") ? "en" : "es";
-      let lang = getSaved("lang", browserLang);
-      let theme = getSaved("theme", "dark");
-
-      const applyLang = () => {
-        const t = dict[lang] || dict.es;
-        document.documentElement.lang = lang;
-        document.querySelectorAll("[data-i18n]").forEach((el) => {
-          const key = el.getAttribute("data-i18n");
-          if (t[key]) el.textContent = t[key];
-        });
-        if (langBtn) langBtn.textContent = lang.toUpperCase();
-        setSaved("lang", lang);
-      };
-
-      const applyTheme = () => {
-        document.documentElement.setAttribute("data-theme", theme);
-        if (themeBtn) themeBtn.textContent = theme === "light" ? "☀️" : "🌙";
-        setSaved("theme", theme);
-      };
-
-      langBtn?.addEventListener("click", () => {
-        lang = lang === "es" ? "en" : "es";
-        applyLang();
-      });
-
-      themeBtn?.addEventListener("click", () => {
-        theme = theme === "dark" ? "light" : "dark";
-        applyTheme();
-      });
-
-      applyTheme();
-      applyLang();
-    })();
-  </script>
+  <script src="/assets/i18n/i18n.js"></script>
+  <script src="/assets/js/main.js"></script>
 </body>
 </html>
