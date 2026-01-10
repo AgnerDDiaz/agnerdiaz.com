@@ -17,16 +17,13 @@
         <span class="brand__text">Agner<span class="brand__accent">Diaz</span></span>
       </a>
 
-      <!-- ✅ Hamburguesa igual que en main -->
       <button class="nav__toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
 
-      <!-- ✅ Menú igual que en main (se abre en móvil con .is-open) -->
       <nav class="nav__menu" id="navMenu" aria-label="Menú Links">
         <a class="btn btn--ghost" href="/" data-i18n="links.goPortfolio">Portafolio</a>
 
-        <!-- Botones igual que en main -->
         <button class="icon-btn" id="langToggle" type="button" aria-label="Cambiar idioma">ES</button>
         <button class="icon-btn" id="themeToggle" type="button" aria-label="Cambiar tema">☾</button>
       </nav>
@@ -50,7 +47,12 @@
                 <span class="links-nameAccent"> DIAZ</span>
               </h1>
 
-              <p class="links-role" data-i18n="links.role">INGENIERO EN SOFTWARE</p>
+              <!-- ✅ Typing (bilingüe) -->
+              <p class="links-role" data-typing-key="links.roles">
+                <span class="typing" aria-hidden="true"></span>
+                <span class="typing__cursor" aria-hidden="true"></span>
+                <span class="sr-only">Rol profesional</span>
+              </p>
             </div>
           </div>
 

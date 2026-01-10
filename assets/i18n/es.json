@@ -1,100 +1,122 @@
 {
-    "a11y": {
-      "openMenu": "Abrir menú",
-      "closeMenu": "Cerrar menú"
+  "a11y": {
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú"
+  },
+  "nav": {
+    "home": "Inicio",
+    "about": "Sobre mí",
+    "experience": "Experiencia",
+    "projects": "Proyectos",
+    "skills": "Tecnologías",
+    "certs": "Certificaciones",
+    "contact": "Contacto",
+    "lang": "Idioma"
+  },
+  "hero": {
+    "role": "Ingeniero en Software",
+    "lead": "Ingeniero en Software de termino (INTEC). Desarrollo soluciones móviles, web y backend con enfoque analítico, calidad y atención extrema al detalle. Me involucro en la lógica del negocio para construir productos útiles, escalables y centrados en la experiencia de usuario. Disfruto colaborar en equipo, identificar fortalezas y convertir problemas en soluciones claras.",
+    "ctaContact": "Contáctame",
+    "ctaProjects": "Ver proyectos",
+    "contactBtn": "Contáctame",
+    "roles": "Ingeniero en Software|Flutter Developer|Desarrollador Junior"
+  },
+  "about": {
+    "title": "Sobre mí",
+    "text": [
+      "Soy Ingeniero de Software y Desarrollador, próximo a graduarme en el Instituto Tecnológico de Santo Domingo (INTEC) (abril 2026).",
+      "Me apasiona construir productos digitales que no solo “funcionen”, sino que sean claros, sólidos y agradables de usar: por eso pongo mucho énfasis en la calidad, el detalle y una experiencia de usuario moderna.",
+      "Mi forma de trabajar parte de entender la lógica del negocio: analizo el problema, identifico oportunidades de mejora y diseño soluciones eficientes y escalables. He participado en proyectos cubriendo el ciclo completo del desarrollo de software (desde el análisis y diseño hasta pruebas e implementación) y me destaco por la documentación técnica clara y el enfoque en calidad.",
+      "A nivel técnico, trabajo con desarrollo móvil en Flutter (Dart), desarrollo web con React, y bases de datos como PostgreSQL, MySQL y SQLite, apoyándome en buenas prácticas, control de versiones con Git/GitHub, pruebas e integración, y metodologías Agile/Scrum con mentalidad de CI/CD cuando el contexto lo requiere.",
+      "Entre mis proyectos, destaca FinClarity, una app móvil en Flutter para gestión financiera personal con analítica visual y presupuestos, con base de datos local y arquitectura modular. También he desarrollado MercaVerde, un marketplace B2C/B2B en Flutter orientado a reducir el desperdicio alimentario, integrando backend con Supabase, PostgreSQL, pagos seguros y geolocalización en tiempo real.",
+      "En lo humano, soy una persona cooperativa y orientada a resultados: disfruto trabajar en equipo, reconocer fortalezas y aportar estructura para que las ideas se conviertan en entregables reales. Esa combinación de mentalidad analítica, cuidado por los detalles y enfoque en producto es lo que guía todo lo que diseño, creo y construyo."
+    ]
+  },
+  "experience": {
+    "title": "Experiencia",
+    "dgii": {
+      "title": "Pasantía — DGII",
+      "date": "Noviembre 2025 — Actualidad",
+      "desc": "Durante mi pasantía en la DGII, he trabajado en el desarrollo de un proyecto interno para el mejoramiento de un sistema institucional, enfocado en optimizar tiempos y ofrecer un seguimiento más claro y trazable de los procesos. A partir de un análisis de mejora, propusimos y ejecutamos una solución que fortalece la eficiencia operativa y la gestión del flujo de trabajo, aplicando un enfoque colaborativo con mi equipo. Además, priorizamos una experiencia de usuario (UI/UX) más intuitiva, contribuyendo a procesos más ágiles y a una mayor satisfacción del usuario y del servicio al cliente."
     },
-    "nav": {
-      "home": "Inicio",
-      "about": "Sobre mí",
-      "experience": "Experiencia",
-      "projects": "Proyectos",
-      "skills": "Tecnologías",
-      "certs": "Certificaciones",
-      "contact": "Contacto",
-      "lang": "Idioma"
+    "banreservas": {
+      "title": "Pasantía — Banreservas",
+      "date": "Octubre 2025 — Diciembre 2025",
+      "desc": "Durante mi pasantía en Banreservas, desarrollé una propuesta para la implementación de un chatbot financiero personalizado por usuario, orientado a brindar atención más precisa y útil. El enfoque del proyecto se basa en utilizar información relevante del cliente para resolver dudas de forma contextual, evitando respuestas genéricas o incorrectas y ofreciendo recomendaciones financieras más acertadas. Esta iniciativa busca mejorar la experiencia del usuario, optimizar la atención al cliente y fortalecer la calidad del servicio mediante una solución escalable alineada a las necesidades reales de cada perfil."
     },
-    "hero": {
-      "role": "Ingeniero en Software",
-      "lead": "Ingeniero en Software de termino (INTEC). Desarrollo soluciones móviles, web y backend con enfoque analítico, calidad y atención extrema al detalle. Me involucro en la lógica del negocio para construir productos útiles, escalables y centrados en la experiencia de usuario. Disfruto colaborar en equipo, identificar fortalezas y convertir problemas en soluciones claras.",
-      "ctaContact": "Contáctame",
-      "ctaProjects": "Ver proyectos"
+    "hershey": {
+      "title": "Supervisor — Hershey",
+      "date": "Mayo 2024 — Septiembre 2025",
+      "desc": "Como Supervisor en Hershey, fortalecí habilidades clave de liderazgo y operación diaria en un entorno dinámico. Desarrollé competencias en gestión de equipo, delegación efectiva, trabajo bajo presión y coordinación de múltiples responsabilidades a la vez, manteniendo el enfoque en la calidad del servicio y el trabajo en equipo. Esta experiencia fue especialmente valiosa para mi crecimiento profesional, ya que reforzó mi capacidad de organización, toma de decisiones y manejo de personas en situaciones exigentes."
     },
-    "about": {
-        "title": "Sobre mí",
-        "text": [
-            "Soy Ingeniero de Software y Desarrollador, próximo a graduarme en el Instituto Tecnológico de Santo Domingo (INTEC) (abril 2026).",
-            "Me apasiona construir productos digitales que no solo “funcionen”, sino que sean claros, sólidos y agradables de usar: por eso pongo mucho énfasis en la calidad, el detalle y una experiencia de usuario moderna.",
-            "Mi forma de trabajar parte de entender la lógica del negocio: analizo el problema, identifico oportunidades de mejora y diseño soluciones eficientes y escalables. He participado en proyectos cubriendo el ciclo completo del desarrollo de software —desde el análisis y diseño hasta pruebas e implementación— y me destaco por la documentación técnica clara y el enfoque en calidad.",
-            "A nivel técnico, trabajo con desarrollo móvil en Flutter (Dart), desarrollo web con React, y bases de datos como PostgreSQL, MySQL y SQLite, apoyándome en buenas prácticas, control de versiones con Git/GitHub, pruebas e integración, y metodologías Agile/Scrum con mentalidad de CI/CD cuando el contexto lo requiere.",
-            "Entre mis proyectos, destaca FinClarity, una app móvil en Flutter para gestión financiera personal con analítica visual y presupuestos, con base de datos local y arquitectura modular. También he desarrollado MercaVerde, un marketplace B2C/B2B en Flutter orientado a reducir el desperdicio alimentario, integrando backend con Supabase, PostgreSQL, pagos seguros y geolocalización en tiempo real.",
-            "En lo humano, soy una persona cooperativa y orientada a resultados: disfruto trabajar en equipo, reconocer fortalezas y aportar estructura para que las ideas se conviertan en entregables reales. Esa combinación de mentalidad analítica, cuidado por los detalles y enfoque en producto es lo que guía todo lo que diseño, creo y construyo."
-        ]
+    "more": "Ver más"
+  },
+  "projects": {
+    "title": "Proyectos",
+    "featured": "Destacados",
+    "finclarity": {
+      "stack": "Flutter (Dart) · SQLite · EasyLocalization · API REST (FastAPI) · Docker · Google Cloud Run · Firestore/servicios cloud · Git/GitHub",
+      "desc": "FinClarity es una app móvil de finanzas personales desarrollada en Flutter que permite registrar ingresos y gastos, organizar cuentas y categorías, y visualizar el progreso con dashboards y reportes. La construí con un enfoque offline-first usando SQLite, arquitectura modular por capas y un backend propio (API REST) para conectar servicios, automatizar flujos y preparar el producto para publicación en iOS y Android.",
+      "tech": "flutter|sqlite|easylocalization|fastapi|docker|gcloudrun|firestore|github"
     },
-    "experience": {
-      "title": "Experiencia",
-      "dgii": {
-        "title": "Pasantía — DGII",
-        "date": "Noviembre 2025 — Actualidad",
-        "desc": "Durante mi pasantía en la DGII, he trabajado en el desarrollo de un proyecto interno para el mejoramiento de un sistema institucional, enfocado en optimizar tiempos y ofrecer un seguimiento más claro y trazable de los procesos. A partir de un análisis de mejora, propusimos y ejecutamos una solución que fortalece la eficiencia operativa y la gestión del flujo de trabajo, aplicando un enfoque colaborativo con mi equipo. Además, priorizamos una experiencia de usuario (UI/UX) más intuitiva, contribuyendo a procesos más ágiles y a una mayor satisfacción del usuario y del servicio al cliente."
-      },
-      "banreservas": {
-        "title": "Pasantía — Banreservas",
-        "date": "Octubre 2025 — Diciembre 2025",
-        "desc": "Durante mi pasantía en Banreservas, desarrollé una propuesta para la implementación de un chatbot financiero personalizado por usuario, orientado a brindar atención más precisa y útil. El enfoque del proyecto se basa en utilizar información relevante del cliente para resolver dudas de forma contextual, evitando respuestas genéricas o incorrectas y ofreciendo recomendaciones financieras más acertadas. Esta iniciativa busca mejorar la experiencia del usuario, optimizar la atención al cliente y fortalecer la calidad del servicio mediante una solución escalable alineada a las necesidades reales de cada perfil."
-      },
-      "hershey": {
-        "title": "Supervisor — Hershey",
-        "date": "Mayo 2024 — Septiembre 2025",
-        "desc": "Como Supervisor en Hershey, fortalecí habilidades clave de liderazgo y operación diaria en un entorno dinámico. Desarrollé competencias en gestión de equipo, delegación efectiva, trabajo bajo presión y coordinación de múltiples responsabilidades a la vez, manteniendo el enfoque en la calidad del servicio y el trabajo en equipo. Esta experiencia fue especialmente valiosa para mi crecimiento profesional, ya que reforzó mi capacidad de organización, toma de decisiones y manejo de personas en situaciones exigentes."
-      },
-      "more": "Ver más"
+    "mercaverde": {
+      "stack": "Flutter (Dart) · Supabase (Auth, Edge Functions, Realtime) · PostgreSQL · Stripe Checkout · Firebase Cloud Messaging · Mapbox SDK · Git/GitHub",
+      "desc": "MercaVerde es una aplicación móvil desarrollada en Flutter enfocada en reducir el desperdicio alimentario mediante un marketplace B2C y B2B. Participé en el diseño y desarrollo del backend y la arquitectura general del sistema, implementando autenticación, manejo de roles, lógica de negocio y flujos de compra. La plataforma permite a productores publicar excedentes, a usuarios comprar o suscribirse a planes, procesar pagos seguros y visualizar productos geolocalizados, con notificaciones en tiempo real y una base escalable lista para crecimiento.",
+      "tech": "flutter|supabase|postgresql|stripe|firebase|mapbox|github"
     },
-    "projects": {
-      "title": "Proyectos",
-      "featured": "Destacados",
-      "finclarity": {
-        "stack": "Flutter (Dart) · SQLite · EasyLocalization · API REST (FastAPI) · Docker · Google Cloud Run · Firestore/servicios cloud · Git/GitHub",
-        "desc": "FinClarity es una app móvil de finanzas personales desarrollada en Flutter que permite registrar ingresos y gastos, organizar cuentas y categorías, y visualizar el progreso con dashboards y reportes. La construí con un enfoque offline-first usando SQLite, arquitectura modular por capas y un backend propio (API REST) para conectar servicios, automatizar flujos y preparar el producto para publicación en iOS y Android."
-      },
-      "mercaverde": {
-        "stack": "Flutter (Dart) · Supabase (Auth, Edge Functions, Realtime) · PostgreSQL · Stripe Checkout · Firebase Cloud Messaging · Mapbox SDK · Git/GitHub",
-        "desc": "MercaVerde es una aplicación móvil desarrollada en Flutter enfocada en reducir el desperdicio alimentario mediante un marketplace B2C y B2B. Participé en el diseño y desarrollo del backend y la arquitectura general del sistema, implementando autenticación, manejo de roles, lógica de negocio y flujos de compra. La plataforma permite a productores publicar excedentes, a usuarios comprar o suscribirse a planes, procesar pagos seguros y visualizar productos geolocalizados, con notificaciones en tiempo real y una base escalable lista para crecimiento."
-      },
-      "more": "Ver todos"
+    "more": "Ver todos"
+  },
+  "skills": {
+    "title": "Tecnologías"
+  },
+  "certs": {
+    "title": "Certificaciones"
+  },
+  "education": {
+    "title": "Educación"
+  },
+  "languages": {
+    "title": "Idiomas"
+  },
+  "contact": {
+    "title": "Contacto",
+    "how": "Envíame un mensaje",
+    "name": "Nombre",
+    "email": "Correo",
+    "message": "Mensaje",
+    "send": "Enviar",
+    "form": {
+      "subjectLabel": "Asunto",
+      "subjectPh": "Ej: Oportunidad Laboral",
+      "emailLabel": "Correo (opcional)",
+      "emailPh": "tuemail@ejemplo.com",
+      "messageLabel": "Mensaje",
+      "messagePh": "Escribe tu mensaje...",
+      "send": "Enviar mensaje"
     },
-    "skills": {
-      "title": "Tecnologías"
-    },
-    "certs": {
-      "title": "Certificaciones"
-    },
-    "education": {
-      "title": "Educación"
-    },
-    "languages": {
-      "title": "Idiomas"
-    },
-    "contact": {
-      "title": "Contacto",
-      "name": "Nombre",
-      "email": "Correo",
-      "message": "Mensaje",
-      "send": "Enviar"
-    },
-    "links": {
-        "goPortfolio": "Portafolio",
-        "kicker": "Directorio",
-        "title": "Links",
-        "subtitle": "Accesos directos a mi portafolio y redes profesionales.",
-        "portfolioBtn": "Ir a mi portafolio",
-        "linkedinBtn": "LinkedIn",
-        "githubBtn": "GitHub",
-        "certsBtn": "Certificaciones",
-        "note": "Consejo: guarda este link como acceso directo para compartir.",
-        "role": "INGENIERO EN SOFTWARE",
-        "footerBuilt": "Desarrollado con HTML/CSS/JS"
-        }
+    "sending": "Enviando…",
+    "successTitle": "Mensaje enviado",
+    "successMessage": "Gracias, te responderé pronto.",
+    "errorTitle": "No se pudo enviar",
+    "errorMessage": "Intenta de nuevo.",
+    "validation": {
+      "subjectRequired": "El asunto es obligatorio.",
+      "messageRequired": "El mensaje es obligatorio.",
+      "emailInvalid": "Escribe un correo válido."
+    }
+  },
+  "links": {
+    "goPortfolio": "Portafolio",
+    "kicker": "Directorio",
+    "title": "Links",
+    "subtitle": "Accesos directos a mi portafolio y redes profesionales.",
+    "portfolioBtn": "Ir a mi portafolio",
+    "linkedinBtn": "LinkedIn",
+    "githubBtn": "GitHub",
+    "certsBtn": "Certificaciones",
+    "note": "Consejo: guarda este link como acceso directo para compartir.",
+    "role": "INGENIERO EN SOFTWARE",
+    "footerBuilt": "Desarrollado con HTML/CSS/JS",
+    "roles": "Ingeniero en Software|Flutter Developer|Desarrollador Junior"
+  }
 }
-
-  
-  
