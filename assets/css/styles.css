@@ -404,14 +404,23 @@ p[data-i18n$=".desc"],
 }
 
 .avatar {
-  width: min(340px, 78vw);
+  width: min(320px, 70vw); /* ✅ un poco más pequeño para móviles */
   aspect-ratio: 1 / 1;
   border-radius: 999px;
+  overflow: hidden; /* ✅ seguro anti ovalado / recorte perfecto */
   position: relative;
   padding: 6px;
   background: radial-gradient(circle at 30% 20%, rgba(217,4,41,0.35), transparent 60%);
   box-shadow: var(--shadow);
 }
+/* ✅ Extra: teléfonos pequeños */
+@media (max-width: 380px){
+  .avatar{
+    width: min(260px, 68vw);
+    padding: 5px;
+  }
+}
+
 .avatar::before {
   content: "";
   position: absolute;
@@ -903,22 +912,62 @@ p[data-i18n$=".desc"],
   padding: 26px;
 }
 
-.links-page .links-hero {
+/* ✅ Base /links: layout correcto en desktop/tablet */
+.links-page .links-hero{
   display: flex;
   gap: 22px;
   align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
+  text-align: left; /* desktop */
 }
 
-.links-page .links-avatar {
-  width: 120px;
+/* ✅ En /links el avatar NO debe heredar el tamaño gigante del .avatar del portafolio */
+.links-page .links-avatar{
+  width: 220px;        /* tamaño controlado en desktop */
   aspect-ratio: 1 / 1;
+  flex: 0 0 auto;
+  overflow: hidden;    /* seguro anti “ovalado” visual */
 }
+
+
+@media (max-width: 760px) {
+  /* ✅ En móvil: avatar arriba + todo centrado */
+  .links-page .links-hero{
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* ✅ Avatar más pequeño en móviles (y 100% circular) */
+  .links-page .links-avatar{
+    width: min(190px, 56vw);  /* más pequeño que antes */
+    aspect-ratio: 1 / 1;
+    flex: 0 0 auto;
+    overflow: hidden;
+  }
+
+  .links-page .links-avatar,
+  .links-page .links-avatar img{
+    border-radius: 999px;
+  }
+}
+
+/* ✅ Extra: móviles MUY pequeños (como el tuyo) */
+@media (max-width: 380px){
+  .links-page .links-avatar{
+    width: min(170px, 54vw);
+  }
+}
+
+
 
 .links-page .links-heroText {
   flex: 1;
-  min-width: 220px;
+  min-width: 0; /* ✅ evita empujes raros */
 }
+
 
 .links-page .links-name {
   margin: 8px 0 6px;
@@ -942,7 +991,19 @@ p[data-i18n$=".desc"],
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--muted);
+
+  /* ✅ Reserva altura para que NO suban/bajen los botones */
+  line-height: 1.15;
+  min-height: calc(1.15em * 1); /* 1 línea fija */
 }
+
+/* ✅ Reserva ancho mientras borra/escribe para que NO “brinque” */
+.links-page .links-role .typing{
+  display: inline-block;
+  min-width: 22ch;        /* suficiente para "Ingeniero en Software" / "Software Engineer" */
+  white-space: nowrap;    /* evita saltos de línea */
+}
+
 
 .links-page .links-divider {
   margin: 18px 0;
