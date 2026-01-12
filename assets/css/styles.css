@@ -922,14 +922,24 @@ p[data-i18n$=".desc"],
   text-align: left; /* desktop */
 }
 
-/* ✅ En /links el avatar NO debe heredar el tamaño gigante del .avatar del portafolio */
+/* ✅ Avatar /links: tamaño controlado + círculo REAL (container recorta) */
 .links-page .links-avatar{
-  width: 220px;        /* tamaño controlado en desktop */
+  width: 250px;        /* desktop */
   aspect-ratio: 1 / 1;
   flex: 0 0 auto;
-  overflow: hidden;    /* seguro anti “ovalado” visual */
+
+  border-radius: 999px;
+  overflow: hidden;    /* ✅ recorte circular garantizado */
 }
 
+/* ✅ iOS/Safari fix: evita “ovalado” dentro del círculo */
+.links-page .links-avatar img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;      /* evita gaps raros */
+  border-radius: 999px;
+}
 
 @media (max-width: 760px) {
   /* ✅ En móvil: avatar arriba + todo centrado */
@@ -938,29 +948,21 @@ p[data-i18n$=".desc"],
     align-items: center;
     justify-content: center;
     text-align: center;
+    gap: 4px; 
   }
 
-  /* ✅ Avatar más pequeño en móviles (y 100% circular) */
+  /* ✅ Avatar más pequeño en móviles */
   .links-page .links-avatar{
-    width: min(190px, 56vw);  /* más pequeño que antes */
-    aspect-ratio: 1 / 1;
-    flex: 0 0 auto;
-    overflow: hidden;
-  }
-
-  .links-page .links-avatar,
-  .links-page .links-avatar img{
-    border-radius: 999px;
+    width: min(220px, 56vw);
   }
 }
 
 /* ✅ Extra: móviles MUY pequeños (como el tuyo) */
 @media (max-width: 380px){
   .links-page .links-avatar{
-    width: min(170px, 54vw);
+    width: min(190px, 54vw);
   }
 }
-
 
 
 .links-page .links-heroText {
