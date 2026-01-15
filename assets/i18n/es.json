@@ -1,7 +1,8 @@
 {
   "a11y": {
     "openMenu": "Abrir menú",
-    "closeMenu": "Cerrar menú"
+    "closeMenu": "Cerrar menú",
+    "skip": "Saltar al contenido"
   },
   "nav": {
     "home": "Inicio",
@@ -118,5 +119,100 @@
     "role": "INGENIERO EN SOFTWARE",
     "footerBuilt": "Desarrollado con HTML/CSS/JS",
     "roles": "Ingeniero en Software|Flutter Developer|Desarrollador Junior"
+  },
+  "footer": {
+    "rest": "Agner Diaz • Desarrollado con HTML/CSS/JS"
+  },
+  "common": {
+    "backHome": "Volver al inicio",
+    "backProjects": "Volver a proyectos",
+    "viewDetails": "Ver detalle",
+    "comingSoon": "Próximamente",
+    "appStore": "App Store",
+    "googlePlay": "Google Play",
+    "privacyPolicy": "Política de Privacidad",
+    "support": "Soporte",
+    "privateRepo": "Repositorio privado"
+  },
+  "projectsPage": {
+    "title": "Proyectos",
+    "subtitle": "Una selección de mi trabajo.",
+    "finclarityCta": "Ver FinClarity",
+    "mercaverdeCta": "Abrir MercaVerde",
+    "homeCta": "Ir al Inicio"
+  },
+  "finclarityPage": {
+    "subtitle": "App de finanzas personales",
+    "overviewTitle": "Resumen",
+    "techStackTitle": "Tecnologías",
+    "linksTitle": "Enlaces",
+    "screenshotsTitle": "Capturas",
+    "appStoreBtn": "App Store (pronto)",
+    "googlePlayBtn": "Google Play (pronto)",
+    "privacyBtn": "Política de Privacidad",
+    "supportBtn": "Soporte",
+    "githubPrivate": "GitHub: Repositorio privado"
+  },
+
+  "supportPage": {
+    "finclarity": {
+      "title": "Soporte — FinClarity",
+      "subtitle": "Ayuda, solución de problemas y contacto.",
+      "faqTitle": "Preguntas frecuentes",
+      "q1": "¿Cómo creo una cuenta?",
+      "a1": "FinClarity puede funcionar sin cuenta (offline-first). Si el inicio de sesión está disponible, usa la pantalla de onboarding para crearla.",
+      "q2": "¿Cómo hago un respaldo de mis datos?",
+      "a2": "Si existe sincronización en la nube, actívala en ajustes. Si no, el respaldo depende de las copias del dispositivo.",
+      "q3": "Veo totales incorrectos, ¿qué hago?",
+      "a3": "Revisa filtros de fecha, categorías y configuración de moneda. Luego reinicia la app.",
+      "troubleshootingTitle": "Solución de problemas",
+      "troubleshootingBody": "Intenta actualizar la app, reiniciar el teléfono y verificar el rango de fechas. Si persiste, escribe a soporte con el modelo de tu dispositivo y versión del sistema.",
+      "contactTitle": "Contacto",
+      "contactBody": "Correo:",
+      "contactEmail": "support@tudominio.com",
+      "privacyLink": "Ver la Política de Privacidad"
+    }
+  },
+"privacy": {
+  "finclarity": {
+    "title": "Política de Privacidad — FinClarity",
+    "updated": "Última actualización:",
+    "intro": "FinClarity es una app de finanzas personales offline-first. La información financiera que ingresas se almacena localmente en tu dispositivo. Esta política explica cómo se maneja la información y cómo funcionan los anuncios.",
+    "collectTitle": "Qué recopilamos",
+    "collectBody": "FinClarity no recopila ni guarda tus registros financieros en servidores. La app almacena transacciones, categorías, cuentas, notas y configuraciones localmente en tu dispositivo. Si los anuncios están habilitados, Google Mobile Ads (AdMob) puede recopilar identificadores del dispositivo y datos técnicos limitados para mostrar y medir anuncios.",
+    "adsTitle": "Anuncios (Google AdMob)",
+    "adsBody": "FinClarity utiliza Google Mobile Ads (AdMob). Según tu consentimiento, los anuncios pueden ser personalizados. AdMob puede recopilar información como el Advertising ID (u otros identificadores similares), dirección IP, información del dispositivo y datos de interacción con anuncios para ofrecer y medir publicidad.",
+    "storageTitle": "Almacenamiento de datos",
+    "storageBody": "Todos los datos de FinClarity se almacenan localmente (SQLite) en tu dispositivo. Si borras datos desde la app, limpias el almacenamiento de la app o desinstalas la aplicación, se eliminarán los datos locales. Como no almacenamos la información externamente, los datos eliminados no se pueden recuperar.",
+    "contactTitle": "Contacto",
+    "contactBody": "Si tienes preguntas sobre esta política, contáctanos en:",
+    "contactEmail": "finclarity.support@gmail.com"
   }
+},
+"support": {
+  "finclarity": {
+    "title": "Soporte — FinClarity",
+    "subtitle": "Ayuda, solución de problemas y opciones de contacto.",
+    "faqTitle": "Preguntas frecuentes",
+    "faq": {
+      "q1": "¿Cómo registro ingresos o gastos?",
+      "a1": "Abre la app y crea una nueva transacción. Selecciona categoría/cuenta y guarda. (Ajusta este texto según tu UI real.)",
+      "q2": "¿Cómo borro todos mis datos?",
+      "a2": "Usa la opción de la app para borrar todos los datos. También puedes limpiar el almacenamiento de la app o desinstalarla para eliminar la información local. Los datos borrados no se pueden recuperar porque no se guardan en la nube.",
+      "q3": "¿Cómo funcionan los anuncios personalizados?",
+      "a3": "Al abrir la app por primera vez, puedes elegir si permites anuncios personalizados. Si los permites, AdMob puede usar identificadores del dispositivo para mostrar anuncios más relevantes. Si no, los anuncios pueden ser menos personalizados."
+    },
+    "troubleshootingTitle": "Solución de problemas",
+    "troubleshooting": {
+      "t1": "Si los totales no cuadran, revisa el rango de fechas y filtros.",
+      "t2": "Si los anuncios no cargan, verifica tu conexión a internet e intenta de nuevo.",
+      "t3": "Si el problema continúa, contacta soporte con el modelo del dispositivo y la versión del sistema."
+    },
+    "contactTitle": "Contacto",
+    "privacyLink": "Ver la Política de Privacidad",
+    "emailLabel": "Correo de soporte",
+    "email": "finclarity.support@gmail.com"
+  }
+}
+
 }

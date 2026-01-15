@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Projects | Agner Diaz</title>
+  <meta name="description" content="Projects by Agner Diaz — FinClarity (personal finance app) and MercaVerde (marketplace)."/>
+  <meta property="og:title" content="Projects | Agner Diaz" />
+  <meta property="og:description" content="Browse a small selection of projects: FinClarity and MercaVerde." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/assets/img/og.png" />
+
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("theme");
+        if (saved === "dark" || saved === "light") {
+          document.documentElement.setAttribute("data-theme", saved);
+          return;
+        }
+        var hasMatch = typeof window.matchMedia === "function";
+        if (hasMatch && window.matchMedia("(prefers-color-scheme: light)").matches) {
+          document.documentElement.setAttribute("data-theme", "light");
+        } else {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
+
+  <style>
+    /* Scoped to this page only (no global look&feel changes) */
+    .page-wrap { max-width: 1100px; }
+    .page-title { margin: 0 0 8px; font-weight: 900; letter-spacing: 1px; }
+    .page-subtitle { margin: 0 0 18px; }
+    .card-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#main" data-i18n="a11y.skip">Saltar al contenido</a>
+
+  <header class="nav">
+    <div class="container nav__inner">
+      <a class="brand" href="/" aria-label="Ir al inicio">
+        <span class="brand__dot"></span>
+        <span class="brand__text">Agner<span class="brand__accent">Diaz</span></span>
+      </a>
+
+      <button class="nav__toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav__menu" id="navMenu" aria-label="Navegación Projects">
+        <a href="/" data-i18n="nav.home">Inicio</a>
+        <a href="/projects/" data-i18n="nav.projects">Proyectos</a>
+
+        <button class="icon-btn" id="langToggle" type="button" aria-label="Cambiar idioma">ES</button>
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Cambiar tema">☾</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="section">
+      <div class="container page-wrap">
+        <h1 class="page-title" data-i18n="projectsPage.title">Projects</h1>
+        <p class="muted page-subtitle" data-i18n="projectsPage.subtitle">A small selection of my work.</p>
+
+        <div class="grid grid--2">
+          <article class="card card--featured">
+            <div class="badge" data-i18n="projects.featured">DESTACADO</div>
+            <h3>FinClarity</h3>
+            <p class="card__text" data-i18n="projects.finclarity.desc"></p>
+            <p class="muted" data-i18n="projects.finclarity.stack"></p>
+            <div class="project-tech" data-project-tech="projects.finclarity.tech"></div>
+
+            <div class="card-actions">
+              <a class="btn btn--primary" href="/projects/finclarity/" data-i18n="projectsPage.finclarityCta">See FinClarity</a>
+              <a class="btn btn--soft" href="/privacy/finclarity/" data-i18n="common.privacyPolicy">Privacy Policy</a>
+              <a class="btn btn--soft" href="/support/finclarity/" data-i18n="common.support">Support</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>MercaVerde</h3>
+            <p class="card__text" data-i18n="projects.mercaverde.desc"></p>
+            <p class="muted" data-i18n="projects.mercaverde.stack"></p>
+            <div class="project-tech" data-project-tech="projects.mercaverde.tech"></div>
+
+            <div class="card-actions">
+              <a class="btn btn--soft" href="/#projects" data-i18n="projectsPage.mercaverdeCta">Open MercaVerde</a>
+              <span class="btn btn--soft" role="button" aria-disabled="true" tabindex="-1" data-i18n="common.comingSoon">Coming soon</span>
+            </div>
+          </article>
+        </div>
+
+        <div style="margin-top:16px;">
+          <a class="btn btn--soft" href="/" data-i18n="projectsPage.homeCta">Go to Home</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="muted">
+        © <span id="year"></span>
+        <span data-i18n="footer.rest">Agner Diaz • Desarrollado con HTML/CSS/JS</span>
+      </p>
+    </div>
+  </footer>
+
+  <script src="/assets/i18n/i18n.js"></script>
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>
