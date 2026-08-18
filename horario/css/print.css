@@ -1,0 +1,57 @@
+/* ============================================================
+   Horario UASD — print.css
+   Minimal, decoupled print base for this iteration. The goal
+   for now is only to keep the future print sheet separated and
+   to produce a usable printout of the calendar. The polished
+   print/PDF experience is intentionally deferred.
+   ============================================================ */
+
+@page {
+  margin: 12mm;
+}
+
+/* Keep type colors when printing */
+* {
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+/* Hide everything that is not the calendar itself */
+.nav,
+.footer,
+.skip-link,
+.hz-hero__actions,
+.hz-controls,
+.hz-banner,
+.hz-toast,
+dialog {
+  display: none !important;
+}
+
+body {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+.hz-hero {
+  padding: 0 0 8px;
+}
+.hz-hero__title {
+  font-size: 20px;
+}
+
+/* Let the whole grid flow onto the page (no inner scroll / height cap) */
+.hz-cal {
+  border: none !important;
+  box-shadow: none !important;
+}
+.hz-cal__scroll {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Avoid splitting an event across pages when possible */
+.hz-event {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}

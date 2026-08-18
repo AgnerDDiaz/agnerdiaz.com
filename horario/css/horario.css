@@ -1,0 +1,663 @@
+/* ============================================================
+   Horario UASD — horario.css
+   App-specific styles only. Global tokens, .btn, .card, nav,
+   theme and fonts come from /assets/css/styles.css.
+   The calendar surface stays intentionally neutral so the
+   activity type colors are the visual protagonists.
+   ============================================================ */
+
+:root {
+  --hz-hour-h: 60px;        /* pixel height of one hour (read by app.js) */
+  --hz-gutter: 62px;        /* time axis column width */
+  --hz-head-h: 46px;        /* day header row height */
+  --hz-colmin: 118px;       /* minimum day column width before scrolling */
+
+  --hz-line: rgba(255, 255, 255, 0.07);
+  --hz-line-strong: rgba(255, 255, 255, 0.12);
+  --hz-grid-bg: #10151d;
+  --hz-panel: var(--surface);
+}
+
+html[data-theme="light"] {
+  --hz-line: rgba(0, 0, 0, 0.07);
+  --hz-line-strong: rgba(0, 0, 0, 0.12);
+  --hz-grid-bg: #fbfcfe;
+  --hz-panel: var(--surface);
+}
+
+/* ------------------------------------------------------------
+   Tool header (compact, coherent with the site nav)
+------------------------------------------------------------ */
+.hz-tool-nav .nav__menu {
+  gap: 10px;
+}
+.hz-tool-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  color: color-mix(in srgb, var(--text) 88%, var(--muted));
+  font-size: 14px;
+}
+.hz-tool-title__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+/* ------------------------------------------------------------
+   Hero / initial state
+------------------------------------------------------------ */
+.hz-hero {
+  padding: 34px 0 10px;
+}
+.hz-hero__title {
+  margin: 0 0 8px;
+  font-size: clamp(28px, 3.4vw, 40px);
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+}
+.hz-hero__subtitle {
+  margin: 0 0 20px;
+  color: var(--muted);
+  max-width: 60ch;
+  font-size: clamp(15px, 1.2vw, 17px);
+}
+.hz-hero__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ------------------------------------------------------------
+   Controls bar
+------------------------------------------------------------ */
+.hz-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 22px 0 14px;
+}
+.hz-controls__group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.hz-btn-sm {
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+/* Segmented control (week / day view) */
+.hz-segment {
+  display: inline-flex;
+  padding: 4px;
+  gap: 4px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+.hz-segment__btn {
+  border: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--text) 82%, var(--muted));
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.4px;
+  padding: 7px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+.hz-segment__btn.is-active {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Day chips (mobile day picker) */
+.hz-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.hz-chips[hidden] {
+  display: none;
+}
+.hz-chip {
+  min-width: 44px;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: color-mix(in srgb, var(--text) 84%, var(--muted));
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition), transform var(--transition);
+}
+.hz-chip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(217, 4, 41, 0.4);
+}
+.hz-chip.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* ------------------------------------------------------------
+   Out-of-range banner
+------------------------------------------------------------ */
+.hz-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 0 14px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(217, 4, 41, 0.3);
+  background: rgba(217, 4, 41, 0.1);
+  color: var(--text);
+  font-size: 14px;
+}
+.hz-banner[hidden] {
+  display: none;
+}
+
+/* ------------------------------------------------------------
+   Calendar
+------------------------------------------------------------ */
+.hz-cal {
+  background: var(--hz-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+.hz-cal__scroll {
+  position: relative;
+  overflow: auto;
+  max-height: min(74vh, 940px);
+  -webkit-overflow-scrolling: touch;
+}
+.hz-grid {
+  display: grid;
+  /* grid-template-columns is set inline by app.js (gutter + N day columns) */
+  grid-template-rows: var(--hz-head-h) auto;
+  background: var(--hz-grid-bg);
+  min-width: max-content;
+}
+
+.hz-corner {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 4;
+  background: var(--hz-panel);
+  border-bottom: 1px solid var(--hz-line-strong);
+  border-right: 1px solid var(--hz-line-strong);
+}
+.hz-dayhead {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--hz-head-h);
+  background: var(--hz-panel);
+  border-bottom: 1px solid var(--hz-line-strong);
+  border-left: 1px solid var(--hz-line);
+}
+.hz-dayhead__name {
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--text) 88%, var(--muted));
+}
+
+.hz-gutter {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--hz-panel);
+  border-right: 1px solid var(--hz-line-strong);
+}
+.hz-gutter__label {
+  position: absolute;
+  right: 8px;
+  transform: translateY(-50%);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.hz-daycol {
+  position: relative;
+  border-left: 1px solid var(--hz-line);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--hz-line) 0,
+    var(--hz-line) 1px,
+    transparent 1px,
+    transparent var(--hz-hour-h)
+  );
+  background-position: 0 0;
+}
+
+/* ------------------------------------------------------------
+   Event cards
+------------------------------------------------------------ */
+.hz-event {
+  position: absolute;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 10px;
+  padding: 5px 8px;
+  background: var(--ev-bg, rgba(141, 153, 174, 0.16));
+  border: 1px solid var(--ev-border, var(--border));
+  border-left: 4px solid var(--ev-accent, var(--accent));
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  transition: transform 120ms ease, box-shadow var(--transition), filter var(--transition);
+}
+.hz-event:hover {
+  filter: brightness(1.06);
+  box-shadow: var(--shadow-soft);
+  z-index: 6;
+}
+.hz-event:focus-visible {
+  outline: 3px solid rgba(217, 4, 41, 0.55);
+  outline-offset: 1px;
+  z-index: 7;
+}
+.hz-event__body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 1px;
+}
+.hz-event__title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.hz-event__section {
+  font-weight: 700;
+  color: color-mix(in srgb, var(--text) 70%, var(--muted));
+}
+.hz-event__meta {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.25;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hz-event__prof {
+  font-weight: 700;
+  color: color-mix(in srgb, var(--text) 76%, var(--muted));
+}
+.hz-event__time {
+  margin: 2px 0 0;
+  margin-top: auto;
+  font-size: 11px;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--text) 78%, var(--muted));
+  white-space: nowrap;
+}
+
+/* Size tiers: hide secondary info when the card is short */
+.hz-event.is-md .hz-event__prof,
+.hz-event.is-md .hz-event__desc {
+  display: none;
+}
+.hz-event.is-sm .hz-event__meta {
+  display: none;
+}
+.hz-event.is-sm .hz-event__title,
+.hz-event.is-xs .hz-event__title {
+  -webkit-line-clamp: 1;
+}
+.hz-event.is-xs .hz-event__meta,
+.hz-event.is-xs .hz-event__time {
+  display: none;
+}
+.hz-event.is-xs,
+.hz-event.is-sm {
+  padding: 3px 8px;
+}
+
+/* ------------------------------------------------------------
+   Empty state (rendered inside the calendar)
+------------------------------------------------------------ */
+.hz-empty {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  pointer-events: none;
+  z-index: 5;
+}
+.hz-empty__card {
+  pointer-events: auto;
+  max-width: 380px;
+  text-align: center;
+  padding: 26px 24px;
+  border-radius: var(--radius);
+  border: 1px dashed var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+.hz-empty__title {
+  margin: 0 0 6px;
+  font-weight: 900;
+}
+.hz-empty__text {
+  margin: 0 0 16px;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------
+   Toast
+------------------------------------------------------------ */
+.hz-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translate(-50%, 12px);
+  z-index: 200;
+  max-width: min(92vw, 420px);
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity var(--transition), transform var(--transition);
+}
+.hz-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ------------------------------------------------------------
+   Dialogs (native <dialog>)
+------------------------------------------------------------ */
+.hz-dialog {
+  width: min(560px, 94vw);
+  max-height: 90vh;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.hz-dialog--sm {
+  width: min(420px, 94vw);
+}
+.hz-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+}
+.hz-dialog__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px 12px;
+}
+.hz-dialog__head h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 900;
+}
+.hz-dialog__body {
+  padding: 4px 20px 8px;
+  overflow-y: auto;
+  max-height: calc(90vh - 150px);
+}
+.hz-dialog__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 20px 18px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.hz-dialog__foot-left,
+.hz-dialog__foot-right {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.hz-dialog__section {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+}
+.hz-dialog__section h3 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--text) 84%, var(--muted));
+}
+
+.hz-iconbtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+  color: var(--text);
+  font-size: 15px;
+  cursor: pointer;
+  line-height: 1;
+}
+.hz-iconbtn:hover {
+  border-color: rgba(217, 4, 41, 0.45);
+}
+
+/* Form fields */
+.hz-field {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.hz-field > span {
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  color: color-mix(in srgb, var(--text) 86%, var(--muted));
+}
+.hz-field input,
+.hz-field select,
+.hz-field textarea {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+  color: var(--text);
+  padding: 10px 12px;
+  font-family: var(--font);
+  font-size: 14px;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.hz-field textarea {
+  resize: vertical;
+  min-height: 64px;
+}
+.hz-field input:focus,
+.hz-field select:focus,
+.hz-field textarea:focus {
+  border-color: rgba(217, 4, 41, 0.55);
+  box-shadow: 0 0 0 4px rgba(217, 4, 41, 0.12);
+}
+.hz-field input.is-invalid {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(217, 4, 41, 0.16);
+}
+.hz-field__error {
+  margin: 0;
+  color: var(--accent);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.hz-grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.hz-more {
+  margin: 4px 0 8px;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+.hz-more > summary {
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--text) 84%, var(--muted));
+  list-style: none;
+  padding: 4px 0;
+}
+.hz-more > summary::-webkit-details-marker {
+  display: none;
+}
+.hz-more > summary::before {
+  content: "▸ ";
+  color: var(--accent);
+}
+.hz-more[open] > summary::before {
+  content: "▾ ";
+}
+
+.hz-danger {
+  color: var(--accent);
+  border-color: rgba(217, 4, 41, 0.4);
+}
+.hz-danger.btn--primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Range controls in settings */
+.hz-range {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.hz-range .hz-field {
+  margin-bottom: 0;
+}
+
+/* Type list */
+.hz-typelist {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.hz-typerow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hz-typerow__swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  flex: 0 0 18px;
+}
+.hz-typerow__name {
+  font-weight: 700;
+  font-size: 14px;
+}
+.hz-addtype {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.hz-addtype input[type="color"] {
+  padding: 2px;
+  height: 42px;
+  width: 48px;
+}
+
+.hz-dev-note {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ------------------------------------------------------------
+   Responsive
+------------------------------------------------------------ */
+@media (max-width: 980px) {
+  :root {
+    --hz-colmin: 132px;
+  }
+}
+@media (max-width: 760px) {
+  :root {
+    --hz-hour-h: 58px;
+    --hz-gutter: 54px;
+  }
+  .hz-grid2 {
+    grid-template-columns: 1fr;
+  }
+  .hz-controls {
+    justify-content: flex-start;
+  }
+  .hz-cal__scroll {
+    max-height: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hz-event,
+  .hz-toast,
+  .hz-chip {
+    transition: none;
+  }
+}
