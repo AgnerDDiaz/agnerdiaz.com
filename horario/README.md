@@ -38,8 +38,22 @@ horario/
 │   ├── types.js          # Registro de tipos + derivación de color/contraste
 │   ├── settings.js       # Estado de ajustes + validación (formato, rango)
 │   ├── events.js         # Modelo ScheduleItem + CRUD/validación (sin DOM)
-│   ├── schedule.js       # MOTOR: geometría + layout de solapamientos (puro)
-│   └── app.js            # Controlador/vista: render, diálogos, wiring
+│   ├── storage.js        # Persistencia local (localStorage), tolerante a fallos
+│   ├── schedule.js       # MOTOR de calendario: geometría + solapamientos (puro)
+│   ├── pdf-reader.js     # PDF → DocumentText (PDF.js + reconstrucción de líneas)
+│   ├── uasd-parser.js    # DocumentText → modelo UASD (PURO, comprobable)
+│   ├── uasd-import.js    # Adaptador: modelo UASD → ScheduleItem[] + reglas
+│   ├── pdf-layout.js     # Geometría PURA del PDF (escala vertical, wrapping)
+│   ├── pdf-export.js     # Dibujo vectorial del PDF (jsPDF) + descarga
+│   └── app.js            # Controlador/vista: render, diálogos, import/export UI
+├── tests/
+│   ├── engine.test.js            # Motor del calendario (17)
+│   ├── uasd-parser.test.js       # Parser + adaptador (59)
+│   ├── pdf-layout.test.js        # Layout del PDF (24)
+│   ├── storage.test.js           # Persistencia local (13)
+│   └── fixtures/
+│       ├── uasd-sanitized.json   # Fixture SIN datos personales (12/15/17/1)
+│       └── private/              # (gitignored) PDFs reales de prueba
 └── README.md
 ```
 
@@ -94,6 +108,128 @@ muestran en tres columnas legibles). Dos eventos solapan solo si
 `schedule.computeDayPositions(...)` centraliza minutos→píxeles: `top`, `height`
 (con altura mínima legible), columna y detección de fuera de rango.
 
+## Importación del PDF UASD (Iteración 02)
+
+Pipeline por capas, cada una comprobable de forma independiente:
+
+```
+PDF  →  pdf-reader.extractPdfDocument()  →  DocumentText
+     →  uasd-parser.parseUasdDocument()  →  UasdImportResult
+     →  uasd-import.convertToScheduleItems()  →  ScheduleItem[]
+     →  (revisión + confirmar)  →  events store  →  calendario
+```
+
+- **`pdf-reader.js`** solo convierte PDF → texto estructurado. Para cada token
+  conserva `{ text, x, y, width, height }` (coordenadas de `item.transform`) y
+  reconstruye **líneas** agrupando por Y con tolerancia y ordenando por X. No
+  sabe nada de materias/UASD.
+- **`uasd-parser.js`** es **puro** (sin DOM, sin PDF.js). Detecta materias por el
+  patrón final `Título - CÓDIGO - SECCIÓN` (interpretado desde el final; la
+  sección se conserva como string: `02`, `W05`…), reconstruye la **tabla de
+  reuniones por columnas usando las X del encabezado** (las columnas no están
+  hardcodeadas: cambian entre páginas), une **celdas multilínea**, mantiene la
+  materia **a través de saltos de página**, interpreta días (`L M I J V S D`,
+  `I`=Miércoles, `LMI`→3 días) y horas AM/PM 12h→24h, y clasifica en
+  `virtual` / `hospital` / `uasd`.
+- **`uasd-import.js`** adapta el modelo a `ScheduleItem[]` (una reunión `LMI`
+  produce 3 items enlazados por `courseKey`/`importId`), y aplica las reglas de
+  importación (reemplazar UASD / agregar, y deduplicación).
+
+### Reglas clave (no dependen de nombres de materia)
+
+- **PA con horario** (hora válida, `Dónde: PA`): se clasifica **Virtual** y se
+  conserva `location: "PA"`.
+- **PA/PA** (`Hora: PA`, sin horario): se coloca automáticamente **Domingo
+  08:00–09:00**, `autoScheduled: true`, con *warning* informativo.
+- **Hospital**: `location` contiene `HOSP`/`HOSPITAL`/`MATERNIDAD` → tipo
+  `Hospital / Fuera UASD`.
+- **`( P )`** al final del instructor se elimina; el nombre real se preserva.
+
+### PDF.js (fuente y vendorizado)
+
+Por defecto se carga **PDF.js 5.7.284** desde CDN (jsdelivr) con worker vía
+*blob* y `cMapUrl`/`standardFontDataUrl`. Todo el procesamiento ocurre **en el
+navegador**; el PDF nunca sale del dispositivo.
+
+Para un sitio 100 % estático, vendoriza PDF.js y actívalo:
+
+```bash
+npm pack pdfjs-dist@5.7.284      # o descarga el build oficial (Apache-2.0)
+# copia a: horario/vendor/pdfjs/{build,cmaps,standard_fonts,wasm}, LICENSE, VERSION
+```
+
+Luego en `horario/index.html` cambia el flag:
+
+```html
+<script>window.HORARIO_PDFJS = { vendor: true };</script>
+```
+
+`pdf-reader.js` probará `/horario/vendor/pdfjs/build/pdf.min.mjs` y, si existe,
+lo usará; si no, vuelve al CDN. (Con el flag en `false` no se hace ninguna
+petición al vendor, para mantener la consola limpia.)
+
+## Rediseño + exportación PDF (Iteración 03)
+
+- **Tipos con rol semántico.** Un tipo es `{ id, semanticRole, name, color,
+  system }`. El importador clasifica por `semanticRole` (`uasd`/`hospital`/
+  `virtual`), nunca por el nombre — así puedes **renombrar y recolorear** un tipo
+  (p. ej. `Dentro UASD` → `Campus UASD`) y el importador lo sigue reconociendo.
+  Los tipos del sistema no se pueden eliminar; los personalizados sí.
+- **Dos renderers sobre los mismos datos.** La vista interactiva (`app.js`) y el
+  PDF (`pdf-layout.js` + `pdf-export.js`) son capas distintas: el PDF **no** es
+  una captura del DOM.
+- **PDF vectorial** con **jsPDF 2.5.2** (CDN por defecto; opt-in a vendor con
+  `window.HORARIO_JSPDF = { vendor: true }`). Botón principal **Descargar PDF**
+  (ya no depende de `window.print()`).
+  - Siempre incluye **los 7 días** (Lun–Dom) y todo el eje horario; página de
+    tamaño personalizado (no atada a A4).
+  - **Escala vertical global** que crece hasta que cada evento tenga espacio para
+    su texto completo → **nunca** se trunca materia, lugar, profesor ni hora
+    (usa *wrapping*, no `...`). Fuente mínima legible.
+  - Orientación **Horizontal** (recomendada, más ancho) o **Vertical** (los 7
+    días igualmente).
+  - Leyenda con los **nombres configurados**, branding discreto, fondo claro,
+    sin cabecera/URL/fecha del navegador ni número de página.
+  - El rango del PDF se amplía automáticamente para incluir actividades fuera del
+    rango visible (se avisa antes de exportar).
+
+## Persistencia (localStorage)
+
+El horario, los tipos (con sus renombrados/colores) y los ajustes se **guardan
+automáticamente en este dispositivo** bajo la clave `horario-uasd:v1`. Es
+como una cookie pero mejor para estos datos: **no** se envía a ningún servidor,
+no caduca y tiene más capacidad. Al abrir `/horario/` se restaura el último
+estado. El módulo `storage.js` es tolerante a fallos (modo privado, cuota, JSON
+corrupto): si algo falla, la app sigue funcionando en memoria. En
+*Configuración → Horario* hay **Vaciar horario** y **Borrar datos guardados**.
+Nunca se guardan el nombre ni la matrícula del estudiante (el importador ya los
+omite).
+
+## Pruebas
+
+```bash
+# Motor del calendario
+node horario/tests/engine.test.js          # 17 passed, 0 failed
+
+# Parser UASD + adaptador (incluye estabilidad de semanticRole)
+node horario/tests/uasd-parser.test.js     # 59 passed, 0 failed
+
+# Layout del PDF (geometría pura, escala, wrapping)
+node horario/tests/pdf-layout.test.js      # 24 passed, 0 failed
+
+# Persistencia local (mock localStorage)
+node horario/tests/storage.test.js         # 13 passed, 0 failed
+```
+
+Verificación adicional del PDF: se genera y se **vuelve a leer con PDF.js**
+(prueba manual en `?dev=1`) comprobando que contiene los 7 días y nombres
+completos, y que **no** contiene `localhost`, `http`, `1/1` ni `...`.
+
+El fixture `tests/fixtures/uasd-sanitized.json` **no** contiene datos personales
+y reproduce los casos académicos del PDF real (12 materias, 15 reuniones, 17
+items, 1 automático, saltos de página, `LMI`, PA/PA, hospital, multilínea).
+El PDF real solo se usa localmente desde `tests/fixtures/private/` (gitignored).
+
 ## Cómo ejecutar localmente
 
 Es estático. Cualquiera de estas opciones sirve:
@@ -126,12 +262,14 @@ Terminado en esta iteración:
 - Empty state, toasts no bloqueantes, tema claro/oscuro, accesibilidad
   (diálogos nativos `<dialog>`, foco, teclado, `aria-*`).
 - Botón **Imprimir** (`window.print()`) + base mínima de `print.css`.
+- **Importación del PDF UASD** (Iteración 02): PDF.js local, reconocimiento del
+  documento, pantalla de revisión, importación atómica (solo muta al confirmar),
+  reemplazar/agregar, deduplicación, y preservación de las actividades manuales.
 
 ## Qué falta (deliberado)
 
-- Parser de PDF de la UASD (`uasd-parser.js`) y PDF.js.
-- Persistencia (`storage.js` / localStorage) e importación/exportación JSON.
-- Experiencia de impresión/PDF pulida.
+- Importación/exportación de un archivo JSON (respaldo manual entre dispositivos).
+- Vendorizado de PDF.js / jsPDF dentro del repo (hoy vía CDN; opt-in listo).
 - Enlace público visible hacia la herramienta desde el sitio.
 
 ## Decisiones tomadas

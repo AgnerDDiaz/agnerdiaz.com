@@ -92,7 +92,7 @@
         <div class="hz-controls__group">
           <button class="btn btn--soft hz-btn-sm" id="hzAdd" type="button">+ Agregar</button>
           <button class="btn btn--soft hz-btn-sm" id="hzImport" type="button">Importar UASD</button>
-          <button class="btn btn--soft hz-btn-sm" id="hzPrint" type="button">Imprimir</button>
+          <button class="btn btn--primary hz-btn-sm" id="hzExport" type="button">Descargar PDF</button>
           <button class="btn btn--soft hz-btn-sm" id="hzSettingsBtn" type="button">Configurar</button>
         </div>
       </div>
@@ -107,6 +107,9 @@
       <div class="hz-cal">
         <div id="hzCalendar"></div>
       </div>
+
+      <!-- Legend (type names + colors) -->
+      <div class="hz-legend" id="hzLegend" hidden></div>
     </section>
   </main>
 
@@ -272,7 +275,11 @@
 
     <div class="hz-dialog__section">
       <h3>Horario</h3>
-      <button type="button" class="btn btn--soft hz-danger" id="hzClearAll">Vaciar horario</button>
+      <p class="hz-dev-note" style="margin:0 0 10px;">🔒 Tu horario se guarda automáticamente en este dispositivo (no se sube a ningún servidor).</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button type="button" class="btn btn--soft hz-danger" id="hzClearAll">Vaciar horario</button>
+        <button type="button" class="btn btn--soft" id="hzClearStored">Borrar datos guardados</button>
+      </div>
     </div>
 
     <div class="hz-dialog__section" id="hzDevSection" hidden>
@@ -289,15 +296,149 @@
     </div>
   </dialog>
 
+  <!-- Import dialog (UASD PDF) -->
+  <dialog class="hz-dialog" id="hzImportDialog" aria-labelledby="hzImportTitle">
+    <div class="hz-dialog__head">
+      <h2 id="hzImportTitle">Importar horario UASD</h2>
+      <button type="button" class="hz-iconbtn" data-hz-close aria-label="Cerrar">✕</button>
+    </div>
+    <div class="hz-dialog__body">
+      <div id="hzImportStart">
+        <div class="hz-drop" id="hzDropzone" role="button" tabindex="0" aria-label="Seleccionar PDF">
+          <div class="hz-drop__icon" aria-hidden="true">📄</div>
+          <p class="hz-drop__title">Selecciona tu PDF</p>
+          <p class="hz-drop__hint">Arrastra aquí tu “Horario de Detalle de Alumno” o usa el botón.</p>
+          <button type="button" class="btn btn--primary" id="hzPickFile">Seleccionar PDF</button>
+          <input type="file" id="hzFileInput" accept="application/pdf,.pdf" hidden />
+        </div>
+        <p class="hz-privacy">🔒 Tu horario se procesa directamente en este dispositivo. El PDF no se sube a ningún servidor.</p>
+      </div>
+      <div id="hzImportProgress" class="hz-progress" hidden>
+        <div class="hz-spinner" aria-hidden="true"></div>
+        <p class="hz-progress__text" id="hzProgressText">Analizando horario…</p>
+      </div>
+      <div id="hzImportError" class="hz-inline-error" role="alert" hidden></div>
+    </div>
+  </dialog>
+
+  <!-- Review dialog -->
+  <dialog class="hz-dialog hz-dialog--wide" id="hzReviewDialog" aria-labelledby="hzReviewTitle">
+    <div class="hz-dialog__head">
+      <h2 id="hzReviewTitle">Revisar importación</h2>
+      <button type="button" class="hz-iconbtn" data-hz-close aria-label="Cerrar">✕</button>
+    </div>
+    <div class="hz-dialog__body">
+      <div class="hz-review__summary" id="hzReviewSummary"></div>
+      <ul class="hz-review__list" id="hzReviewList"></ul>
+      <div class="hz-import-mode" id="hzImportModeRow" hidden>
+        <p class="hz-import-mode__q">Ya tienes materias UASD en tu horario. ¿Cómo quieres importar?</p>
+        <label class="hz-radio"><input type="radio" name="importMode" value="replace" checked /> Reemplazar materias UASD (conserva las manuales)</label>
+        <label class="hz-radio"><input type="radio" name="importMode" value="add" /> Agregar al horario actual</label>
+      </div>
+      <pre class="hz-diag" id="hzDiagOut" hidden></pre>
+    </div>
+    <div class="hz-dialog__foot">
+      <div class="hz-dialog__foot-left">
+        <button type="button" class="btn btn--soft" id="hzReviewDiag" hidden>Ver diagnóstico</button>
+      </div>
+      <div class="hz-dialog__foot-right">
+        <button type="button" class="btn btn--soft" data-hz-close>Cancelar</button>
+        <button type="button" class="btn btn--primary" id="hzCreateSchedule">Crear mi horario</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Type editor dialog -->
+  <dialog class="hz-dialog hz-dialog--sm" id="hzTypeEditDialog" aria-labelledby="hzTypeEditTitle">
+    <div class="hz-dialog__head">
+      <h2 id="hzTypeEditTitle">Editar tipo</h2>
+      <button type="button" class="hz-iconbtn" data-hz-close aria-label="Cerrar">✕</button>
+    </div>
+    <form id="hzTypeEditForm">
+      <div class="hz-dialog__body">
+        <p class="hz-type-msg" id="hzTypeMsg" hidden></p>
+        <label class="hz-field" for="fTypeEditName">
+          <span>Nombre</span>
+          <input id="fTypeEditName" type="text" maxlength="40" autocomplete="off" required />
+        </label>
+        <label class="hz-field" for="fTypeEditColor">
+          <span>Color</span>
+          <input id="fTypeEditColor" type="color" value="#3A86FF" />
+        </label>
+        <span class="hz-field"><span>Vista previa</span></span>
+        <div class="hz-preview" id="hzTypePreview">
+          <p class="hz-preview__title">Fisiopatología II — W05</p>
+          <p class="hz-preview__meta">INSTITUTO DE CARDIOLOGIA 101</p>
+          <p class="hz-preview__meta">Petronila Martinez</p>
+          <p class="hz-preview__time">7:00 PM – 9:50 PM</p>
+          <span class="hz-preview__tag"><span class="hz-event__dot"></span><span id="hzPreviewTagName">Dentro UASD</span></span>
+        </div>
+      </div>
+      <div class="hz-dialog__foot">
+        <div class="hz-dialog__foot-left">
+          <button type="button" class="btn btn--soft hz-danger" id="hzTypeDelete" hidden>Eliminar</button>
+        </div>
+        <div class="hz-dialog__foot-right">
+          <button type="button" class="btn btn--soft" data-hz-close>Cancelar</button>
+          <button type="submit" class="btn btn--primary" id="hzTypeSave">Guardar</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Export (PDF) dialog -->
+  <dialog class="hz-dialog" id="hzExportDialog" aria-labelledby="hzExportTitle">
+    <div class="hz-dialog__head">
+      <h2 id="hzExportTitle">Exportar horario</h2>
+      <button type="button" class="hz-iconbtn" data-hz-close aria-label="Cerrar">✕</button>
+    </div>
+    <div class="hz-dialog__body">
+      <p style="margin:0 0 12px;font-weight:800;font-size:13px;">Orientación</p>
+      <label class="hz-export__opt">
+        <input type="radio" name="pdfOrientation" value="landscape" checked />
+        <span class="hz-export__opt-title">Horizontal — recomendado</span>
+        <p class="hz-export__opt-desc">Más espacio para nombres, lugares y profesores.</p>
+      </label>
+      <label class="hz-export__opt">
+        <input type="radio" name="pdfOrientation" value="portrait" />
+        <span class="hz-export__opt-title">Vertical</span>
+        <p class="hz-export__opt-desc">Documento más alto y compacto (los 7 días siempre presentes).</p>
+      </label>
+      <p class="hz-export__note" id="hzExportRangeNote"></p>
+      <div class="hz-export__busy" id="hzExportBusy" hidden>
+        <div class="hz-spinner" aria-hidden="true"></div>
+        <span>Generando PDF…</span>
+      </div>
+      <div class="hz-inline-error" id="hzExportError" role="alert" hidden></div>
+    </div>
+    <div class="hz-dialog__foot">
+      <div class="hz-dialog__foot-left"></div>
+      <div class="hz-dialog__foot-right">
+        <button type="button" class="btn btn--soft" data-hz-close>Cancelar</button>
+        <button type="button" class="btn btn--primary" id="hzExportGo">Descargar PDF</button>
+      </div>
+    </div>
+  </dialog>
+
   <!-- Shared site behavior: theme toggle, footer year (guards missing elements safely) -->
   <script src="/assets/js/main.js"></script>
+
+  <!-- PDF.js source: CDN by default. After vendoring PDF.js into
+       /horario/vendor/pdfjs/, set vendor:true here to make the site fully static. -->
+  <script>window.HORARIO_PDFJS = { vendor: false };</script>
 
   <!-- Horario UASD engine (classic scripts, load order matters) -->
   <script src="/horario/js/utils.js"></script>
   <script src="/horario/js/types.js"></script>
   <script src="/horario/js/settings.js"></script>
   <script src="/horario/js/events.js"></script>
+  <script src="/horario/js/storage.js"></script>
   <script src="/horario/js/schedule.js"></script>
+  <script src="/horario/js/pdf-reader.js"></script>
+  <script src="/horario/js/uasd-parser.js"></script>
+  <script src="/horario/js/uasd-import.js"></script>
+  <script src="/horario/js/pdf-layout.js"></script>
+  <script src="/horario/js/pdf-export.js"></script>
   <script src="/horario/js/app.js"></script>
 </body>
 </html>

@@ -7,10 +7,10 @@
    ============================================================ */
 
 :root {
-  --hz-hour-h: 60px;        /* pixel height of one hour (read by app.js) */
-  --hz-gutter: 62px;        /* time axis column width */
+  --hz-hour-h: 62px;        /* pixel height of one hour (read by app.js) */
+  --hz-gutter: 72px;        /* time axis column width (fits "12:00 PM") */
   --hz-head-h: 46px;        /* day header row height */
-  --hz-colmin: 118px;       /* minimum day column width before scrolling */
+  --hz-colmin: 142px;       /* minimum day column width before scrolling */
 
   --hz-line: rgba(255, 255, 255, 0.07);
   --hz-line-strong: rgba(255, 255, 255, 0.12);
@@ -236,15 +236,21 @@ html[data-theme="light"] {
   z-index: 2;
   background: var(--hz-panel);
   border-right: 1px solid var(--hz-line-strong);
+  overflow: visible;
 }
+/* The hour axis is the ONLY place nowrap is appropriate; the label is
+   right-aligned inside a gutter wide enough that "12:00 PM" never clips. */
 .hz-gutter__label {
   position: absolute;
-  right: 8px;
+  right: 10px;
+  left: 4px;
   transform: translateY(-50%);
+  text-align: right;
   font-size: 11px;
   font-weight: 700;
   color: var(--muted);
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .hz-daycol {
@@ -299,10 +305,14 @@ html[data-theme="light"] {
   font-weight: 800;
   line-height: 1.2;
   color: var(--text);
+  /* Smart wrapping: wrap on words, never break mid-word, clamp per tier. */
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
 }
 .hz-event__section {
   font-weight: 700;
@@ -313,9 +323,27 @@ html[data-theme="light"] {
   font-size: 11.5px;
   line-height: 1.25;
   color: var(--muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: break-word;
+}
+.hz-event__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: color-mix(in srgb, var(--text) 78%, var(--muted));
+  margin-top: 2px;
+}
+.hz-event__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--ev-accent, var(--accent));
+  flex: 0 0 8px;
 }
 .hz-event__prof {
   font-weight: 700;
@@ -330,15 +358,24 @@ html[data-theme="light"] {
   white-space: nowrap;
 }
 
-/* Size tiers: hide secondary info when the card is short */
+/* Size tiers: progressively hide secondary info as the card gets shorter.
+   Full info always remains reachable (click/edit dialog + hover tooltip). */
 .hz-event.is-md .hz-event__prof,
-.hz-event.is-md .hz-event__desc {
+.hz-event.is-md .hz-event__desc,
+.hz-event.is-md .hz-event__tag,
+.hz-event.is-sm .hz-event__tag,
+.hz-event.is-xs .hz-event__tag {
   display: none;
+}
+.hz-event.is-md .hz-event__title {
+  -webkit-line-clamp: 2;
 }
 .hz-event.is-sm .hz-event__meta {
   display: none;
 }
-.hz-event.is-sm .hz-event__title,
+.hz-event.is-sm .hz-event__title {
+  -webkit-line-clamp: 2;
+}
 .hz-event.is-xs .hz-event__title {
   -webkit-line-clamp: 1;
 }
@@ -629,6 +666,289 @@ html[data-theme="light"] {
   color: var(--muted);
   font-size: 13px;
 }
+
+/* ------------------------------------------------------------
+   Import / Review (UASD PDF)
+------------------------------------------------------------ */
+.hz-dialog--wide {
+  width: min(640px, 94vw);
+}
+
+.hz-drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  padding: 28px 20px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+}
+.hz-drop.is-dragover,
+.hz-drop:hover,
+.hz-drop:focus-visible {
+  border-color: rgba(217, 4, 41, 0.5);
+  background: color-mix(in srgb, var(--bg-soft) 70%, var(--surface));
+}
+.hz-drop__icon {
+  font-size: 34px;
+  line-height: 1;
+}
+.hz-drop__title {
+  margin: 4px 0 0;
+  font-weight: 900;
+  font-size: 16px;
+}
+.hz-drop__hint {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 13px;
+  max-width: 42ch;
+}
+.hz-privacy {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 12.5px;
+  text-align: center;
+}
+
+.hz-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 30px 20px;
+}
+.hz-progress__text {
+  margin: 0;
+  font-weight: 700;
+}
+.hz-spinner {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  animation: hzspin 800ms linear infinite;
+}
+@keyframes hzspin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hz-spinner { animation-duration: 2.4s; }
+}
+
+.hz-inline-error {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(217, 4, 41, 0.35);
+  background: rgba(217, 4, 41, 0.1);
+  color: var(--text);
+  font-size: 14px;
+}
+
+.hz-review__summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.hz-review__stat {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  font-size: 12.5px;
+  font-weight: 800;
+}
+.hz-review__stat.is-auto {
+  border-color: rgba(233, 161, 0, 0.5);
+  color: #E9A100;
+}
+
+.hz-review__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.hz-course {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: var(--bg-soft);
+}
+.hz-course__head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-weight: 800;
+}
+.hz-course__icon { flex: 0 0 auto; }
+.hz-course__icon.is-ok { color: #2A9D8F; }
+.hz-course__icon.is-warn { color: #E9A100; }
+.hz-course__icon.is-error { color: var(--accent); }
+.hz-course__section { color: var(--muted); font-weight: 700; }
+.hz-course__meeting {
+  margin: 6px 0 0 22px;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--text) 85%, var(--muted));
+}
+.hz-course__meeting .hz-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.hz-course__warn {
+  margin: 6px 0 0 22px;
+  font-size: 12.5px;
+  color: #E9A100;
+}
+
+.hz-import-mode {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+}
+.hz-import-mode__q { margin: 0 0 8px; font-weight: 800; font-size: 13px; }
+.hz-radio { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; margin: 4px 0; }
+
+.hz-diag {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  font-size: 11.5px;
+  max-height: 220px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ------------------------------------------------------------
+   Legend (type names + colors, below the calendar)
+------------------------------------------------------------ */
+.hz-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin: 14px 2px 0;
+  align-items: center;
+}
+.hz-legend[hidden] { display: none; }
+.hz-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--text) 84%, var(--muted));
+}
+.hz-legend__swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 5px;
+  border: 1px solid var(--ev-border, var(--border));
+  background: var(--ev-bg, var(--bg-soft));
+  box-shadow: inset 0 0 0 2px var(--ev-accent, var(--accent));
+}
+
+/* ------------------------------------------------------------
+   Editable type rows + type editor
+------------------------------------------------------------ */
+.hz-typerow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-soft);
+}
+.hz-typerow__swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  flex: 0 0 20px;
+}
+.hz-typerow__name { font-weight: 800; font-size: 14px; }
+.hz-typerow__role {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 1px 8px;
+}
+.hz-typerow__spacer { flex: 1; }
+
+.hz-type-msg {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg-soft));
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border));
+  color: color-mix(in srgb, var(--text) 88%, var(--muted));
+  font-size: 12.5px;
+}
+.hz-type-msg[hidden] { display: none; }
+
+/* Live preview card in the type editor */
+.hz-preview {
+  margin-top: 6px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--ev-border, var(--border));
+  border-left: 5px solid var(--ev-accent, var(--accent));
+  background: var(--ev-bg, var(--bg-soft));
+  padding: 12px 14px;
+}
+.hz-preview__title { margin: 0; font-weight: 900; font-size: 15px; color: var(--text); }
+.hz-preview__meta { margin: 2px 0 0; font-size: 12.5px; color: var(--muted); }
+.hz-preview__time { margin: 6px 0 0; font-size: 12px; font-weight: 800; color: color-mix(in srgb, var(--text) 80%, var(--muted)); }
+.hz-preview__tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 8px; font-size: 11px; font-weight: 800;
+  color: color-mix(in srgb, var(--text) 82%, var(--muted));
+}
+
+/* ------------------------------------------------------------
+   Export dialog (PDF)
+------------------------------------------------------------ */
+.hz-export__opt {
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+}
+.hz-export__opt:hover { border-color: rgba(217, 4, 41, 0.4); }
+.hz-export__opt input { margin-right: 8px; }
+.hz-export__opt-title { font-weight: 800; }
+.hz-export__opt-desc { margin: 4px 0 0 24px; color: var(--muted); font-size: 12.5px; }
+.hz-export__note {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+.hz-export__busy { display: flex; align-items: center; gap: 12px; padding: 8px 0; }
 
 /* ------------------------------------------------------------
    Responsive

@@ -89,7 +89,121 @@
     renderCalendar();
     renderDayChips();
     renderBanner();
+    renderLegend();
     syncViewToggle();
+    persist();
+  }
+
+  // ----------------------------------------------------------------------
+  // Persistence (localStorage) — saved on this device only, never uploaded.
+  // Every state mutation is followed by render(), so persisting here captures
+  // all changes; a serialized-diff guard skips redundant writes (view toggles).
+  // ----------------------------------------------------------------------
+  var lastSaved = null;
+
+  function persist() {
+    if (!H.storage) return;
+    var payload = { items: state.items, types: state.types, settings: state.settings };
+    var str = JSON.stringify(payload);
+    if (str === lastSaved) return;
+    lastSaved = str;
+    H.storage.save(payload);
+  }
+
+  function loadPersisted() {
+    if (!H.storage) return;
+    var data = H.storage.load();
+    if (!data) return;
+
+    if (data.types) state.types = mergeTypes(data.types);
+
+    if (data.settings) {
+      state.settings.hourFormat = data.settings.hourFormat === "12" ? "12" : "24";
+      var r = Settings.normalizeRange(data.settings.rangeStart, data.settings.rangeEnd);
+      if (r.ok) { state.settings.rangeStart = r.rangeStart; state.settings.rangeEnd = r.rangeEnd; }
+    }
+
+    if (data.items && data.items.length) {
+      state.items = data.items
+        .map(function (d) { return Model.createItem(d); })
+        .filter(function (it) {
+          return !isNaN(U.timeToMinutes(it.startTime)) &&
+            !isNaN(U.timeToMinutes(it.endTime)) &&
+            U.timeToMinutes(it.endTime) > U.timeToMinutes(it.startTime);
+        });
+    }
+  }
+
+  // Merge stored types onto the defaults: keep the immutable system types (and
+  // their roles) always present, apply stored name/color, then append custom.
+  function mergeTypes(stored) {
+    var defaults = Types.createDefaults();
+    if (!Array.isArray(stored) || !stored.length) return defaults;
+    var byId = {};
+    stored.forEach(function (p) { if (p && p.id) byId[p.id] = p; });
+    var result = defaults.map(function (d) {
+      var p = byId[d.id];
+      if (p) {
+        if (typeof p.name === "string" && p.name.trim()) d.name = p.name.trim();
+        if (/^#[0-9a-fA-F]{6}$/.test(p.color || "")) d.color = p.color;
+      }
+      return d;
+    });
+    stored.forEach(function (p) {
+      if (!p || !p.id || p.system) return;
+      if (result.some(function (r) { return r.id === p.id; })) return;
+      result.push({
+        id: p.id,
+        semanticRole: p.semanticRole || "",
+        name: (typeof p.name === "string" && p.name.trim()) ? p.name.trim() : "Tipo",
+        color: /^#[0-9a-fA-F]{6}$/.test(p.color || "") ? p.color : "#8D99AE",
+        system: false
+      });
+    });
+    return result;
+  }
+
+  function clearStoredData() {
+    confirmAction(
+      "Borrar datos guardados",
+      "Se eliminará tu horario, tus tipos personalizados y tus ajustes guardados en este dispositivo. Esta acción no se puede deshacer."
+    ).then(function (ok) {
+      if (!ok) return;
+      if (H.storage) H.storage.clear();
+      lastSaved = null;
+      state.items = [];
+      state.types = Types.createDefaults();
+      state.settings = Settings.createDefault();
+      closeDialog(els.settings);
+      populateSelects();
+      syncSettingsInputs();
+      renderTypeList();
+      render();
+      toast("Datos guardados borrados.");
+    });
+  }
+
+  // Legend below the calendar: type name + color for every type currently used.
+  function renderLegend() {
+    var host = els.legend;
+    if (!host) return;
+    U.clearNode(host);
+    var usedIds = {};
+    state.items.forEach(function (it) { usedIds[it.typeId] = true; });
+    var used = state.types.filter(function (t) { return usedIds[t.id]; });
+    if (!used.length) { host.hidden = true; return; }
+    host.hidden = false;
+    used.forEach(function (t) {
+      var style = Types.deriveStyle(t.color);
+      var item = U.el("span", { class: "hz-legend__item" });
+      var sw = U.el("span", { class: "hz-legend__swatch" });
+      sw.style.setProperty("--ev-accent", style.accent);
+      sw.style.setProperty("--ev-bg", style.bg);
+      sw.style.setProperty("--ev-border", style.border);
+      item.appendChild(sw);
+      item.appendChild(U.el("span", { text: t.name }));
+      host.appendChild(item);
+    });
   }
 
   function renderCalendar() {
@@ -207,15 +321,40 @@
       U.el("p", { class: "hz-event__time", text: U.formatRange(p.startMin, p.endMin, use12()) })
     );
 
+    // Type tag (color is not the only indicator — the name is shown too).
+    var tag = U.el("div", { class: "hz-event__tag" });
+    tag.appendChild(U.el("span", { class: "hz-event__dot" }));
+    tag.appendChild(U.el("span", { text: type.name || "" }));
+    body.appendChild(tag);
+
     card.appendChild(body);
+
+    // Full detail on hover (desktop) — nothing is hidden, just compacted.
+    card.setAttribute("title", fullInfoText(item, p, type));
     return card;
+  }
+
+  function fullInfoText(item, p, type) {
+    var lines = [];
+    lines.push(item.title + (item.section ? " — " + item.section : ""));
+    if (item.code) lines.push(item.code);
+    if (item.location) lines.push(item.location);
+    if (item.professor) lines.push(item.professor);
+    lines.push(Model.DAY_LABELS[item.day] + " · " + U.formatRange(p.startMin, p.endMin, use12()));
+    if (type && type.name) lines.push(type.name);
+    if (item.description) lines.push(item.description);
+    return lines.join("\n");
   }
 
   function ariaLabelFor(item, p) {
     var parts = [item.title || "Actividad"];
+    if (item.section) parts.push("Sección " + item.section);
     parts.push(Model.DAY_LABELS[item.day]);
     parts.push(U.formatRange(p.startMin, p.endMin, use12()));
     if (item.location) parts.push(item.location);
+    if (item.professor) parts.push(item.professor);
+    var type = Types.findType(state.types, item.typeId);
+    if (type && type.name) parts.push(type.name);
     return parts.join(", ") + ". Pulsa para editar.";
   }
 
@@ -648,7 +787,87 @@
       swatch.style.background = t.color;
       row.appendChild(swatch);
       row.appendChild(U.el("span", { class: "hz-typerow__name", text: t.name }));
+      if (t.system) row.appendChild(U.el("span", { class: "hz-typerow__role", text: "sistema" }));
+      row.appendChild(U.el("span", { class: "hz-typerow__spacer" }));
+      var edit = U.el("button", {
+        class: "btn btn--soft hz-btn-sm",
+        text: "Editar",
+        attrs: { type: "button", "aria-label": "Editar tipo " + t.name }
+      });
+      edit.addEventListener("click", function () { openTypeEditor(t.id, edit); });
+      row.appendChild(edit);
       els.typeList.appendChild(row);
+    });
+  }
+
+  // ---- Type editor (rename / recolor, with live preview) ----------------
+  function openTypeEditor(typeId, opener) {
+    var type = Types.findType(state.types, typeId);
+    if (!type) return;
+    state.ui.editingTypeId = typeId;
+    state.ui.dialogOpener = opener || document.activeElement;
+
+    els.typeEditName.value = type.name || "";
+    els.typeEditColor.value = /^#[0-9a-fA-F]{6}$/.test(type.color) ? type.color : "#3A86FF";
+
+    var msg = type.system ? Types.ROLE_MESSAGES[type.semanticRole] : "";
+    if (els.typeMsg) {
+      els.typeMsg.textContent = msg || "";
+      els.typeMsg.hidden = !msg;
+    }
+    // Custom (non-system) types can be deleted.
+    if (els.typeDelete) els.typeDelete.hidden = !!type.system;
+
+    updateTypePreview();
+    openDialog(els.typeEditDialog);
+    setTimeout(function () { els.typeEditName.focus(); els.typeEditName.select(); }, 30);
+  }
+
+  function updateTypePreview() {
+    var color = els.typeEditColor.value || "#3A86FF";
+    var name = (els.typeEditName.value || "").trim() || "Tipo";
+    var style = Types.deriveStyle(color);
+    var pv = els.typePreview;
+    if (!pv) return;
+    pv.style.setProperty("--ev-accent", style.accent);
+    pv.style.setProperty("--ev-bg", style.bg);
+    pv.style.setProperty("--ev-border", style.border);
+    if (els.previewTagName) els.previewTagName.textContent = name;
+    var dot = pv.querySelector(".hz-event__dot");
+    if (dot) dot.style.background = style.accent;
+  }
+
+  function onTypeEditSubmit(e) {
+    e.preventDefault();
+    var type = Types.findType(state.types, state.ui.editingTypeId);
+    if (!type) return;
+    var name = (els.typeEditName.value || "").trim();
+    if (!name) { els.typeEditName.focus(); return; }
+    type.name = name;
+    type.color = els.typeEditColor.value || type.color;
+    closeDialog(els.typeEditDialog);
+    populateSelects();
+    renderTypeList();
+    render(); // cards + legend pick up new name/color immediately
+    toast("Tipo actualizado.");
+  }
+
+  function onTypeDelete() {
+    var type = Types.findType(state.types, state.ui.editingTypeId);
+    if (!type || type.system) return;
+    confirmAction(
+      "Eliminar tipo",
+      "¿Eliminar el tipo “" + type.name + "”? Las actividades que lo usan pasarán a un tipo por defecto."
+    ).then(function (ok) {
+      if (!ok) return;
+      var fallback = Types.findBySemanticRole(state.types, "uasd") || state.types[0];
+      state.items.forEach(function (it) { if (it.typeId === type.id) it.typeId = fallback.id; });
+      state.types = state.types.filter(function (t) { return t.id !== type.id; });
+      closeDialog(els.typeEditDialog);
+      populateSelects();
+      renderTypeList();
+      render();
+      toast("Tipo eliminado.");
     });
   }
 
@@ -659,10 +878,11 @@
       els.typeName.focus();
       return;
     }
-    state.types.push({ id: U.uid("type"), name: name, color: color });
+    state.types.push({ id: U.uid("type"), semanticRole: "", name: name, color: color, system: false });
     els.typeName.value = "";
     populateSelects();
     renderTypeList();
+    persist(); // adding a type does not re-render the calendar
     toast("Tipo añadido.");
   }
 
@@ -702,14 +922,14 @@
   // ----------------------------------------------------------------------
   function demoItems() {
     var raw = [
-      { title: "Fisiología Humana II", day: "monday", startTime: "07:00", endTime: "09:50", location: "Aula 305", professor: "Dr. Pérez", typeId: "uasd", section: "W01", code: "FIS 2200" },
-      { title: "Laboratorio de Química", day: "monday", startTime: "14:00", endTime: "15:50", location: "Lab 2", typeId: "uasd" },
-      { title: "Tutoría", day: "monday", startTime: "18:00", endTime: "19:00", location: "Biblioteca", typeId: "personal" },
-      { title: "Estudio grupal", day: "monday", startTime: "18:30", endTime: "20:00", location: "Cafetería", typeId: "personal" },
-      { title: "Fisiopatología II", day: "thursday", startTime: "19:00", endTime: "21:50", location: "Instituto de Cardiología 101", professor: "Marlene Núñez Rodríguez", section: "W05", code: "CFI 1560", typeId: "external" },
-      { title: "Materia sin horario A", day: "sunday", startTime: "08:00", endTime: "09:00", typeId: "virtual" },
-      { title: "Materia sin horario B", day: "sunday", startTime: "08:00", endTime: "09:00", typeId: "uasd" },
-      { title: "Materia sin horario C", day: "sunday", startTime: "08:00", endTime: "09:00", typeId: "personal" }
+      { title: "Fisiología Humana II", day: "monday", startTime: "07:00", endTime: "09:50", location: "Aula 305", professor: "Dr. Pérez", typeId: "type-uasd", section: "W01", code: "FIS 2200" },
+      { title: "Laboratorio de Química", day: "monday", startTime: "14:00", endTime: "15:50", location: "Lab 2", typeId: "type-uasd" },
+      { title: "Tutoría", day: "monday", startTime: "18:00", endTime: "19:00", location: "Biblioteca", typeId: "type-personal" },
+      { title: "Estudio grupal", day: "monday", startTime: "18:30", endTime: "20:00", location: "Cafetería", typeId: "type-personal" },
+      { title: "Fisiopatología II", day: "thursday", startTime: "19:00", endTime: "21:50", location: "Instituto de Cardiología 101", professor: "Marlene Núñez Rodríguez", section: "W05", code: "CFI 1560", typeId: "type-hospital" },
+      { title: "Materia sin horario A", day: "sunday", startTime: "08:00", endTime: "09:00", typeId: "type-virtual" },
+      { title: "Materia sin horario B", day: "sunday", startTime: "08:00", endTime: "09:00", typeId: "type-uasd" },
+      { title: "Materia sin horario C", day: "sunday", startTime: "08:00", endTime: "09:00", typeId: "type-personal" }
     ];
     return raw.map(function (d) {
       return Model.createItem(d);
@@ -726,6 +946,63 @@
   // ----------------------------------------------------------------------
   // Wiring / init
   // ----------------------------------------------------------------------
+  // ----------------------------------------------------------------------
+  // PDF export
+  // ----------------------------------------------------------------------
+  function openExportDialog(opener) {
+    state.ui.dialogOpener = opener || document.activeElement;
+    if (els.exportRangeNote) els.exportRangeNote.textContent = exportRangeNote();
+    if (els.exportBusy) els.exportBusy.hidden = true;
+    if (els.exportError) els.exportError.hidden = true;
+    if (els.exportGo) els.exportGo.disabled = state.items.length === 0;
+    openDialog(els.exportDialog);
+  }
+
+  function exportRangeNote() {
+    if (!state.items.length) return "Agrega o importa actividades para exportar.";
+    var range = currentRange();
+    var mins = [];
+    var maxs = [];
+    state.items.forEach(function (it) {
+      var s = U.timeToMinutes(it.startTime);
+      var e = U.timeToMinutes(it.endTime);
+      if (!isNaN(s) && !isNaN(e) && e > s) { mins.push(s); maxs.push(e); }
+    });
+    if (!mins.length) return "";
+    var minStart = Settings.floorHour(Math.min.apply(null, mins));
+    var maxEnd = Settings.ceilHour(Math.max.apply(null, maxs));
+    if (minStart < range.startMin || maxEnd > range.endMin) {
+      return "Hay actividades fuera del rango visible. El PDF ampliará el rango automáticamente para incluirlas (" +
+        U.formatClock(Math.min(minStart, range.startMin), use12()) + " – " +
+        U.formatClock(Math.max(maxEnd, range.endMin), use12()) + ").";
+    }
+    return "El PDF incluirá los 7 días y el rango " +
+      U.formatClock(range.startMin, use12()) + " – " + U.formatClock(range.endMin, use12()) + ".";
+  }
+
+  function onExportGo() {
+    if (!state.items.length || !H.pdfExport) return;
+    var checked = els.exportDialog.querySelector('input[name="pdfOrientation"]:checked');
+    var orientation = checked ? checked.value : "landscape";
+    if (els.exportBusy) els.exportBusy.hidden = false;
+    if (els.exportError) els.exportError.hidden = true;
+    if (els.exportGo) els.exportGo.disabled = true;
+    H.pdfExport.generateAndDownload({
+      items: state.items, types: state.types, settings: state.settings, orientation: orientation
+    }).then(function () {
+      closeDialog(els.exportDialog);
+      toast("PDF descargado.");
+    }).catch(function () {
+      if (els.exportError) {
+        els.exportError.textContent = "No se pudo generar el PDF. Revisa tu conexión e inténtalo de nuevo.";
+        els.exportError.hidden = false;
+      }
+    }).then(function () {
+      if (els.exportBusy) els.exportBusy.hidden = true;
+      if (els.exportGo) els.exportGo.disabled = false;
+    });
+  }
+
   function cacheEls() {
     els.calendar = document.getElementById("hzCalendar");
     els.dayChips = document.getElementById("hzDayChips");
@@ -775,8 +1052,49 @@
     els.typeColor = document.getElementById("fTypeColor");
     els.typeAdd = document.getElementById("hzTypeAdd");
     els.clearAll = document.getElementById("hzClearAll");
+    els.clearStored = document.getElementById("hzClearStored");
     els.devSection = document.getElementById("hzDevSection");
     els.loadDemo = document.getElementById("hzLoadDemo");
+
+    // Import dialog
+    els.importDialog = document.getElementById("hzImportDialog");
+    els.importStart = document.getElementById("hzImportStart");
+    els.importProgress = document.getElementById("hzImportProgress");
+    els.progressText = document.getElementById("hzProgressText");
+    els.importError = document.getElementById("hzImportError");
+    els.dropzone = document.getElementById("hzDropzone");
+    els.pickFile = document.getElementById("hzPickFile");
+    els.fileInput = document.getElementById("hzFileInput");
+
+    // Review dialog
+    els.reviewDialog = document.getElementById("hzReviewDialog");
+    els.reviewSummary = document.getElementById("hzReviewSummary");
+    els.reviewList = document.getElementById("hzReviewList");
+    els.importModeRow = document.getElementById("hzImportModeRow");
+    els.createSchedule = document.getElementById("hzCreateSchedule");
+    els.reviewDiag = document.getElementById("hzReviewDiag");
+    els.diagOut = document.getElementById("hzDiagOut");
+
+    // Legend
+    els.legend = document.getElementById("hzLegend");
+
+    // Type editor dialog
+    els.typeEditDialog = document.getElementById("hzTypeEditDialog");
+    els.typeEditForm = document.getElementById("hzTypeEditForm");
+    els.typeEditName = document.getElementById("fTypeEditName");
+    els.typeEditColor = document.getElementById("fTypeEditColor");
+    els.typeMsg = document.getElementById("hzTypeMsg");
+    els.typePreview = document.getElementById("hzTypePreview");
+    els.previewTagName = document.getElementById("hzPreviewTagName");
+    els.typeDelete = document.getElementById("hzTypeDelete");
+
+    // Export dialog
+    els.exportBtn = document.getElementById("hzExport");
+    els.exportDialog = document.getElementById("hzExportDialog");
+    els.exportRangeNote = document.getElementById("hzExportRangeNote");
+    els.exportBusy = document.getElementById("hzExportBusy");
+    els.exportError = document.getElementById("hzExportError");
+    els.exportGo = document.getElementById("hzExportGo");
   }
 
   function bindEvents() {
@@ -785,7 +1103,7 @@
     bindClick("hzAdd", function (e) { openAdd(e.currentTarget); });
     bindClick("hzImportHero", onImportClick);
     bindClick("hzImport", onImportClick);
-    bindClick("hzPrint", function () { window.print(); });
+    bindClick("hzExport", function (e) { openExportDialog(e.currentTarget); });
     bindClick("hzSettingsBtn", function (e) { openSettings(e.currentTarget); });
 
     if (els.bannerFix) els.bannerFix.addEventListener("click", autoFitRange);
@@ -841,7 +1159,49 @@
     if (els.rangeApply) els.rangeApply.addEventListener("click", onRangeApply);
     if (els.typeAdd) els.typeAdd.addEventListener("click", onAddType);
     if (els.clearAll) els.clearAll.addEventListener("click", onClearAll);
+    if (els.clearStored) els.clearStored.addEventListener("click", clearStoredData);
     if (els.loadDemo) els.loadDemo.addEventListener("click", loadDemo);
+
+    // Type editor
+    if (els.typeEditForm) els.typeEditForm.addEventListener("submit", onTypeEditSubmit);
+    if (els.typeEditColor) els.typeEditColor.addEventListener("input", updateTypePreview);
+    if (els.typeEditName) els.typeEditName.addEventListener("input", updateTypePreview);
+    if (els.typeDelete) els.typeDelete.addEventListener("click", onTypeDelete);
+
+    // Export
+    if (els.exportGo) els.exportGo.addEventListener("click", onExportGo);
+
+    // Import: file picker + drag & drop
+    if (els.pickFile && els.fileInput) {
+      els.pickFile.addEventListener("click", function () { els.fileInput.click(); });
+    }
+    if (els.dropzone && els.fileInput) {
+      els.dropzone.addEventListener("click", function (e) {
+        if (e.target.closest("#hzPickFile")) return; // button handles its own click
+        els.fileInput.click();
+      });
+      els.dropzone.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); els.fileInput.click(); }
+      });
+      ["dragenter", "dragover"].forEach(function (ev) {
+        els.dropzone.addEventListener(ev, function (e) { e.preventDefault(); els.dropzone.classList.add("is-dragover"); });
+      });
+      ["dragleave", "drop"].forEach(function (ev) {
+        els.dropzone.addEventListener(ev, function (e) { e.preventDefault(); els.dropzone.classList.remove("is-dragover"); });
+      });
+      els.dropzone.addEventListener("drop", function (e) {
+        var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+        if (f) handleImportFile(f);
+      });
+    }
+    if (els.fileInput) {
+      els.fileInput.addEventListener("change", function () {
+        var f = els.fileInput.files && els.fileInput.files[0];
+        if (f) handleImportFile(f);
+      });
+    }
+    if (els.createSchedule) els.createSchedule.addEventListener("click", onCreateSchedule);
+    if (els.reviewDiag) els.reviewDiag.addEventListener("click", onReviewDiag);
 
     // Every [data-hz-close] closes its parent dialog. Confirm cancel resolves false.
     document.querySelectorAll("[data-hz-close]").forEach(function (btn) {
@@ -874,13 +1234,239 @@
     if (node) node.addEventListener("click", handler);
   }
 
-  function onImportClick() {
-    toast("La importación desde PDF se añadirá en la siguiente etapa.");
+  function onImportClick(e) {
+    openImportDialog(e && e.currentTarget);
+  }
+
+  // ----------------------------------------------------------------------
+  // UASD PDF import flow (atomic: state mutates only on "Crear mi horario")
+  // ----------------------------------------------------------------------
+  var importState = { busy: false, pending: null };
+
+  function openImportDialog(opener) {
+    state.ui.dialogOpener = opener || document.activeElement;
+    resetImportDialog();
+    openDialog(els.importDialog);
+    setTimeout(function () { if (els.dropzone) els.dropzone.focus(); }, 30);
+  }
+
+  function resetImportDialog() {
+    if (els.importStart) els.importStart.hidden = false;
+    if (els.importProgress) els.importProgress.hidden = true;
+    if (els.importError) { els.importError.hidden = true; els.importError.textContent = ""; }
+    if (els.fileInput) els.fileInput.value = "";
+  }
+
+  function setProgress(text) {
+    if (els.progressText) els.progressText.textContent = text;
+  }
+
+  function showImportError(message) {
+    if (els.importProgress) els.importProgress.hidden = true;
+    if (els.importStart) els.importStart.hidden = false;
+    if (els.importError) { els.importError.textContent = message; els.importError.hidden = false; }
+    importState.busy = false;
+  }
+
+  async function handleImportFile(file) {
+    if (importState.busy) return; // block accidental double import
+    if (els.importError) els.importError.hidden = true;
+
+    var check = await H.pdfReader.validatePdfFile(file);
+    if (!check.ok) { showImportError(check.message); return; }
+
+    importState.busy = true;
+    if (els.importStart) els.importStart.hidden = true;
+    if (els.importProgress) els.importProgress.hidden = false;
+    setProgress("Analizando horario…");
+
+    try {
+      var buffer = await file.arrayBuffer();
+      var docText = await H.pdfReader.extractPdfDocument(buffer, {
+        onProgress: function (p, total) {
+          setProgress("Analizando horario… Página " + p + " de " + total);
+        }
+      });
+
+      var detect = H.uasdParser.detectUasdDocument(docText);
+      if (!detect.isUasd) {
+        showImportError("No pudimos reconocer este archivo como un Horario de Detalle de Alumno de la UASD.");
+        return;
+      }
+
+      var parsed = H.uasdParser.parseUasdDocument(docText);
+      var conv = H.uasdImport.convertToScheduleItems(parsed, state.types);
+      importState.pending = { parsed: parsed, items: conv.items };
+      importState.busy = false;
+
+      closeDialog(els.importDialog);
+      openReview();
+    } catch (err) {
+      showImportError("Ocurrió un error al leer el PDF. Verifica el archivo e inténtalo de nuevo.");
+    }
+  }
+
+  function classLabel(classification) {
+    // Use the user-configured type name (renaming reflects in the review too).
+    var t = Types.findBySemanticRole(state.types, classification);
+    if (t) return t.name;
+    if (classification === "virtual") return "Virtual";
+    if (classification === "hospital") return "Hospital / Fuera UASD";
+    return "Dentro UASD";
+  }
+
+  function courseReviewState(course) {
+    var hasError = false;
+    var hasWarn = false;
+    if (!course.meetings.length) hasWarn = true;
+    course.meetings.forEach(function (m) {
+      if (!m.autoScheduled && (!m.days || m.days.length === 0)) hasError = true;
+      if (m.autoScheduled) hasWarn = true;
+    });
+    return hasError ? "error" : hasWarn ? "warn" : "ok";
+  }
+
+  function buildCourseReview(course) {
+    var st = courseReviewState(course);
+    var li = U.el("li", { class: "hz-course" });
+    var head = U.el("div", { class: "hz-course__head" });
+    head.appendChild(U.el("span", {
+      class: "hz-course__icon is-" + st,
+      text: st === "ok" ? "✓" : st === "warn" ? "⚠" : "✗"
+    }));
+    head.appendChild(U.el("span", { text: course.title || "Materia" }));
+    head.appendChild(U.el("span", { class: "hz-course__section", text: "— Sección " + course.section }));
+    li.appendChild(head);
+
+    course.meetings.forEach(function (m) {
+      if (m.autoScheduled) {
+        li.appendChild(U.el("div", {
+          class: "hz-course__warn",
+          text: "Sin horario definido → Domingo · 08:00–09:00 · " + classLabel(m.classification)
+        }));
+        return;
+      }
+      if (!m.days || m.days.length === 0) {
+        li.appendChild(U.el("div", { class: "hz-course__warn", text: "No se pudo interpretar el día de esta reunión." }));
+        return;
+      }
+      var dayLabels = m.days.map(function (d) { return Model.DAY_LABELS[d]; }).join(", ");
+      var timeLabel = U.formatRange(U.timeToMinutes(m.startTime), U.timeToMinutes(m.endTime), use12());
+      var row = U.el("div", { class: "hz-course__meeting" });
+      row.appendChild(document.createTextNode(dayLabels + " · " + timeLabel));
+      if (m.location) row.appendChild(document.createTextNode(" · " + m.location));
+      row.appendChild(U.el("span", { class: "hz-tag", text: classLabel(m.classification) }));
+      li.appendChild(row);
+    });
+    return li;
+  }
+
+  function renderReview(pending) {
+    var s = pending.parsed.stats;
+    U.clearNode(els.reviewSummary);
+    function stat(text, cls) {
+      els.reviewSummary.appendChild(U.el("span", { class: "hz-review__stat" + (cls ? " " + cls : ""), text: text }));
+    }
+    stat(s.coursesDetected + " materias detectadas");
+    stat(s.meetingRowsDetected + " reuniones encontradas");
+    stat(s.scheduleItemsGenerated + " bloques para el horario");
+    if (s.autoScheduled > 0) stat(s.autoScheduled + " horario automático", "is-auto");
+
+    U.clearNode(els.reviewList);
+    pending.parsed.courses.forEach(function (course) {
+      els.reviewList.appendChild(buildCourseReview(course));
+    });
+  }
+
+  function openReview() {
+    var pending = importState.pending;
+    if (!pending) return;
+    renderReview(pending);
+    if (els.importModeRow) els.importModeRow.hidden = !H.uasdImport.hasUasdItems(state.items);
+    if (els.reviewDiag) els.reviewDiag.hidden = !isDev();
+    if (els.diagOut) { els.diagOut.hidden = true; els.diagOut.textContent = ""; }
+    openDialog(els.reviewDialog);
+    setTimeout(function () { if (els.createSchedule) els.createSchedule.focus(); }, 30);
+  }
+
+  function autoFitRangeIfNeeded() {
+    var range = currentRange();
+    var mins = [];
+    var maxs = [];
+    state.items.forEach(function (it) {
+      var s = U.timeToMinutes(it.startTime);
+      var e = U.timeToMinutes(it.endTime);
+      if (!isNaN(s) && !isNaN(e) && e > s) { mins.push(s); maxs.push(e); }
+    });
+    if (!mins.length) return;
+    var newStart = Math.min(range.startMin, Settings.floorHour(Math.min.apply(null, mins)));
+    var newEnd = Math.max(range.endMin, Settings.ceilHour(Math.max.apply(null, maxs)));
+    if (newStart !== range.startMin || newEnd !== range.endMin) {
+      state.settings.rangeStart = U.minutesToTime(U.clamp(newStart, 0, 23 * 60));
+      state.settings.rangeEnd = U.minutesToTime(U.clamp(newEnd, 60, 24 * 60));
+      syncSettingsInputs();
+    }
+  }
+
+  function onCreateSchedule() {
+    var pending = importState.pending;
+    if (!pending) return;
+
+    var mode = "add";
+    if (H.uasdImport.hasUasdItems(state.items)) {
+      var checked = els.reviewDialog.querySelector('input[name="importMode"]:checked');
+      mode = checked ? checked.value : "replace";
+    }
+
+    var plan = H.uasdImport.planImport(state.items, pending.items, mode);
+    state.items = plan.nextItems;
+    importState.pending = null;
+
+    closeDialog(els.reviewDialog);
+    autoFitRangeIfNeeded();
+    render();
+
+    var msg = "Horario importado correctamente. " + plan.added + " actividades agregadas.";
+    if (plan.skipped > 0) {
+      msg += " " + plan.skipped + (plan.skipped === 1 ? " ya existía y fue omitida." : " ya existían y fueron omitidas.");
+    }
+    toast(msg);
+  }
+
+  function onReviewDiag() {
+    var pending = importState.pending;
+    if (!pending || !els.diagOut) return;
+    var p = pending.parsed;
+    // Academic diagnostics only — never the student's header (name/matrícula).
+    var safe = {
+      stats: p.stats,
+      warnings: p.warnings,
+      errors: p.errors,
+      courses: p.courses.map(function (c) {
+        return {
+          title: c.title, code: c.code, section: c.section, page: c.page,
+          educationalMethod: c.educationalMethod,
+          meetings: (c.meetings || []).map(function (m) {
+            return {
+              type: m.type, rawTime: m.rawTime, startTime: m.startTime, endTime: m.endTime,
+              rawDays: m.rawDays, days: m.days, location: m.location,
+              classification: m.classification, autoScheduled: m.autoScheduled,
+              scheduleType: m.scheduleType, instructor: m.instructor
+            };
+          })
+        };
+      })
+    };
+    var shown = !els.diagOut.hidden;
+    els.diagOut.hidden = shown;
+    if (!shown) els.diagOut.textContent = JSON.stringify(safe, null, 2);
   }
 
   function init() {
     cacheEls();
     if (!els.calendar) return;
+
+    loadPersisted(); // restore saved schedule/types/settings before first render
 
     populateSelects();
 
@@ -904,6 +1490,16 @@
     _state: state,
     loadDemo: loadDemo,
     addItem: function (data) { addItem(data); render(); },
-    render: render
+    render: render,
+    _importFile: function (file) { return handleImportFile(file); },
+    _openImport: function () { openImportDialog(); },
+    _exportPdf: function (orientation) {
+      return H.pdfExport.generate({ items: state.items, types: state.types, settings: state.settings, orientation: orientation });
+    },
+    _renameType: function (semanticRole, name, color) {
+      var t = Types.findBySemanticRole(state.types, semanticRole);
+      if (t) { t.name = name; if (color) t.color = color; populateSelects(); renderTypeList(); render(); }
+      return t;
+    }
   };
 })(window);

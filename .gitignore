@@ -1,0 +1,7 @@
+# Private test fixtures — real UASD PDFs contain a student's name and matrícula.
+# Never commit them; they are used locally only.
+horario/tests/fixtures/private/
+*.pdf
+
+# OS noise
+.DS_Store

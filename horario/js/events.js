@@ -63,9 +63,14 @@
       day: isValidDay(data.day) ? data.day : "monday",
       startTime: str(data.startTime) || "07:00",
       endTime: str(data.endTime) || "08:00",
-      typeId: str(data.typeId) || "uasd",
+      typeId: str(data.typeId) || "type-uasd",
       source: str(data.source) || "manual",
-      autoScheduled: !!data.autoScheduled
+      autoScheduled: !!data.autoScheduled,
+      // Optional import metadata (empty for manual items). Lets a later
+      // import replace/update/group UASD activities without touching manuals.
+      importId: str(data.importId),
+      courseKey: str(data.courseKey),
+      meetingKey: str(data.meetingKey)
     };
   }
 

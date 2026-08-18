@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "note": "Sanitized UASD fixture — NO student name/matrícula; instructor names anonymized. Reproduces the academic cases of the real 'Horario de Detalle de Alumno': 12 courses, 15 meetings, 17 ScheduleItems, 1 autoScheduled. Includes multiline cells, page breaks (BAN 3170 p1->p2, SAP 1180 p2->p3), PA-with-schedule (CFI 1560), PA/PA unscheduled (FAR 3510), hospital (MED 1360), virtual, multi-meeting courses and LMI. Token x-coordinates emulate the PDF columns so the parser detects them dynamically.",
+  "pages": [
+    {
+      "pageNumber": 1,
+      "lines": [
+        { "tokens": [{ "t": "Hematología Médica - BAN 3160 - 19", "x": 60 }] },
+        { "tokens": [{ "t": "Método Educativo Presencial", "x": 60 }] },
+        { "tokens": [{ "t": "Horas de Reunión Programadas", "x": 60 }] },
+        { "tokens": [{ "t": "Tipo", "x": 90 }, { "t": "Hora", "x": 116 }, { "t": "Días", "x": 175 }, { "t": "Dónde", "x": 202 }, { "t": "Rango de Fecha", "x": 289 }, { "t": "Tipo de Horario", "x": 368 }, { "t": "Instructores", "x": 423 }] },
+        { "tokens": [{ "t": "Class", "x": 90 }, { "t": "12:00 PM -", "x": 116 }, { "t": "V", "x": 175 }, { "t": "FACULTAD DE", "x": 202 }, { "t": "Ago 17, 2026 - Dic", "x": 289 }, { "t": "Teoria", "x": 368 }, { "t": "Docente", "x": 423 }] },
+        { "tokens": [{ "t": "3:50 PM", "x": 116 }, { "t": "INGENIERIA 104", "x": 202 }, { "t": "06, 2026", "x": 289 }, { "t": "Ejemplo", "x": 423 }] },
+        { "tokens": [{ "t": "Lab Hematología Médica - BAN 3170 - 56", "x": 60 }] },
+        { "tokens": [{ "t": "Método Educativo Presencial", "x": 60 }] },
+        { "tokens": [{ "t": "Horas de Reunión Programadas", "x": 60 }] }
+      ]
+    },
+    {
+      "pageNumber": 2,
+      "lines": [
+        { "tokens": [{ "t": "Tipo", "x": 90 }, { "t": "Hora", "x": 116 }, { "t": "Días", "x": 175 }, { "t": "Dónde", "x": 202 }, { "t": "Rango de Fecha", "x": 289 }, { "t": "Tipo de Horario", "x": 368 }, { "t": "Instructores", "x": 423 }] },
+        { "tokens": [{ "t": "Class", "x": 90 }, { "t": "7:00 AM -", "x": 116 }, { "t": "M", "x": 175 }, { "t": "LABORATORIO DE", "x": 202 }, { "t": "Ago 17, 2026 - Dic", "x": 289 }, { "t": "Laboratorio", "x": 368 }, { "t": "Docente Ejemplo", "x": 423 }] },
+        { "tokens": [{ "t": "9:50 AM", "x": 116 }, { "t": "MEDICINA 177", "x": 202 }, { "t": "06, 2026", "x": 289 }] },
+        { "tokens": [{ "t": "Fisiopatología II - CFI 1560 - W05", "x": 60 }] },
+        { "tokens": [{ "t": "Método Educativo Virtual o por Internet", "x": 60 }] },
+        { "tokens": [{ "t": "Horas de Reunión Programadas", "x": 60 }] },
+        { "tokens": [{ "t": "Tipo", "x": 90 }, { "t": "Hora", "x": 116 }, { "t": "Días", "x": 175 }, { "t": "Dónde", "x": 202 }, { "t": "Rango de Fecha", "x": 289 }, { "t": "Tipo de Horario", "x": 368 }, { "t": "Instructores", "x": 423 }] },
+        { "tokens": [{ "t": "Class", "x": 90 }, { "t": "7:00 PM - 9:50 PM", "x": 116 }, { "t": "J", "x": 175 }, { "t": "PA", "x": 202 }, { "t": "Ago 17, 2026 - Dic 06, 2026", "x": 289 }, { "t": "Teoria", "x": 368 }, { "t": "Docente Ejemplo", "x": 423 }] },
+        { "tokens": [{ "t": "Lab Fisiopatología II - CFI 1570 - 35", "x": 60 }] },
+        { "tokens": [{ "t": "Método Educativo Presencial", "x": 60 }] },
+        { "tokens": [{ "t": "Horas de Reunión Programadas", "x": 60 }] },
+        { "tokens": [{ "t": "Tipo", "x": 90 }, { "t": "Hora", "x": 116 }, { "t": "Días", "x": 175 }, { "t": "Dónde", "x": 202 }, { "t": "Rango de Fecha", "x": 289 }, { "t": "Tipo de Horario", "x": 368 }, { "t": "Instructores", "x": 423 }] },
+        { "tokens": [{ "t": "Class", "x": 90 }, { "t": "10:00 AM - 12:50 PM", "x": 116 }, { "t": "J", "x": 175 }, { "t": "INSTITUTO DE CARDIOLOGIA 101", "x": 202 }, { "t": "Ago 17, 2026 - Dic 06, 2026", "x": 289 }, { "t": "Laboratorio", "x": 368 }, { "t": "Docente Ejemplo", "x": 423 }] },
+        { "tokens": [{ "t": "Farmacología - CFI 2460 - 25", "x": 60 }] },
+        { "tokens": [{ "t": "Método Educativo Presencial", "x": 60 }] },
+        { "tokens": [{ "t": "Horas de Reunión Programadas", "x": 60 }] },
+        { "tokens": [{ "t": "Tipo", "x": 90 }, { "t": "Hora", "x": 116 }, { "t": "Días", "x": 175 }, { "t": "Dónde", "x": 202 }, { "t": "Rango de Fecha", "x": 289 }, { "t": "Tipo de Horario", "x": 368 }, { "t": "Instructores", "x": 423 }] },
+        { "tokens": [{ "t": "Class", "x": 90 }, { "t": "2:00 PM - 3:50 PM", "x": 116 }, { "t": "L", "x": 175 }, { "t": "ESCUELA DE MEDICINA 207", "x": 202 }, { "t": "Ago 17, 2026 - Dic 06, 2026", "x": 289 }, { "t": "Teoria", "x": 368 }, { "t": "Docente Ejemplo", "x": 423 }] },
+        { "tokens": [{ "t": "Class", "x": 90 }, { "t": "8:00 PM - 9:50 PM", "x": 116 }, { "t": "M", "x": 175 }, { "t": "INST DE ANATOMIA 005", "x": 202 }, { "t": "Ago 17, 2026 - Dic 06, 2026", "x": 289 }, { "t": "Teoria", "x": 368 }, { "t": "Docente Ejemplo", "x": 423 }] },
+        { "tokens": [{ "t": "Lab Farmacología - CFI 2470 - 23", "x": 60 }] },
+        { "tokens": [{ "t": "Método Educativo Presencial", "x": 60 }] },
+        { "tokens": [{ "t": "Horas de Reunión Programadas", "x": 60 }] },
+        { "tokens": [{ "t": "Tipo", "x": 90 }, { "t": "Hora", "x": 116 }, { "t": "Días", "x": 175 }, { "t": "Dónde", "x": 202 }, { "t": "Rango de Fecha", "x": 289 }, { "t": "Tipo de Horario", "x": 368 }, { "t": "Instructores", "x": 423 }] },
+        { "tokens": [{ "t": "Class", "x": 90 }, { "t": "7:00 AM - 9:50 AM", "x": 116 }, { "t": "J", "x": 175 }, { "t": "INST DE ANATOMIA 032", "x": 202 }, { "t": "Ago 17, 2026 - Dic 06, 2026", "x": 289 }, { "t": "Laboratorio", "x": 368 }, { "t": "Docente Ejemplo", "x": 423 }] },
+        { "tokens": [{ "t": "Anatomía Patológica I - CMO 2280 - 16", "x": 60 }] },
+        { "tokens": [{ "t": "Método Educativo Presencial", "x": 60 }] },
+        { "tokens": [{ "t": "Horas de Reunión Programadas", "x": 60 }] },
+        { "tokens": [{ "t": "Tipo", "x": 90 }, { "t": "Hora", "x": 116 }, { "t": "Días", "x": 175 }, { "t": "Dónde", "x": 202 }, { "t": "Rango de Fecha", "x": 289 }, { "t": "Tipo de Horario", "x": 368 }, { "t": "Instructores", "x": 423 }] },
+        { "tokens": [{ "t": "Class", "x": 90 }, { "t": "2:00 PM - 3:50 PM", "x": 116 }, { "t": "J", "x": 175 }, { "t": "ESCUELA DE MEDICINA 209", "x": 202 }, { "t": "Ago 17, 2026 - Dic 06, 2026", "x": 289 }, { "t": "Teoria", "x": 368 }, { "t": "Docente Ejemplo", "x": 423 }] },
+        { "tokens": [{ "t": "Class", "x": 90 }, { "t": "4:00 PM - 5:50 PM", "x": 116 }, { "t": "V", "x": 175 }, { "t": "ESCUELA DE MEDICINA 210", "x": 202 }, { "t": "Ago 17, 2026 - Dic 06, 2026", "x": 289 }, { "t": "Teoria", "x": 368 }, { "t": "Docente Ejemplo", "x": 423 }] },
+        { "tokens": [{ "t": "Nutrición (Medicina) - FAR 3510 - W12", "x": 60 }] },
+        { "tokens": [{ "t": "Método Educativo Virtual o por Internet", "x": 60 }] },
+        { "tokens": [{ "t": "Horas de Reunión Programadas", "x": 60 }] },
+        { "tokens": [{ "t": "Tipo", "x": 90 }, { "t": "Hora", "x": 116 }, { "t": "Días", "x": 175 }, { "t": "Dónde", "x": 202 }, { "t": "Rango de Fecha", "x": 289 }, { "t": "Tipo de Horario", "x": 368 }, { "t": "Instructores", "x": 423 }] },
+        { "tokens": [{ "t": "Class", "x": 90 }, { "t": "PA", "x": 116 }, { "t": "PA", "x": 175 }, { "t": "Ago 17, 2026 - Dic 06, 2026", "x": 289 }, { "t": "Teoria", "x": 368 }, { "t": "Docente Ejemplo", "x": 423 }] },
+        { "tokens": [{ "t": "Sexología Médica - MED 1360 - 02", "x": 60 }] },
+        { "tokens": [{ "t": "Método Educativo Presencial", "x": 60 }] },
+        { "tokens": [{ "t": "Horas de Reunión Programadas", "x": 60 }] },
+        { "tokens": [{ "t": "Tipo", "x": 90 }, { "t": "Hora", "x": 116 }, { "t": "Días", "x": 175 }, { "t": "Dónde", "x": 202 }, { "t": "Rango de Fecha", "x": 289 }, { "t": "Tipo de Horario", "x": 368 }, { "t": "Instructores", "x": 423 }] },
+        { "tokens": [{ "t": "Class", "x": 90 }, { "t": "7:00 AM -", "x": 116 }, { "t": "L", "x": 175 }, { "t": "HOSP MATERNIDAD", "x": 202 }, { "t": "Ago 17, 2026 - Dic", "x": 289 }, { "t": "Teoria", "x": 368 }, { "t": "Docente Ejemplo", "x": 423 }] },
+        { "tokens": [{ "t": "8:50 AM", "x": 116 }, { "t": "ALTAGRAC 101", "x": 202 }, { "t": "06, 2026", "x": 289 }] },
+        { "tokens": [{ "t": "Parasitología - MIP 1240 - 08", "x": 60 }] },
+        { "tokens": [{ "t": "Método Educativo Presencial", "x": 60 }] },
+        { "tokens": [{ "t": "Horas de Reunión Programadas", "x": 60 }] },
+        { "tokens": [{ "t": "Tipo", "x": 90 }, { "t": "Hora", "x": 116 }, { "t": "Días", "x": 175 }, { "t": "Dónde", "x": 202 }, { "t": "Rango de Fecha", "x": 289 }, { "t": "Tipo de Horario", "x": 368 }, { "t": "Instructores", "x": 423 }] },
+        { "tokens": [{ "t": "Class", "x": 90 }, { "t": "6:00 PM - 7:50 PM", "x": 116 }, { "t": "L", "x": 175 }, { "t": "CIENCIAS JURIDICAS A 206", "x": 202 }, { "t": "Ago 17, 2026 - Dic 06, 2026", "x": 289 }, { "t": "Teoria", "x": 368 }, { "t": "Docente Ejemplo", "x": 423 }] },
+        { "tokens": [{ "t": "Class", "x": 90 }, { "t": "6:00 PM - 7:50 PM", "x": 116 }, { "t": "I", "x": 175 }, { "t": "CIENCIAS MODERNAS 112", "x": 202 }, { "t": "Ago 17, 2026 - Dic 06, 2026", "x": 289 }, { "t": "Teoria", "x": 368 }, { "t": "Docente Ejemplo", "x": 423 }] },
+        { "tokens": [{ "t": "LAB Parasitología - MIP 1240 - 42", "x": 60 }] },
+        { "tokens": [{ "t": "Método Educativo Presencial", "x": 60 }] },
+        { "tokens": [{ "t": "Horas de Reunión Programadas", "x": 60 }] },
+        { "tokens": [{ "t": "Tipo", "x": 90 }, { "t": "Hora", "x": 116 }, { "t": "Días", "x": 175 }, { "t": "Dónde", "x": 202 }, { "t": "Rango de Fecha", "x": 289 }, { "t": "Tipo de Horario", "x": 368 }, { "t": "Instructores", "x": 423 }] },
+        { "tokens": [{ "t": "Class", "x": 90 }, { "t": "10:00 AM - 11:50 AM", "x": 116 }, { "t": "LMI", "x": 175 }, { "t": "FACULTAD DE CIENCIAS 185", "x": 202 }, { "t": "Ago 17, 2026 - Dic 06, 2026", "x": 289 }, { "t": "Laboratorio", "x": 368 }, { "t": "Docente Ejemplo", "x": 423 }] },
+        { "tokens": [{ "t": "Medicina de Urgencias y Desast - SAP 1180 - 07", "x": 60 }] },
+        { "tokens": [{ "t": "Método Educativo Presencial", "x": 60 }] },
+        { "tokens": [{ "t": "Horas de Reunión Programadas", "x": 60 }] }
+      ]
+    },
+    {
+      "pageNumber": 3,
+      "lines": [
+        { "tokens": [{ "t": "Tipo", "x": 90 }, { "t": "Hora", "x": 116 }, { "t": "Días", "x": 175 }, { "t": "Dónde", "x": 202 }, { "t": "Rango de Fecha", "x": 289 }, { "t": "Tipo de Horario", "x": 368 }, { "t": "Instructores", "x": 423 }] },
+        { "tokens": [{ "t": "Class", "x": 90 }, { "t": "4:00 PM - 6:50 PM", "x": 116 }, { "t": "M", "x": 175 }, { "t": "EDIFICIO MARION 005", "x": 202 }, { "t": "Ago 17, 2026 - Dic 06, 2026", "x": 289 }, { "t": "Teoria", "x": 368 }, { "t": "Docente Ejemplo", "x": 423 }] }
+      ]
+    }
+  ]
+}
