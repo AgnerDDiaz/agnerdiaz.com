@@ -28,7 +28,8 @@
     cardPadX: 5,
     cardPadY: 5,
     blockGap: 2,
-    legendRowH: 18
+    legendRowH: 18,
+    bottomPad: 16
   };
 
   var FONT = {
@@ -36,9 +37,11 @@
     title: 9.5, meta: 8, time: 8, legend: 8.5, brand: 8
   };
 
-  // Fixed day-column width and minimum vertical scale (pt per minute).
+  // Landscape aims at a target PAGE width (so the sheet is no wider than a
+  // 100% screen) and derives the day column from it; portrait keeps a fixed
+  // column. minDayCol is the floor that protects legibility.
   var ORIENT = {
-    landscape: { dayCol: 156, minScale: 0.62 },
+    landscape: { targetPageWidth: 960, minDayCol: 112, minScale: 0.62 },
     portrait: { dayCol: 96, minScale: 0.9 }
   };
 
@@ -120,7 +123,9 @@
     });
     gutterW = Math.ceil(gutterW + PT.gutterPad * 2);
 
-    var dayColW = conf.dayCol;
+    var dayColW = orientation === "landscape"
+      ? Math.max(conf.minDayCol, (conf.targetPageWidth - 2 * PT.margin - gutterW) / DAYS.length)
+      : conf.dayCol;
     var contentW = gutterW + DAYS.length * dayColW;
     var pageW = contentW + PT.margin * 2;
 
@@ -162,7 +167,8 @@
       });
     });
 
-    var bodyH = (endMin - startMin) * scale;
+    // Breathing room under the last hour so it never touches the legend/edge.
+    var bodyH = (endMin - startMin) * scale + PT.bottomPad;
 
     // Legend rows (wrap chips within content width).
     var usedIds = {};
@@ -226,7 +232,7 @@
       header: {
         x: PT.margin, y: PT.margin,
         title: "Horario semanal",
-        subtitle: settings.hourFormat === "12" ? "Formato 12 horas" : "Formato 24 horas"
+        subtitle: ""
       },
       gutter: { x: PT.margin, width: gutterW, marks: marks },
       grid: { top: bodyTop, bottom: bodyTop + bodyH, left: daysX0, right: daysX0 + DAYS.length * dayColW, dayHeadTop: gridTop },

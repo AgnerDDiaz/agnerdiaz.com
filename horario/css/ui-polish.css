@@ -1,0 +1,278 @@
+/* ============================================================
+   Horario UASD — ui-polish.css  (iteration 05)
+   Loaded AFTER horario.css. Corrective layer only: it fixes the
+   dialog clipping bug, the card/axis overflow and the button
+   reflow without rewriting horario.css, so the diff stays
+   reviewable and this file can be dropped to revert.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. Dialogs — the whole dialog scrolls (P0)
+   Cause of the bug: .hz-dialog had overflow:hidden and only
+   .hz-dialog__body scrolled, so every .hz-dialog__section that
+   lives OUTSIDE the body (Settings has four) plus the footer
+   were simply clipped away and unreachable.
+   Fix: the dialog itself is the scroll container; head and foot
+   stay pinned with position:sticky.
+------------------------------------------------------------ */
+.hz-dialog {
+  max-height: min(88vh, 900px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--text) 26%, transparent) transparent;
+}
+.hz-dialog::-webkit-scrollbar {
+  width: 10px;
+}
+.hz-dialog::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--text) 24%, transparent);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+.hz-dialog::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--text) 40%, transparent);
+  background-clip: content-box;
+}
+
+/* The body is no longer a scroller of its own. */
+.hz-dialog__body {
+  max-height: none;
+  overflow: visible;
+  padding: 4px 20px 12px;
+}
+
+/* Head and foot ride along the scroll so the title and the
+   actions ("Listo", "Guardar", "Crear mi horario") are always
+   reachable, whatever the content height. */
+.hz-dialog__head {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 20px 12px;
+}
+.hz-dialog__foot {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  background: var(--surface);
+  /* covers the rounded corner gap under the sticky bar */
+  box-shadow: 0 -1px 0 var(--border);
+}
+
+/* Keep the background page still while a dialog is open, and
+   reserve the scrollbar gutter so nothing jumps sideways. */
+html:has(dialog[open]) {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+
+/* Section rhythm: clearer separation and a readable heading. */
+.hz-dialog__section {
+  padding: 16px 20px;
+}
+.hz-dialog__section + .hz-dialog__section {
+  border-top: 1px solid var(--border);
+}
+.hz-dialog__section h3 {
+  font-size: 12.5px;
+  letter-spacing: 0.6px;
+  color: color-mix(in srgb, var(--text) 72%, var(--muted));
+  margin-bottom: 12px;
+}
+
+/* Roomier form controls inside the tool. */
+.hz-field input,
+.hz-field select,
+.hz-field textarea {
+  padding: 10px 12px;
+  font-size: 14.5px;
+}
+.hz-field > span {
+  font-size: 12.5px;
+}
+
+/* "Formato de hora" as selectable chips, so the active one reads
+   as active instead of being a bare radio. */
+#hzSettings fieldset label {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+  min-height: 40px;
+  box-sizing: border-box;
+}
+#hzSettings fieldset label:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+}
+#hzSettings fieldset label:has(input:checked) {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+#hzSettings fieldset label:has(input:focus-visible) {
+  outline: 3px solid rgba(217, 4, 41, 0.5);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------
+   2. Buttons — no shouting, no reflow
+   The global .btn is uppercase with 1px tracking, which made the
+   tool's dense button rows grow and rewrap on every relabel.
+------------------------------------------------------------ */
+.hz-page .btn,
+.hz-dialog .btn,
+.hz-segment__btn {
+  text-transform: none;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+/* Uniform heights per group. */
+.hz-controls .btn,
+.hz-banner .btn,
+.btn.hz-btn-sm {
+  min-height: 38px;
+  padding-top: 0;
+  padding-bottom: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.hz-hero__actions .btn {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.hz-segment__btn {
+  min-height: 32px;
+}
+.hz-dialog__foot .btn,
+.hz-dialog__section .btn {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ------------------------------------------------------------
+   3. Calendar — more air
+------------------------------------------------------------ */
+:root {
+  --hz-hour-h: 70px;   /* read by app.js via getComputedStyle */
+  --hz-colmin: 152px;
+  --hz-gutter: 78px;
+}
+
+/* The first hour label is centred on the line (translateY(-50%)),
+   so at offset 0 half of it fell outside the grid. Shift the axis
+   and the day columns together with a margin so the geometry set
+   by app.js (label tops, event tops, hour gradient) stays aligned. */
+.hz-gutter,
+.hz-daycol {
+  margin-top: 10px;
+}
+
+/* ------------------------------------------------------------
+   4. Event cards — text must never be cut mid-word
+   The blocks could not shrink (min-height:auto on flex items),
+   so long words like LABORATORIO / CARDIOLOGIA overflowed the
+   card instead of wrapping.
+------------------------------------------------------------ */
+.hz-event__body {
+  min-height: 0;
+  overflow: hidden;
+}
+.hz-event__body > * {
+  min-height: 0;
+  flex: 0 1 auto;
+}
+.hz-event__title,
+.hz-event__meta {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+/* The time is the anchor: pinned to the bottom and never squeezed. */
+.hz-event__time {
+  margin-top: auto;
+  flex: 0 0 auto;
+}
+
+/* Degradation by priority: title -> time -> location -> professor
+   -> description. Full detail always stays available on click and
+   on hover (title attribute). */
+
+/* is-md (66-108px): drop description and the type chip. */
+.hz-event.is-md .hz-event__desc,
+.hz-event.is-md .hz-event__tag {
+  display: none;
+}
+.hz-event.is-md .hz-event__prof {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+}
+.hz-event.is-md .hz-event__title {
+  -webkit-line-clamp: 2;
+}
+
+/* is-sm (36-66px): a 50-minute class. Location MUST still show,
+   so the title gives up its second line instead. */
+.hz-event.is-sm .hz-event__prof,
+.hz-event.is-sm .hz-event__desc,
+.hz-event.is-sm .hz-event__tag {
+  display: none;
+}
+.hz-event.is-sm .hz-event__loc {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+}
+.hz-event.is-sm .hz-event__title {
+  -webkit-line-clamp: 1;
+}
+
+/* is-xs (<36px): only what is guaranteed to fit. */
+.hz-event.is-xs .hz-event__meta,
+.hz-event.is-xs .hz-event__time,
+.hz-event.is-xs .hz-event__tag {
+  display: none;
+}
+.hz-event.is-xs .hz-event__title {
+  -webkit-line-clamp: 1;
+}
+
+/* ------------------------------------------------------------
+   5. Mobile — one-handed use
+------------------------------------------------------------ */
+@media (max-width: 640px) {
+  .hz-hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hz-hero__actions .btn {
+    width: 100%;
+  }
+  .hz-dialog__foot {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  .hz-dialog__foot-left,
+  .hz-dialog__foot-right {
+    width: 100%;
+  }
+  .hz-dialog__foot .btn {
+    flex: 1 1 auto;
+  }
+  /* Touch targets stay >= 40px. */
+  .hz-iconbtn {
+    width: 40px;
+    height: 40px;
+  }
+  .hz-dialog {
+    max-height: 92vh;
+  }
+}

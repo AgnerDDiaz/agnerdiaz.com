@@ -108,17 +108,67 @@
     return normalizeWhitespace(text.replace(/\(\s*P\s*\)\s*$/i, ""));
   }
 
+  // ---- Campus venue allowlist ------------------------------------------
+  // Real UASD campus buildings. The rule looks at the BUILDING, never at a
+  // word like "instituto": Anatomia (IA), Geografico (IGU) and Sexualidad
+  // Humana (SH) are on campus, while Cardiologia (IC), Dermatologico (ID),
+  // Oncologico (IO) and Forense (IF) are not.
+  var UASD_CAMPUS_VENUES = [
+    // Facultades y escuelas
+    "FACULTAD DE INGENIERIA", "FACULTAD DE CIENCIAS", "FACULTAD DE HUMANIDADES",
+    "FACULTAD DE ARTES", "FACULTAD DE CIENCIAS ECONOMICAS",
+    "FACULTAD DE CIENCIAS JURIDICAS", "CIENCIAS JURIDICAS", "CIENCIAS ECONOMICAS",
+    "CIENCIAS MODERNAS", "ESCUELA DE MEDICINA", "ESCUELA DE ODONTOLOGIA",
+    "ESCUELA DE IDIOMAS", "COLEGIO UNIVERSITARIO",
+    // Institutos universitarios (DENTRO del campus)
+    "INSTITUTO DE ANATOMIA", "INST DE ANATOMIA",
+    "INSTITUTO GEOGRAFICO UNIVERSITARIO", "INSTITUTO DE SEXUALIDAD HUMANA",
+    // Laboratorios universitarios
+    "LABORATORIO DE MEDICINA", "LABORATORIO DE BIOLOGIA", "LABORATORIO DE QUIMICA",
+    "LABORATORIO DE INFORMATICA", "LABORATORIO DE INGENIERIA",
+    "LABORATORIO DE FOTOGRAFIA", "LABORATORIO DE TELEVISION",
+    "LAB DE MEDICINA", "LABUASD", "MARION LABORATORIO",
+    // Edificios y departamentos
+    "EDIFICIO MARION", "MARION", "IVAN GUZMAN", "FARMACIA MODELO", "ECONOMATO",
+    "NUEVA UNIVERSIDAD", "SEDE CENTRAL", "PEDRO MIR", "MAXIMO AVILES BLONDA",
+    "TONY BARREIRO", "EUGENIO MARIA DE HOSTOS", "ENERIO RODRIGUEZ",
+    "JUAN ISIDRO JIMENEZ", "ROGELIO LAMARCHE", "JULIO RAVELO", "ORLANDO MARTINEZ",
+    "DEPARTAMENTO DE FILOSOFIA", "DEPARTAMENTO DE LETRAS",
+    "DEPARTAMENTO DE MICROBIOLOGIA", "DEPARTAMENTO DE SALUD PUBLICA",
+    "ENFERMEDADES TROPICALES", "CLINICA VETERINARIA", "ZOOLOGICO",
+    "CENTRO OLIMPICO", "PISCINA OLIMPICA", "CAMPO DEPORTIVO",
+    "POSTGRADO SEDE", "ANTIGUO 20-30", "ACTIVO 20-30"
+  ];
+
+  // Uppercase, strip accents, collapse whitespace, so that "Instituto de
+  // Anatomía" and "INST  DE  ANATOMIA" compare against the same entries.
+  function normalizeVenue(raw) {
+    return normalizeWhitespace(raw)
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .toUpperCase();
+  }
+
+  function isUasdCampusVenue(location) {
+    var venue = normalizeVenue(location);
+    if (!venue) return false;
+    for (var i = 0; i < UASD_CAMPUS_VENUES.length; i++) {
+      if (venue.indexOf(UASD_CAMPUS_VENUES[i]) !== -1) return true;
+    }
+    return false;
+  }
+
   // Classification. Rules only — never titles.
   //  virtual  : method mentions Virtual/Internet OR location === "PA"
-  //  hospital : location mentions HOSP / HOSPITAL / MATERNIDAD
-  //  uasd     : anything else
+  //  uasd     : location is a known campus building (or no location at all)
+  //  hospital : anything else, i.e. outside the campus
   function classifyUasdCourse(course, meeting) {
-    var method = normalizeWhitespace((course && course.educationalMethod) || "").toUpperCase();
-    var location = normalizeWhitespace((meeting && meeting.location) || "").toUpperCase();
+    var method = normalizeVenue((course && course.educationalMethod) || "");
+    var location = normalizeVenue((meeting && meeting.location) || "");
 
     if (/VIRTUAL|INTERNET/.test(method) || location === PA) return "virtual";
-    if (/\bHOSP\b|HOSPITAL|MATERNIDAD/.test(location)) return "hospital";
-    return "uasd";
+    if (!location) return "uasd"; // no location: never assert it is off campus
+    return isUasdCampusVenue(location) ? "uasd" : "hospital";
   }
 
   // ---- Noise / structural line detectors --------------------------------
@@ -441,6 +491,8 @@
     expandDayCodes: expandDayCodes,
     stripInstructorMarker: stripInstructorMarker,
     classifyUasdCourse: classifyUasdCourse,
+    isUasdCampusVenue: isUasdCampusVenue,
+    UASD_CAMPUS_VENUES: UASD_CAMPUS_VENUES,
     detectColumns: detectColumns,
     columnFor: columnFor,
     isTableHeaderLine: isTableHeaderLine,
