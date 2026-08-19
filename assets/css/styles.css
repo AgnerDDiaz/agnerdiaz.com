@@ -230,17 +230,27 @@ p[data-i18n$=".desc"],
 }
 .brand__accent { color: var(--accent); }
 
+/* The nav carries more items than the article container is sized for, so its
+   bar spans wider than the page content. Without this the menu is capped at
+   --container and collides with the brand on wide screens. */
+.nav .container {
+  width: min(1280px, calc(100% - 40px));
+}
+
 .nav__menu {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
 }
 
 .nav__menu a {
   font-weight: 600;
   font-size: 14px;
   color: color-mix(in srgb, var(--text) 88%, var(--muted));
-  padding: 10px 10px;
+  /* Labels must never break mid-item ("Horario UASD" was wrapping to two
+     lines and throwing the whole bar out of alignment). */
+  white-space: nowrap;
+  padding: 10px 8px;
   border-radius: 12px;
   transition: background var(--transition), transform var(--transition), border-color var(--transition);
   border: 1px solid transparent;
@@ -850,8 +860,10 @@ p[data-i18n$=".desc"],
 
 /* ==============================
    NAV — Switch to hamburger earlier (tablet)
+   Raised from 1100px: with the Horario UASD entry the horizontal bar needs
+   ~1137px, so below this width the menu is collapsed instead of overflowing.
 ============================== */
-@media (max-width: 1100px) {
+@media (max-width: 1250px) {
   .nav__toggle { display: flex; }
 
   .nav__menu {
