@@ -696,6 +696,11 @@
 
   function closeDialog(dialog) {
     if (!dialog) return;
+    // Settings are committed as a block when the dialog closes. Done here as
+    // well as on the native "close" event because ESC bypasses this path while
+    // the buttons bypass the event; commitSettings is idempotent, so whichever
+    // fires second is a no-op.
+    if (els.settings && dialog === els.settings) commitSettings();
     if (typeof dialog.close === "function" && dialog.open) {
       dialog.close();
     } else {
@@ -757,25 +762,44 @@
     if (els.rangeEnd) els.rangeEnd.value = state.settings.rangeEnd;
   }
 
-  function onFormatChange(e) {
-    var val = e.target.value === "12" ? "12" : "24";
-    state.settings.hourFormat = val;
-    render();
-  }
-
-  function onRangeApply() {
+  // Los ajustes se editan libremente dentro del diálogo y se confirman en
+  // bloque al cerrarlo ("Listo", la X o ESC). No hay botón "Aplicar": mientras
+  // el diálogo está abierto sólo se valida, nunca se toca el estado.
+  function onRangeInput() {
     var result = Settings.normalizeRange(els.rangeStart.value, els.rangeEnd.value);
-    if (!result.ok) {
+    if (result.ok) {
+      els.rangeError.hidden = true;
+    } else {
       els.rangeError.textContent = result.error;
       els.rangeError.hidden = false;
-      return;
     }
-    state.settings.rangeStart = result.rangeStart;
-    state.settings.rangeEnd = result.rangeEnd;
+  }
+
+  function commitSettings() {
+    var changed = false;
+
+    var checked = els.settings.querySelector('input[name="hourFormat"]:checked');
+    var format = checked && checked.value === "12" ? "12" : "24";
+    if (format !== state.settings.hourFormat) {
+      state.settings.hourFormat = format;
+      changed = true;
+    }
+
+    var result = Settings.normalizeRange(els.rangeStart.value, els.rangeEnd.value);
+    if (result.ok &&
+        (result.rangeStart !== state.settings.rangeStart ||
+         result.rangeEnd !== state.settings.rangeEnd)) {
+      state.settings.rangeStart = result.rangeStart;
+      state.settings.rangeEnd = result.rangeEnd;
+      changed = true;
+    }
+
     els.rangeError.hidden = true;
-    syncSettingsInputs();
-    render();
-    toast("Rango horario actualizado.");
+    syncSettingsInputs(); // descarta un borrador inválido
+    if (changed) render(); // render() persiste en localStorage
+
+    if (!result.ok) toast("Rango no válido: se mantuvo el anterior.");
+    else if (changed) toast("Ajustes actualizados.");
   }
 
   function renderTypeList() {
@@ -1045,7 +1069,6 @@
     els.formatRadios = document.querySelectorAll('input[name="hourFormat"]');
     els.rangeStart = document.getElementById("fRangeStart");
     els.rangeEnd = document.getElementById("fRangeEnd");
-    els.rangeApply = document.getElementById("hzRangeApply");
     els.rangeError = document.getElementById("hzRangeError");
     els.typeList = document.getElementById("hzTypeList");
     els.typeName = document.getElementById("fTypeName");
@@ -1151,12 +1174,9 @@
     }
 
     // Settings dialog
-    if (els.formatRadios) {
-      Array.prototype.forEach.call(els.formatRadios, function (radio) {
-        radio.addEventListener("change", onFormatChange);
-      });
-    }
-    if (els.rangeApply) els.rangeApply.addEventListener("click", onRangeApply);
+    if (els.rangeStart) els.rangeStart.addEventListener("change", onRangeInput);
+    if (els.rangeEnd) els.rangeEnd.addEventListener("change", onRangeInput);
+    if (els.settings) els.settings.addEventListener("close", commitSettings);
     if (els.typeAdd) els.typeAdd.addEventListener("click", onAddType);
     if (els.clearAll) els.clearAll.addEventListener("click", onClearAll);
     if (els.clearStored) els.clearStored.addEventListener("click", clearStoredData);
@@ -1284,7 +1304,10 @@
       var buffer = await file.arrayBuffer();
       var docText = await H.pdfReader.extractPdfDocument(buffer, {
         onProgress: function (p, total) {
-          setProgress("Analizando horario… Página " + p + " de " + total);
+          // Con un solo folio el contador no aporta nada y parece decorativo.
+          setProgress(total > 1
+            ? "Analizando horario… Página " + p + " de " + total
+            : "Analizando horario…");
         }
       });
 

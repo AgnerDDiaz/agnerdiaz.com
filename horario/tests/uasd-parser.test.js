@@ -87,10 +87,47 @@ function expandFixture(compact) {
 })();
 
 (function classify() {
+  function at(location, method) {
+    return P.classifyUasdCourse({ educationalMethod: method || "Presencial" }, { location: location });
+  }
+
   eq("virtual by method", P.classifyUasdCourse({ educationalMethod: "Virtual o por Internet" }, { location: "PA" }), "virtual");
   eq("virtual by PA location", P.classifyUasdCourse({ educationalMethod: "Presencial" }, { location: "PA" }), "virtual");
-  eq("hospital", P.classifyUasdCourse({ educationalMethod: "Presencial" }, { location: "HOSP MATERNIDAD ALTAGRAC 101" }), "hospital");
-  eq("uasd default", P.classifyUasdCourse({ educationalMethod: "Presencial" }, { location: "ESCUELA DE MEDICINA 207" }), "uasd");
+  eq("virtual by method wins over a campus room", at("ESCUELA DE MEDICINA 207", "Virtual o por Internet"), "virtual");
+
+  // Campus buildings -> inside the UASD.
+  eq("campus: escuela de medicina", at("ESCUELA DE MEDICINA 207"), "uasd");
+  eq("campus: facultad de ciencias", at("FACULTAD DE CIENCIAS 185"), "uasd");
+  eq("campus: ciencias juridicas", at("CIENCIAS JURIDICAS A 206"), "uasd");
+  eq("campus: edificio marion", at("EDIFICIO MARION 005"), "uasd");
+  eq("campus: laboratorio de medicina", at("LABORATORIO DE MEDICINA 177"), "uasd");
+
+  // The rule looks at the building, not at the word "instituto".
+  eq("instituto INSIDE: anatomia (abbrev)", at("INST DE ANATOMIA 032"), "uasd");
+  eq("instituto INSIDE: anatomia (full)", at("INSTITUTO DE ANATOMIA 005"), "uasd");
+  eq("instituto INSIDE: geografico universitario", at("INSTITUTO GEOGRAFICO UNIVERSITARIO 12"), "uasd");
+  eq("instituto INSIDE: sexualidad humana", at("INSTITUTO DE SEXUALIDAD HUMANA 3"), "uasd");
+  eq("instituto OUTSIDE: cardiologia", at("INSTITUTO DE CARDIOLOGIA 101"), "hospital");
+  eq("instituto OUTSIDE: dermatologico", at("INSTITUTO DERMATOLOGICO 2"), "hospital");
+  eq("instituto OUTSIDE: oncologico", at("INSTITUTO ONCOLOGICO 4"), "hospital");
+  eq("instituto OUTSIDE: forense", at("INSTITUTO NACIONAL DE CIENCIAS FORENSES"), "hospital");
+
+  // Hospitals and health centres stay outside.
+  eq("hospital: maternidad", at("HOSP MATERNIDAD ALTAGRAC 101"), "hospital");
+  eq("hospital: padre billini", at("HOSPITAL PADRE BILLINI 12"), "hospital");
+  eq("centro de salud outside", at("CENTRO DE SALUD LOS MINA"), "hospital");
+
+  // Unknown building -> outside (allowlist, not blocklist).
+  eq("unknown venue is outside", at("EDIFICIO DESCONOCIDO 99"), "hospital");
+
+  // Accents and spacing must not change the verdict.
+  eq("accents normalized", at("Instituto de Anatomía 005"), "uasd");
+  eq("extra whitespace normalized", at("  INST   DE   ANATOMIA  032 "), "uasd");
+  eq("accented outside venue", at("Instituto de Cardiología 101"), "hospital");
+
+  // Without a location we never assert the class is off campus.
+  eq("empty location defaults to uasd", at(""), "uasd");
+  eq("missing meeting defaults to uasd", P.classifyUasdCourse({ educationalMethod: "Presencial" }, null), "uasd");
 })();
 
 (function semanticRoleStability() {
@@ -179,7 +216,7 @@ if (fs.existsSync(fixturePath)) {
     ["Hematología Médica", "BAN 3160", "19", "friday", "12:00", "15:50", "FACULTAD DE INGENIERIA 104", "type-uasd", false],
     ["Lab Hematología Médica", "BAN 3170", "56", "tuesday", "07:00", "09:50", "LABORATORIO DE MEDICINA 177", "type-uasd", false],
     ["Fisiopatología II", "CFI 1560", "W05", "thursday", "19:00", "21:50", "PA", "type-virtual", false],
-    ["Lab Fisiopatología II", "CFI 1570", "35", "thursday", "10:00", "12:50", "INSTITUTO DE CARDIOLOGIA 101", "type-uasd", false],
+    ["Lab Fisiopatología II", "CFI 1570", "35", "thursday", "10:00", "12:50", "INSTITUTO DE CARDIOLOGIA 101", "type-hospital", false],
     ["Farmacología", "CFI 2460", "25", "monday", "14:00", "15:50", "ESCUELA DE MEDICINA 207", "type-uasd", false],
     ["Farmacología", "CFI 2460", "25", "tuesday", "20:00", "21:50", "INST DE ANATOMIA 005", "type-uasd", false],
     ["Lab Farmacología", "CFI 2470", "23", "thursday", "07:00", "09:50", "INST DE ANATOMIA 032", "type-uasd", false],
@@ -200,6 +237,15 @@ if (fs.existsSync(fixturePath)) {
     var got = [it.title, it.code, it.section, it.day, it.startTime, it.endTime, it.location, it.typeId, it.autoScheduled];
     eq("item[" + i + "] " + exp[0] + " " + exp[3], got, exp);
   });
+
+  // Campus-allowlist distribution over the 17 items.
+  var dist = conv.items.reduce(function (acc, it) {
+    acc[it.typeId] = (acc[it.typeId] || 0) + 1;
+    return acc;
+  }, {});
+  eq("distribution uasd", dist["type-uasd"], 13);
+  eq("distribution hospital", dist["type-hospital"], 2);
+  eq("distribution virtual", dist["type-virtual"], 2);
 } else {
   console.log("SKIP integration: fixture not found at " + fixturePath);
 }

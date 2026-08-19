@@ -12,7 +12,8 @@
     "skills": "Technologies",
     "certs": "Certifications",
     "contact": "Contact",
-    "lang": "Language"
+    "lang": "Language",
+    "horario": "Horario UASD"
   },
   "hero": {
     "role": "Software Engineer",
@@ -65,7 +66,12 @@
       "desc": "MercaVerde is a Flutter mobile app focused on reducing food waste through a B2C/B2B marketplace. I contributed to the design and development of the backend and overall system architecture, implementing authentication, role management, business logic, and purchase flows. The platform enables producers to publish surplus inventory, users to buy or subscribe to plans, process secure payments, and browse geolocated products, with real-time notifications and a scalable foundation ready for growth.",
       "tech": "flutter|supabase|postgresql|stripe|firebase|mapbox|github"
     },
-    "more": "See all"
+    "more": "See all",
+    "horario": {
+      "desc": "Horario UASD turns the UASD official “Horario de Detalle de Alumno” PDF into a clear weekly calendar. It reads the PDF entirely in the browser — nothing is ever uploaded — recognising courses, sections, rooms and lecturers, and classifying each class by the actual campus building. Everything stays editable by hand, types and colours are configurable, and the schedule exports to a vector PDF.",
+      "stack": "HTML · CSS · JavaScript (no frameworks) · PDF.js · jsPDF · localStorage",
+      "tech": "html|css|javascript|pdfjs|jspdf|localstorage"
+    }
   },
   "skills": {
     "title": "Technologies"
@@ -139,7 +145,8 @@
     "subtitle": "A small selection of my work.",
     "finclarityCta": "See FinClarity",
     "mercaverdeCta": "Open MercaVerde",
-    "homeCta": "Go to Home"
+    "homeCta": "Go to Home",
+    "horarioCta": "Open Horario UASD"
   },
   "finclarityPage": {
     "subtitle": "Personal finance app",
@@ -172,47 +179,53 @@
       "privacyLink": "Read the Privacy Policy"
     }
   },
- "privacy": {
-  "finclarity": {
-    "title": "Privacy Policy — FinClarity",
-    "updated": "Last updated:",
-    "intro": "FinClarity is an offline-first personal finance app. The financial data you enter is stored locally on your device. This policy explains how data is handled and how ads work.",
-    "collectTitle": "What we collect",
-    "collectBody": "FinClarity does not collect or store your financial entries on our servers. The app stores transactions, categories, accounts, notes, and settings locally on your device. If ads are enabled, Google Mobile Ads (AdMob) may collect device identifiers and limited technical data to serve and measure ads.",
-    "adsTitle": "Ads (Google AdMob)",
-    "adsBody": "FinClarity uses Google Mobile Ads (AdMob). Depending on your consent, ads may be personalized. AdMob may collect information such as Advertising ID (or similar identifiers), IP address, device information, and ad interaction data to provide and measure advertising.",
-    "storageTitle": "Data storage",
-    "storageBody": "All FinClarity data is stored locally (SQLite) on your device. If you delete data inside the app, clear the app’s storage, or uninstall the app, your local data will be removed. Because we do not store it externally, deleted data cannot be recovered.",
-    "contactTitle": "Contact",
-    "contactBody": "If you have questions about this policy, contact us at:",
-    "contactEmail": "finclarity.support@gmail.com"
+  "privacy": {
+    "finclarity": {
+      "title": "Privacy Policy — FinClarity",
+      "updated": "Last updated:",
+      "intro": "FinClarity is an offline-first personal finance app. The financial data you enter is stored locally on your device. This policy explains how data is handled and how ads work.",
+      "collectTitle": "What we collect",
+      "collectBody": "FinClarity does not collect or store your financial entries on our servers. The app stores transactions, categories, accounts, notes, and settings locally on your device. If ads are enabled, Google Mobile Ads (AdMob) may collect device identifiers and limited technical data to serve and measure ads.",
+      "adsTitle": "Ads (Google AdMob)",
+      "adsBody": "FinClarity uses Google Mobile Ads (AdMob). Depending on your consent, ads may be personalized. AdMob may collect information such as Advertising ID (or similar identifiers), IP address, device information, and ad interaction data to provide and measure advertising.",
+      "storageTitle": "Data storage",
+      "storageBody": "All FinClarity data is stored locally (SQLite) on your device. If you delete data inside the app, clear the app’s storage, or uninstall the app, your local data will be removed. Because we do not store it externally, deleted data cannot be recovered.",
+      "contactTitle": "Contact",
+      "contactBody": "If you have questions about this policy, contact us at:",
+      "contactEmail": "finclarity.support@gmail.com"
+    }
+  },
+  "support": {
+    "finclarity": {
+      "title": "Support — FinClarity",
+      "subtitle": "Help, troubleshooting, and contact options.",
+      "faqTitle": "FAQ",
+      "faq": {
+        "q1": "How do I add income or expenses?",
+        "a1": "Open the app and create a new transaction. Choose a category/account and save. (Adjust this text to match your exact UI.)",
+        "q2": "How do I delete all my data?",
+        "a2": "Use the app option to delete all data. You can also clear the app’s storage or uninstall the app to remove local data. Deleted data cannot be recovered because it isn’t stored in the cloud.",
+        "q3": "How do personalized ads work?",
+        "a3": "On first launch, you can choose whether to allow personalized ads. If you allow it, AdMob may use device identifiers to show more relevant ads. If you don’t, ads may be less personalized."
+      },
+      "troubleshootingTitle": "Troubleshooting",
+      "troubleshooting": {
+        "t1": "If totals look wrong, check your date range and filters.",
+        "t2": "If ads don’t load, verify your internet connection and try again.",
+        "t3": "If the issue persists, contact support with your device model and OS version."
+      },
+      "contactTitle": "Contact",
+      "privacyLink": "Read the Privacy Policy",
+      "emailLabel": "Support email",
+      "email": "finclarity.support@gmail.com"
+    }
+  },
+  "techLabels": {
+    "html": "HTML",
+    "css": "CSS",
+    "javascript": "JavaScript",
+    "pdfjs": "PDF.js",
+    "jspdf": "jsPDF",
+    "localstorage": "localStorage"
   }
-},
-"support": {
-  "finclarity": {
-    "title": "Support — FinClarity",
-    "subtitle": "Help, troubleshooting, and contact options.",
-    "faqTitle": "FAQ",
-    "faq": {
-      "q1": "How do I add income or expenses?",
-      "a1": "Open the app and create a new transaction. Choose a category/account and save. (Adjust this text to match your exact UI.)",
-      "q2": "How do I delete all my data?",
-      "a2": "Use the app option to delete all data. You can also clear the app’s storage or uninstall the app to remove local data. Deleted data cannot be recovered because it isn’t stored in the cloud.",
-      "q3": "How do personalized ads work?",
-      "a3": "On first launch, you can choose whether to allow personalized ads. If you allow it, AdMob may use device identifiers to show more relevant ads. If you don’t, ads may be less personalized."
-    },
-    "troubleshootingTitle": "Troubleshooting",
-    "troubleshooting": {
-      "t1": "If totals look wrong, check your date range and filters.",
-      "t2": "If ads don’t load, verify your internet connection and try again.",
-      "t3": "If the issue persists, contact support with your device model and OS version."
-    },
-    "contactTitle": "Contact",
-    "privacyLink": "Read the Privacy Policy",
-    "emailLabel": "Support email",
-    "email": "finclarity.support@gmail.com"
-  }
-}
-
-  
 }

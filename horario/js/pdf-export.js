@@ -83,10 +83,12 @@
     doc.setFontSize(F.header);
     setText(doc, INK);
     doc.text(layout.header.title, layout.header.x, layout.header.y + F.header);
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(F.sub);
-    setText(doc, GRAY);
-    doc.text(layout.header.subtitle, layout.header.x, layout.header.y + F.header + F.sub + 4);
+    if (layout.header.subtitle) {
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(F.sub);
+      setText(doc, GRAY);
+      doc.text(layout.header.subtitle, layout.header.x, layout.header.y + F.header + F.sub + 4);
+    }
 
     var grid = layout.grid;
 

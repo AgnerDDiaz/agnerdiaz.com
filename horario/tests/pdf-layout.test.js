@@ -88,5 +88,34 @@ var port = run("portrait");
 ok("landscape day columns wider than portrait", land.days[0].width > port.days[0].width);
 ok("legend lists used types", land.legend.length >= 3);
 
+// ---- Adaptive landscape width (iteration 05) -------------------------
+// Landscape targets a 960 pt page instead of a fixed column width, so the
+// sheet is no wider than a screen at 100%.
+ok("landscape page width hits the 960 pt target", Math.abs(land.page.width - 960) < 0.5);
+ok("landscape day column is derived, ~112-140 pt", land.days[0].width > 112 && land.days[0].width < 140);
+ok("landscape columns exactly fill the content width",
+  Math.abs(land.page.width - (2 * land.pt.margin + land.gutter.width + 7 * land.days[0].width)) < 0.01);
+ok("portrait keeps its fixed 96 pt column", Math.abs(port.days[0].width - 96) < 0.01);
+
+// A very wide gutter must not squeeze the columns below the floor.
+(function minDayColFloor() {
+  var wide = {
+    width: function (t, f) { return String(t).length * f * 4; }, // huge hour labels
+    wrap: measure.wrap
+  };
+  var L = H.pdfLayout.computeLayout({ items: items, types: types, settings: settings, orientation: "landscape", measure: wide });
+  ok("minDayCol floor respected when the gutter is huge", L.days[0].width >= 112 - 1e-9);
+})();
+
+// Air under the last hour, and no subtitle in the header.
+ok("bottomPad is applied under the last hour",
+  Math.abs((land.grid.bottom - land.grid.top) - ((1320 - 300) * land.scale + land.pt.bottomPad)) < 0.01);
+ok("header subtitle is empty (no 'Formato N horas')", land.header.subtitle === "");
+(function subtitleIn12h() {
+  var s12 = Object.assign({}, settings, { hourFormat: "12" });
+  var L = H.pdfLayout.computeLayout({ items: items, types: types, settings: s12, orientation: "landscape", measure: measure });
+  ok("header subtitle stays empty in 12h format too", L.header.subtitle === "");
+})();
+
 console.log("\n=== " + pass + " passed, " + fail + " failed ===");
 process.exit(fail ? 1 : 0);

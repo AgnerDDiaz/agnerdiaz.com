@@ -12,7 +12,8 @@
     "skills": "Tecnologías",
     "certs": "Certificaciones",
     "contact": "Contacto",
-    "lang": "Idioma"
+    "lang": "Idioma",
+    "horario": "Horario UASD"
   },
   "hero": {
     "role": "Ingeniero en Software",
@@ -65,7 +66,12 @@
       "desc": "MercaVerde es una aplicación móvil desarrollada en Flutter enfocada en reducir el desperdicio alimentario mediante un marketplace B2C y B2B. Participé en el diseño y desarrollo del backend y la arquitectura general del sistema, implementando autenticación, manejo de roles, lógica de negocio y flujos de compra. La plataforma permite a productores publicar excedentes, a usuarios comprar o suscribirse a planes, procesar pagos seguros y visualizar productos geolocalizados, con notificaciones en tiempo real y una base escalable lista para crecimiento.",
       "tech": "flutter|supabase|postgresql|stripe|firebase|mapbox|github"
     },
-    "more": "Ver todos"
+    "more": "Ver todos",
+    "horario": {
+      "desc": "Horario UASD convierte el PDF oficial de «Horario de Detalle de Alumno» en un calendario semanal claro. Lee el PDF en el propio navegador —nunca se sube a ningún servidor—, reconoce materias, secciones, aulas y profesores, y clasifica cada clase según el edificio real del campus. Todo queda editable a mano, los tipos y colores son configurables, y el horario se exporta a PDF vectorial.",
+      "stack": "HTML · CSS · JavaScript (sin frameworks) · PDF.js · jsPDF · localStorage",
+      "tech": "html|css|javascript|pdfjs|jspdf|localstorage"
+    }
   },
   "skills": {
     "title": "Tecnologías"
@@ -139,7 +145,8 @@
     "subtitle": "Una selección de mi trabajo.",
     "finclarityCta": "Ver FinClarity",
     "mercaverdeCta": "Abrir MercaVerde",
-    "homeCta": "Ir al Inicio"
+    "homeCta": "Ir al Inicio",
+    "horarioCta": "Abrir Horario UASD"
   },
   "finclarityPage": {
     "subtitle": "App de finanzas personales",
@@ -153,7 +160,6 @@
     "supportBtn": "Soporte",
     "githubPrivate": "GitHub: Repositorio privado"
   },
-
   "supportPage": {
     "finclarity": {
       "title": "Soporte — FinClarity",
@@ -173,46 +179,53 @@
       "privacyLink": "Ver la Política de Privacidad"
     }
   },
-"privacy": {
-  "finclarity": {
-    "title": "Política de Privacidad — FinClarity",
-    "updated": "Última actualización:",
-    "intro": "FinClarity es una app de finanzas personales offline-first. La información financiera que ingresas se almacena localmente en tu dispositivo. Esta política explica cómo se maneja la información y cómo funcionan los anuncios.",
-    "collectTitle": "Qué recopilamos",
-    "collectBody": "FinClarity no recopila ni guarda tus registros financieros en servidores. La app almacena transacciones, categorías, cuentas, notas y configuraciones localmente en tu dispositivo. Si los anuncios están habilitados, Google Mobile Ads (AdMob) puede recopilar identificadores del dispositivo y datos técnicos limitados para mostrar y medir anuncios.",
-    "adsTitle": "Anuncios (Google AdMob)",
-    "adsBody": "FinClarity utiliza Google Mobile Ads (AdMob). Según tu consentimiento, los anuncios pueden ser personalizados. AdMob puede recopilar información como el Advertising ID (u otros identificadores similares), dirección IP, información del dispositivo y datos de interacción con anuncios para ofrecer y medir publicidad.",
-    "storageTitle": "Almacenamiento de datos",
-    "storageBody": "Todos los datos de FinClarity se almacenan localmente (SQLite) en tu dispositivo. Si borras datos desde la app, limpias el almacenamiento de la app o desinstalas la aplicación, se eliminarán los datos locales. Como no almacenamos la información externamente, los datos eliminados no se pueden recuperar.",
-    "contactTitle": "Contacto",
-    "contactBody": "Si tienes preguntas sobre esta política, contáctanos en:",
-    "contactEmail": "finclarity.support@gmail.com"
+  "privacy": {
+    "finclarity": {
+      "title": "Política de Privacidad — FinClarity",
+      "updated": "Última actualización:",
+      "intro": "FinClarity es una app de finanzas personales offline-first. La información financiera que ingresas se almacena localmente en tu dispositivo. Esta política explica cómo se maneja la información y cómo funcionan los anuncios.",
+      "collectTitle": "Qué recopilamos",
+      "collectBody": "FinClarity no recopila ni guarda tus registros financieros en servidores. La app almacena transacciones, categorías, cuentas, notas y configuraciones localmente en tu dispositivo. Si los anuncios están habilitados, Google Mobile Ads (AdMob) puede recopilar identificadores del dispositivo y datos técnicos limitados para mostrar y medir anuncios.",
+      "adsTitle": "Anuncios (Google AdMob)",
+      "adsBody": "FinClarity utiliza Google Mobile Ads (AdMob). Según tu consentimiento, los anuncios pueden ser personalizados. AdMob puede recopilar información como el Advertising ID (u otros identificadores similares), dirección IP, información del dispositivo y datos de interacción con anuncios para ofrecer y medir publicidad.",
+      "storageTitle": "Almacenamiento de datos",
+      "storageBody": "Todos los datos de FinClarity se almacenan localmente (SQLite) en tu dispositivo. Si borras datos desde la app, limpias el almacenamiento de la app o desinstalas la aplicación, se eliminarán los datos locales. Como no almacenamos la información externamente, los datos eliminados no se pueden recuperar.",
+      "contactTitle": "Contacto",
+      "contactBody": "Si tienes preguntas sobre esta política, contáctanos en:",
+      "contactEmail": "finclarity.support@gmail.com"
+    }
+  },
+  "support": {
+    "finclarity": {
+      "title": "Soporte — FinClarity",
+      "subtitle": "Ayuda, solución de problemas y opciones de contacto.",
+      "faqTitle": "Preguntas frecuentes",
+      "faq": {
+        "q1": "¿Cómo registro ingresos o gastos?",
+        "a1": "Abre la app y crea una nueva transacción. Selecciona categoría/cuenta y guarda. (Ajusta este texto según tu UI real.)",
+        "q2": "¿Cómo borro todos mis datos?",
+        "a2": "Usa la opción de la app para borrar todos los datos. También puedes limpiar el almacenamiento de la app o desinstalarla para eliminar la información local. Los datos borrados no se pueden recuperar porque no se guardan en la nube.",
+        "q3": "¿Cómo funcionan los anuncios personalizados?",
+        "a3": "Al abrir la app por primera vez, puedes elegir si permites anuncios personalizados. Si los permites, AdMob puede usar identificadores del dispositivo para mostrar anuncios más relevantes. Si no, los anuncios pueden ser menos personalizados."
+      },
+      "troubleshootingTitle": "Solución de problemas",
+      "troubleshooting": {
+        "t1": "Si los totales no cuadran, revisa el rango de fechas y filtros.",
+        "t2": "Si los anuncios no cargan, verifica tu conexión a internet e intenta de nuevo.",
+        "t3": "Si el problema continúa, contacta soporte con el modelo del dispositivo y la versión del sistema."
+      },
+      "contactTitle": "Contacto",
+      "privacyLink": "Ver la Política de Privacidad",
+      "emailLabel": "Correo de soporte",
+      "email": "finclarity.support@gmail.com"
+    }
+  },
+  "techLabels": {
+    "html": "HTML",
+    "css": "CSS",
+    "javascript": "JavaScript",
+    "pdfjs": "PDF.js",
+    "jspdf": "jsPDF",
+    "localstorage": "localStorage"
   }
-},
-"support": {
-  "finclarity": {
-    "title": "Soporte — FinClarity",
-    "subtitle": "Ayuda, solución de problemas y opciones de contacto.",
-    "faqTitle": "Preguntas frecuentes",
-    "faq": {
-      "q1": "¿Cómo registro ingresos o gastos?",
-      "a1": "Abre la app y crea una nueva transacción. Selecciona categoría/cuenta y guarda. (Ajusta este texto según tu UI real.)",
-      "q2": "¿Cómo borro todos mis datos?",
-      "a2": "Usa la opción de la app para borrar todos los datos. También puedes limpiar el almacenamiento de la app o desinstalarla para eliminar la información local. Los datos borrados no se pueden recuperar porque no se guardan en la nube.",
-      "q3": "¿Cómo funcionan los anuncios personalizados?",
-      "a3": "Al abrir la app por primera vez, puedes elegir si permites anuncios personalizados. Si los permites, AdMob puede usar identificadores del dispositivo para mostrar anuncios más relevantes. Si no, los anuncios pueden ser menos personalizados."
-    },
-    "troubleshootingTitle": "Solución de problemas",
-    "troubleshooting": {
-      "t1": "Si los totales no cuadran, revisa el rango de fechas y filtros.",
-      "t2": "Si los anuncios no cargan, verifica tu conexión a internet e intenta de nuevo.",
-      "t3": "Si el problema continúa, contacta soporte con el modelo del dispositivo y la versión del sistema."
-    },
-    "contactTitle": "Contacto",
-    "privacyLink": "Ver la Política de Privacidad",
-    "emailLabel": "Correo de soporte",
-    "email": "finclarity.support@gmail.com"
-  }
-}
-
 }

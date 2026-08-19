@@ -21,6 +21,7 @@
 
   <link rel="stylesheet" href="/assets/css/styles.css" />
   <link rel="stylesheet" href="/horario/css/horario.css" />
+  <link rel="stylesheet" href="/horario/css/ui-polish.css" />
   <link rel="stylesheet" href="/horario/css/print.css" media="print" />
 
   <!-- Prevent theme flash: apply saved/system theme before paint (same as the rest of the site) -->
@@ -45,7 +46,7 @@
   </script>
 </head>
 
-<body>
+<body class="hz-page">
   <a class="skip-link" href="#main">Saltar al contenido</a>
 
   <!-- Header (compact, coherent with the site nav) -->
@@ -252,9 +253,9 @@
           <span>Final</span>
           <input id="fRangeEnd" type="time" step="3600" />
         </label>
-        <button type="button" class="btn btn--soft hz-btn-sm" id="hzRangeApply">Aplicar</button>
       </div>
       <p class="hz-field__error" id="hzRangeError" hidden></p>
+      <p class="hz-hint">Los cambios se aplican al pulsar «Listo».</p>
     </div>
 
     <div class="hz-dialog__section">
@@ -396,12 +397,12 @@
       <p style="margin:0 0 12px;font-weight:800;font-size:13px;">Orientación</p>
       <label class="hz-export__opt">
         <input type="radio" name="pdfOrientation" value="landscape" checked />
-        <span class="hz-export__opt-title">Horizontal — recomendado</span>
+        <span class="hz-export__opt-title">Columnas anchas (recomendado)</span>
         <p class="hz-export__opt-desc">Más espacio para nombres, lugares y profesores.</p>
       </label>
       <label class="hz-export__opt">
         <input type="radio" name="pdfOrientation" value="portrait" />
-        <span class="hz-export__opt-title">Vertical</span>
+        <span class="hz-export__opt-title">Compacto</span>
         <p class="hz-export__opt-desc">Documento más alto y compacto (los 7 días siempre presentes).</p>
       </label>
       <p class="hz-export__note" id="hzExportRangeNote"></p>
