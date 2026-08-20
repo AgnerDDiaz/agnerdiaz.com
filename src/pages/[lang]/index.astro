@@ -8,7 +8,7 @@ import TechChips from "@components/ui/TechChips.astro";
 import CertCard from "@components/certs/CertCard.astro";
 import CertViewer from "@components/certs/CertViewer.astro";
 import { site } from "@data/site";
-import { metrics, about, education, languages } from "@data/home";
+import { about, education, languages } from "@data/home";
 import { TECH, TECH_CATEGORY_ORDER } from "@data/tech";
 import { useTranslations, toLang, type UIKey } from "@i18n/ui";
 
@@ -80,30 +80,12 @@ const roles = JSON.stringify(site.roles[lang]);
           </p>
           <p class="hero__lead">{t("hero.lead")}</p>
           <div class="hero__cta">
-            <a class="btn btn--primary" href={site.cv[lang]} download>
-              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
-              {t("hero.cvBtn")}
-            </a>
-            <a class="btn btn--soft" href="#contact">{t("hero.contactBtn")}</a>
+            <a class="btn btn--primary" href="#contact">{t("hero.contactBtn")}</a>
           </div>
           <div class="social"><SocialIcons /></div>
         </div>
         <div class="hero__right">
           <div class="avatar"><img src="/assets/img/profile.jpg" alt={site.name} width="320" height="320" /></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── Métricas ─────────────────────────────────────── -->
-    <section class="section" aria-label={t("metrics.title")}>
-      <div class="container">
-        <div class="metrics reveal">
-          {metrics.map((m) => (
-            <div class="metric">
-              <div class="metric__value">{m.value}</div>
-              <div class="metric__label">{m.label[lang]}</div>
-            </div>
-          ))}
         </div>
       </div>
     </section>

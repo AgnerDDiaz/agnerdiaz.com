@@ -9,8 +9,10 @@ interface Props {
   path?: string;
   /** true si el header está en la home (anclas directas #about). */
   onHome?: boolean;
+  /** Solo marca + toggles, sin menú de secciones (p. ej. /links). */
+  minimal?: boolean;
 }
-const { lang, path = "/", onHome = true } = Astro.props;
+const { lang, path = "/", onHome = true, minimal = false } = Astro.props;
 const t = useTranslations(lang);
 const homeHref = localizePath("/", lang);
 const other = otherLang(lang);
@@ -26,25 +28,34 @@ const sectionHref = (hash: string) => (onHome ? hash : `${homeHref}${hash}`);
       <span class="brand__text">{site.brand.first}<span class="brand__accent">{site.brand.last}</span></span>
     </a>
 
-    <button class="nav__toggle" id="navToggle" aria-label={t("a11y.menu.open")} aria-expanded="false" aria-controls="navMenu">
-      <span></span><span></span><span></span>
-    </button>
+    {
+      minimal ? (
+        <div class="nav__actions">
+          <a class="icon-btn" id="langToggle" href={otherHref} data-lang={other} aria-label={t("a11y.lang")}>{other.toUpperCase()}</a>
+          <button class="icon-btn" id="themeToggle" type="button" aria-label={t("a11y.theme")}>☾</button>
+        </div>
+      ) : (
+        <>
+          <button class="nav__toggle" id="navToggle" aria-label={t("a11y.menu.open")} aria-expanded="false" aria-controls="navMenu">
+            <span></span><span></span><span></span>
+          </button>
 
-    <nav class="nav__menu" id="navMenu" aria-label={t("nav.home")}>
-      {
-        mainNav.map((item) =>
-          item.cta ? (
-            <a class="btn btn--ghost" href={sectionHref(item.href)}>{t(item.key as UIKey)}</a>
-          ) : (
-            <a href={sectionHref(item.href)}>{t(item.key as UIKey)}</a>
-          )
-        )
-      }
-      <div class="nav__actions">
-        <a class="icon-btn" id="langToggle" href={otherHref} data-lang={other} aria-label={t("a11y.lang")}>{other.toUpperCase()}</a>
-        <button class="icon-btn" id="themeToggle" type="button" aria-label={t("a11y.theme")}>☾</button>
-      </div>
-    </nav>
+          <nav class="nav__menu" id="navMenu" aria-label={t("nav.home")}>
+            {mainNav.map((item) =>
+              item.cta ? (
+                <a class="btn btn--ghost" href={sectionHref(item.href)}>{t(item.key as UIKey)}</a>
+              ) : (
+                <a href={sectionHref(item.href)}>{t(item.key as UIKey)}</a>
+              )
+            )}
+            <div class="nav__actions">
+              <a class="icon-btn" id="langToggle" href={otherHref} data-lang={other} aria-label={t("a11y.lang")}>{other.toUpperCase()}</a>
+              <button class="icon-btn" id="themeToggle" type="button" aria-label={t("a11y.theme")}>☾</button>
+            </div>
+          </nav>
+        </>
+      )
+    }
   </div>
 </header>
 

@@ -95,6 +95,9 @@ export const ui = {
 
     "footer.rights": "Todos los derechos reservados.",
     "footer.built": "Diseñado y construido por Agner Díaz.",
+
+    "links.kicker": "Directorio",
+    "links.subtitle": "Accesos directos a mi portafolio y redes profesionales.",
   },
 
   en: {
@@ -181,6 +184,9 @@ export const ui = {
 
     "footer.rights": "All rights reserved.",
     "footer.built": "Designed and built by Agner Díaz.",
+
+    "links.kicker": "Directory",
+    "links.subtitle": "Quick links to my portfolio and professional networks.",
   },
 } as const;
 

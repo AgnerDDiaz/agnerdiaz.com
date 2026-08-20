@@ -1,55 +1,7 @@
 /**
- * Interacciones de la home (bundleadas por Astro). Todo respeta
- * prefers-reduced-motion y degrada con elegancia si falta algún nodo.
+ * Interacciones específicas de la home (bundleadas por Astro). El typing,
+ * el reveal y el botón «arriba» viven en base.ts (todas las páginas).
  */
-
-const reduceMotion = () =>
-  typeof window.matchMedia === "function" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-// ── Máquina de escribir (roles del hero) ─────────────────────
-function initTyping() {
-  const el = document.querySelector<HTMLElement>(".hero__roles");
-  const out = el?.querySelector<HTMLElement>(".typing");
-  if (!el || !out) return;
-
-  let roles: string[] = [];
-  try {
-    roles = JSON.parse(el.getAttribute("data-roles") || "[]");
-  } catch {
-    roles = [];
-  }
-  if (!roles.length) return;
-
-  if (reduceMotion()) {
-    out.textContent = roles[0];
-    const caret = el.querySelector<HTMLElement>(".typing__cursor");
-    if (caret) caret.style.display = "none";
-    return;
-  }
-
-  let idx = 0;
-  const rand = (a: number, b: number) => Math.floor(a + Math.random() * (b - a));
-
-  const type = (text: string, i: number) => {
-    out.textContent = text.slice(0, i);
-    if (i <= text.length) {
-      setTimeout(() => type(text, i + 1), rand(34, 58));
-    } else {
-      setTimeout(() => del(text, text.length), rand(900, 1200));
-    }
-  };
-  const del = (text: string, i: number) => {
-    out.textContent = text.slice(0, i);
-    if (i > 0) {
-      setTimeout(() => del(text, i - 1), rand(18, 32));
-    } else {
-      idx = (idx + 1) % roles.length;
-      setTimeout(() => type(roles[idx], 0), rand(240, 360));
-    }
-  };
-  type(roles[0], 0);
-}
 
 // ── Formulario de contacto (Netlify Forms) ───────────────────
 function initContact() {
@@ -136,6 +88,5 @@ function initContact() {
 }
 
 export function initHome() {
-  initTyping();
   initContact();
 }

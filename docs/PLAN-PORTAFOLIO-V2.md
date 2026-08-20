@@ -199,6 +199,13 @@ Las URLs legales (`/privacy/finclarity/`) ya están publicadas en App Store y Go
 
 **Criterio de salida:** cero HTML duplicado; el menú se edita en un archivo.
 
+**Ajustes por feedback del usuario (post-revisión de la home):**
+- Eliminado el botón de descarga de CV del hero (el contacto es por el formulario).
+- Eliminada la banda de 4 métricas.
+- Página de links reconstruida en el sistema nuevo: `/[lang]/links/` (linktree
+  bilingüe con header minimal, avatar, rol dinámico y botones data-driven desde
+  `src/data/links.ts`). Pendiente: redirigir el viejo `/links/` al nuevo al publicar.
+
 ### Fase 2 — Contenido real (cerrar la brecha con el CV)
 - Reescribir perfil y "Sobre mí" con el posicionamiento actual del CV: *Ingeniero de Software | Desarrollador Flutter | Analista de Software*, ya graduado.
 - **Timeline vertical** reemplazando las 3 tarjetas de experiencia: EDESUR → Top1Solutions → DGII → Banreservas → Hershey. Escala a 10 empleos sin romperse.
