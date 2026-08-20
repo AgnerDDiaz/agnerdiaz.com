@@ -12,6 +12,17 @@ export default defineConfig({
   site: "https://agnerdiaz.com",
   output: "static",
 
+  // Sitio bilingüe por rutas: /es/… y /en/… (ambos prefijados). La raíz «/»
+  // la sirve src/pages/index.astro, que redirige según preferencia/idioma.
+  i18n: {
+    locales: ["es", "en"],
+    defaultLocale: "es",
+    routing: {
+      prefixDefaultLocale: true,
+      redirectToDefaultLocale: false,
+    },
+  },
+
   // URLs con barra final: /proyectos/finclarity/ — es lo que ya está indexado
   // hoy y lo que enlazan las páginas legales publicadas en las tiendas.
   trailingSlash: "always",

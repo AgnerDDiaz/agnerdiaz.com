@@ -1,0 +1,335 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Header from "@components/nav/Header.astro";
+import Footer from "@components/nav/Footer.astro";
+import SocialIcons from "@components/nav/SocialIcons.astro";
+import TechChips from "@components/ui/TechChips.astro";
+import { site } from "@data/site";
+import { metrics, about, education, languages } from "@data/home";
+import { TECH, TECH_CATEGORY_ORDER } from "@data/tech";
+import { useTranslations, toLang, type UIKey } from "@i18n/ui";
+
+export function getStaticPaths() {
+  return [{ params: { lang: "es" } }, { params: { lang: "en" } }];
+}
+
+const lang = toLang(Astro.params.lang);
+const t = useTranslations(lang);
+
+// ── Contenido ────────────────────────────────────────────────
+const experience = (await getCollection("experience")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const projects = (await getCollection("projects"))
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const certifications = (await getCollection("certifications")).sort((a, b) =>
+  b.data.issuedAt.localeCompare(a.data.issuedAt),
+);
+
+// Skills agrupadas por categoría (a partir del registro único de tecnologías).
+const skillGroups = TECH_CATEGORY_ORDER.map((cat) => ({
+  key: cat.key,
+  items: Object.values(TECH).filter((tetch) => tetch.category === cat.id),
+})).filter((g) => g.items.length > 0);
+
+const MONTHS: Record<string, { es: string; en: string }> = {
+  "01": { es: "Ene", en: "Jan" }, "02": { es: "Feb", en: "Feb" },
+  "03": { es: "Mar", en: "Mar" }, "04": { es: "Abr", en: "Apr" },
+  "05": { es: "May", en: "May" }, "06": { es: "Jun", en: "Jun" },
+  "07": { es: "Jul", en: "Jul" }, "08": { es: "Ago", en: "Aug" },
+  "09": { es: "Sep", en: "Sep" }, "10": { es: "Oct", en: "Oct" },
+  "11": { es: "Nov", en: "Nov" }, "12": { es: "Dic", en: "Dec" },
+};
+function fmt(ym: string): string {
+  const [y, m] = ym.split("-");
+  return m ? `${MONTHS[m]?.[lang] ?? m} ${y}` : y;
+}
+function period(start: string, end: string | null): string {
+  const now = lang === "es" ? "Actualidad" : "Present";
+  return `${fmt(start)} — ${end ? fmt(end) : now}`;
+}
+
+const title =
+  lang === "es"
+    ? "Agner Díaz | Ingeniero de Software & Flutter Developer"
+    : "Agner Díaz | Software Engineer & Flutter Developer";
+const description = t("hero.lead");
+const roles = JSON.stringify(site.roles[lang]);
+---
+
+<BaseLayout lang={lang} title={title} description={description} path="/">
+  <a class="skip-link" href="#main">{t("a11y.skip")}</a>
+  <Header lang={lang} path="/" />
+
+  <main id="main">
+    <!-- ── Hero ─────────────────────────────────────────── -->
+    <section class="hero">
+      <div class="container hero__grid">
+        <div class="hero__left">
+          <h1 class="hero__title">AGNER <span class="accent">DÍAZ</span></h1>
+          <p class="hero__roles" data-roles={roles}>
+            <span class="typing" aria-hidden="true"></span><span class="typing__cursor" aria-hidden="true"></span>
+            <span class="sr-only">{t("hero.availabilityRole")}</span>
+          </p>
+          <p class="hero__lead">{t("hero.lead")}</p>
+          <div class="hero__cta">
+            <a class="btn btn--primary" href={site.cv[lang]} download>
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+              {t("hero.cvBtn")}
+            </a>
+            <a class="btn btn--soft" href="#contact">{t("hero.contactBtn")}</a>
+          </div>
+          <div class="social"><SocialIcons /></div>
+        </div>
+        <div class="hero__right">
+          <div class="avatar"><img src="/assets/img/profile.jpg" alt={site.name} width="320" height="320" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Métricas ─────────────────────────────────────── -->
+    <section class="section" aria-label={t("metrics.title")}>
+      <div class="container">
+        <div class="metrics reveal">
+          {metrics.map((m) => (
+            <div class="metric">
+              <div class="metric__value">{m.value}</div>
+              <div class="metric__label">{m.label[lang]}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Sobre mí ─────────────────────────────────────── -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section__head reveal">
+          <span class="section__eyebrow">01</span>
+          <h2>{t("about.title")}</h2>
+        </div>
+        <div class="card about__card reveal">
+          {about[lang].map((p) => <p>{p}</p>)}
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Experiencia ──────────────────────────────────── -->
+    <section class="section" id="experience">
+      <div class="container">
+        <div class="section__head reveal">
+          <span class="section__eyebrow">02</span>
+          <h2>{t("experience.title")}</h2>
+        </div>
+        <div class="timeline">
+          {experience.map((exp) => (
+            <article class="tl-item reveal">
+              <div class="tl-item__head">
+                <span class="tl-item__role">{exp.data.role[lang]}</span>
+                <span class="tl-item__at">@ <span class="tl-item__company">{exp.data.company}</span></span>
+              </div>
+              <div class="tl-item__meta">
+                <span class="dates">{period(exp.data.start, exp.data.end)}</span>
+                <span>{exp.data.location[lang]}</span>
+                {exp.data.end === null && <span class="tl-current">{t("experience.current")}</span>}
+              </div>
+              <ul class="tl-item__bullets">
+                {exp.data.bullets[lang].map((b) => <li>{b}</li>)}
+              </ul>
+              <TechChips ids={exp.data.tech} />
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Proyectos ────────────────────────────────────── -->
+    <section class="section" id="projects">
+      <div class="container">
+        <div class="section__head reveal">
+          <span class="section__eyebrow">03</span>
+          <h2>{t("projects.title")}</h2>
+          <p class="section__sub">{t("projects.subtitle")}</p>
+        </div>
+        <div class="projects-grid">
+          {projects.map((proj) => (
+            <article class="card project reveal" style={`--proj-accent:${proj.data.accent ?? "var(--accent)"}`}>
+              <div class="project__topline">
+                <h3 class="project__title">{proj.data.title}</h3>
+                <span class={`status status--${proj.data.status}`}>
+                  {t(`projects.status.${proj.data.status}` as UIKey)}
+                </span>
+              </div>
+              <p class="project__role">{proj.data.role[lang]}</p>
+              <p class="project__tagline">{proj.data.tagline[lang]}</p>
+              {proj.data.metrics.length > 0 && (
+                <div class="project__metrics">
+                  {proj.data.metrics.map((m) => (
+                    <div class="project__metric"><b>{m.value}</b><span>{m.label[lang]}</span></div>
+                  ))}
+                </div>
+              )}
+              <TechChips ids={proj.data.tech} />
+              <div class="project__actions">
+                {proj.data.links.live && (
+                  <a class="btn btn--primary" href={proj.data.links.live}>{t("projects.open")}</a>
+                )}
+                {proj.data.links.repo && (
+                  <a class="btn btn--soft" href={proj.data.links.repo} target="_blank" rel="noreferrer">GitHub</a>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Tecnologías ──────────────────────────────────── -->
+    <section class="section" id="skills">
+      <div class="container">
+        <div class="section__head reveal">
+          <span class="section__eyebrow">04</span>
+          <h2>{t("skills.title")}</h2>
+          <p class="section__sub">{t("skills.subtitle")}</p>
+        </div>
+        <div class="skills">
+          {skillGroups.map((group) => (
+            <div class="card skillcat reveal">
+              <p class="skillcat__title">{t(group.key as UIKey)}</p>
+              <div class="skillcat__list">
+                {group.items.map((tech) => (
+                  <span class={`skill${tech.invertOnDark ? " is-inverted" : ""}`}>
+                    {tech.icon && <img src={tech.icon} alt="" width="24" height="24" loading="lazy" decoding="async" onerror="this.remove()" />}
+                    <span>{tech.label}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Certificaciones ──────────────────────────────── -->
+    <section class="section" id="certs">
+      <div class="container">
+        <div class="section__head reveal">
+          <span class="section__eyebrow">05</span>
+          <h2>{t("certs.title")}</h2>
+          <p class="section__sub">{t("certs.subtitle")}</p>
+        </div>
+        <div class="certs-grid">
+          {certifications.map((cert) => (
+            <article class="card cert reveal">
+              {cert.data.thumb ? (
+                <img class="cert__thumb" src={cert.data.thumb} alt={cert.data.name[lang]} loading="lazy" />
+              ) : (
+                <div class="cert__thumb cert__thumb--ph" aria-hidden="true">{cert.data.issuer.slice(0, 2).toUpperCase()}</div>
+              )}
+              <div class="cert__body">
+                <span class="cert__issuer">{cert.data.issuer}</span>
+                <h3 class="cert__name">{cert.data.name[lang]}</h3>
+                <span class="cert__year">{cert.data.issuedAt}</span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Educación e idiomas ──────────────────────────── -->
+    <section class="section" id="education">
+      <div class="container">
+        <div class="section__head reveal">
+          <span class="section__eyebrow">06</span>
+          <h2>{t("education.title")}</h2>
+        </div>
+        <div class="grid grid--2">
+          <div class="card edu-card reveal">
+            <h3>{education.institution}</h3>
+            <p class="muted">{education.degree[lang]}</p>
+            <p class="muted">{education.date[lang]}</p>
+          </div>
+          <div class="grid grid--2">
+            {languages.map((l) => (
+              <div class="card lang-card reveal">
+                <div class="name">{l.name[lang]}</div>
+                <div class="level">{l.level[lang]}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Contacto ─────────────────────────────────────── -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section__head reveal">
+          <span class="section__eyebrow">07</span>
+          <h2>{t("contact.title")}</h2>
+        </div>
+        <div class="contact-grid">
+          <div class="contact-intro reveal">
+            <p>{t("contact.intro")}</p>
+            <div class="social" style="margin-top:16px"><SocialIcons size="sm" /></div>
+          </div>
+
+          <div class="card contact-card reveal" id="contactCard">
+            <h3>{t("contact.how")}</h3>
+            <form
+              class="form"
+              id="contactForm"
+              name="contact"
+              method="POST"
+              data-netlify="true"
+              data-netlify-honeypot="bot-field"
+              action="/"
+              data-msg-sending={t("contact.sending")}
+              data-msg-send={t("contact.form.send")}
+              data-msg-success-title={t("contact.successTitle")}
+              data-msg-success={t("contact.successMessage")}
+              data-msg-error-title={t("contact.errorTitle")}
+              data-msg-error={t("contact.errorMessage")}
+              data-err-subject={t("contact.validation.subjectRequired")}
+              data-err-message={t("contact.validation.messageRequired")}
+              data-err-email={t("contact.validation.emailInvalid")}
+            >
+              <input type="hidden" name="form-name" value="contact" />
+              <p class="form-hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
+              <div class="form-status" id="contactStatus" role="status" aria-live="polite" hidden></div>
+
+              <label class="field" for="cf-subject">
+                <span>{t("contact.form.subjectLabel")}</span>
+                <input id="cf-subject" name="subject" type="text" autocomplete="off" required placeholder={t("contact.form.subjectPh")} aria-describedby="err-subject" />
+                <p class="field-error" id="err-subject" hidden></p>
+              </label>
+              <label class="field" for="cf-email">
+                <span>{t("contact.form.emailLabel")}</span>
+                <input id="cf-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder={t("contact.form.emailPh")} aria-describedby="err-email" />
+                <p class="field-error" id="err-email" hidden></p>
+              </label>
+              <label class="field" for="cf-message">
+                <span>{t("contact.form.messageLabel")}</span>
+                <textarea id="cf-message" name="message" rows="6" required placeholder={t("contact.form.messagePh")} aria-describedby="err-message"></textarea>
+                <p class="field-error" id="err-message" hidden></p>
+              </label>
+              <button class="btn btn--primary" id="contactSubmit" type="submit">{t("contact.form.send")}</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>
+
+<script>
+  import { initHome } from "@scripts/home";
+  initHome();
+</script>

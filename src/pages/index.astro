@@ -1,0 +1,41 @@
+---
+// Raíz «/»: redirige al idioma preferido (guardado o del navegador).
+// Página estática con redirección por script + fallback <noscript> y hreflang,
+// para que funcione en cualquier hosting sin reglas de servidor.
+import { site } from "@data/site";
+const esUrl = "/es/";
+const enUrl = "/en/";
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{site.name}</title>
+    <link rel="canonical" href={new URL(esUrl, site.url).href} />
+    <link rel="alternate" hreflang="es" href={new URL(esUrl, site.url).href} />
+    <link rel="alternate" hreflang="en" href={new URL(enUrl, site.url).href} />
+    <link rel="alternate" hreflang="x-default" href={new URL(esUrl, site.url).href} />
+    <meta name="robots" content="noindex,follow" />
+    <script is:inline>
+      (function () {
+        try {
+          var saved = localStorage.getItem("lang");
+          var lang = saved === "es" || saved === "en"
+            ? saved
+            : (navigator.language || "es").toLowerCase().indexOf("en") === 0 ? "en" : "es";
+          location.replace("/" + lang + "/");
+        } catch (e) {
+          location.replace("/es/");
+        }
+      })();
+    </script>
+    <meta http-equiv="refresh" content={`0; url=${esUrl}`} />
+  </head>
+  <body>
+    <p style="font-family:system-ui;padding:24px">
+      <a href={esUrl}>Español</a> · <a href={enUrl}>English</a>
+    </p>
+  </body>
+</html>
