@@ -6,7 +6,7 @@
  */
 global.window = {};
 var path = require("path");
-var JS = path.join(__dirname, "..", "js");
+var JS = path.join(__dirname, "..", "..", "public", "horario", "js");
 require(path.join(JS, "utils.js"));
 require(path.join(JS, "types.js"));
 require(path.join(JS, "settings.js"));

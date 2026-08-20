@@ -10,7 +10,7 @@ global.window = {};
 var fs = require("fs");
 var path = require("path");
 
-var JS = path.join(__dirname, "..", "js");
+var JS = path.join(__dirname, "..", "..", "public", "horario", "js");
 require(path.join(JS, "utils.js"));
 require(path.join(JS, "types.js"));
 require(path.join(JS, "events.js"));

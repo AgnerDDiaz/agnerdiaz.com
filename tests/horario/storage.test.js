@@ -17,7 +17,7 @@ var mock = makeLS();
 global.window = { localStorage: mock };
 
 var path = require("path");
-require(path.join(__dirname, "..", "js", "storage.js"));
+require(path.join(__dirname, "..", "..", "public", "horario", "js", "storage.js"));
 var S = global.window.Horario.storage;
 
 var pass = 0, fail = 0;
@@ -56,8 +56,8 @@ ok("load after clear -> null", S.load() === null);
 
 // Unavailable storage (throwing accessor) -> graceful
 global.window = { get localStorage() { throw new Error("blocked"); } };
-delete require.cache[require.resolve(path.join(__dirname, "..", "js", "storage.js"))];
-require(path.join(__dirname, "..", "js", "storage.js"));
+delete require.cache[require.resolve(path.join(__dirname, "..", "..", "public", "horario", "js", "storage.js"))];
+require(path.join(__dirname, "..", "..", "public", "horario", "js", "storage.js"));
 var S2 = global.window.Horario.storage;
 ok("available false when storage blocked", S2.available() === false);
 ok("load null when storage blocked", S2.load() === null);

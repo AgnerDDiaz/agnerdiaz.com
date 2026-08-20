@@ -28,7 +28,7 @@ bajo el espacio de nombres global `window.Horario`. Separación estado / lógica
 presentación:
 
 ```
-horario/
+public/horario/           # la app: servida tal cual, sin pasar por el bundler
 ├── index.html            # Estructura, diálogos accesibles, SEO
 ├── css/
 │   ├── horario.css       # Estilos específicos de la app (calendario neutro)
@@ -46,15 +46,18 @@ horario/
 │   ├── pdf-layout.js     # Geometría PURA del PDF (escala vertical, wrapping)
 │   ├── pdf-export.js     # Dibujo vectorial del PDF (jsPDF) + descarga
 │   └── app.js            # Controlador/vista: render, diálogos, import/export UI
-├── tests/
-│   ├── engine.test.js            # Motor del calendario (17)
-│   ├── uasd-parser.test.js       # Parser + adaptador (59)
-│   ├── pdf-layout.test.js        # Layout del PDF (24)
-│   ├── storage.test.js           # Persistencia local (13)
-│   └── fixtures/
-│       ├── uasd-sanitized.json   # Fixture SIN datos personales (12/15/17/1)
-│       └── private/              # (gitignored) PDFs reales de prueba
-└── README.md
+└── vendor/               # (opcional) PDF.js auto-hospedado
+
+tests/horario/            # fuera de public/: los tests no se publican
+├── engine.test.js                # Motor del calendario (17)
+├── uasd-parser.test.js           # Parser + adaptador (83)
+├── pdf-layout.test.js            # Layout del PDF (32)
+├── storage.test.js               # Persistencia local (13)
+└── fixtures/
+    ├── uasd-sanitized.json       # Fixture SIN datos personales (12/15/17/1)
+    └── private/                  # (gitignored) PDFs reales de prueba
+
+docs/horario/             # esta documentación
 ```
 
 Reutiliza del sitio: `/assets/css/styles.css` (tokens, botones, tarjetas, tema)
@@ -155,10 +158,10 @@ Para un sitio 100 % estático, vendoriza PDF.js y actívalo:
 
 ```bash
 npm pack pdfjs-dist@5.7.284      # o descarga el build oficial (Apache-2.0)
-# copia a: horario/vendor/pdfjs/{build,cmaps,standard_fonts,wasm}, LICENSE, VERSION
+# copia a: public/horario/vendor/pdfjs/{build,cmaps,standard_fonts,wasm}, LICENSE, VERSION
 ```
 
-Luego en `horario/index.html` cambia el flag:
+Luego en `public/horario/index.html` cambia el flag:
 
 ```html
 <script>window.HORARIO_PDFJS = { vendor: true };</script>
@@ -208,39 +211,45 @@ omite).
 ## Pruebas
 
 ```bash
+# Los cuatro de una vez (145 assertions)
+npm test
+```
+
+O uno por uno:
+
+```bash
 # Motor del calendario
-node horario/tests/engine.test.js          # 17 passed, 0 failed
+node tests/horario/engine.test.js          # 17 passed, 0 failed
 
 # Parser UASD + adaptador (incluye estabilidad de semanticRole)
-node horario/tests/uasd-parser.test.js     # 59 passed, 0 failed
+node tests/horario/uasd-parser.test.js     # 83 passed, 0 failed
 
 # Layout del PDF (geometría pura, escala, wrapping)
-node horario/tests/pdf-layout.test.js      # 24 passed, 0 failed
+node tests/horario/pdf-layout.test.js      # 32 passed, 0 failed
 
 # Persistencia local (mock localStorage)
-node horario/tests/storage.test.js         # 13 passed, 0 failed
+node tests/horario/storage.test.js         # 13 passed, 0 failed
 ```
 
 Verificación adicional del PDF: se genera y se **vuelve a leer con PDF.js**
 (prueba manual en `?dev=1`) comprobando que contiene los 7 días y nombres
 completos, y que **no** contiene `localhost`, `http`, `1/1` ni `...`.
 
-El fixture `tests/fixtures/uasd-sanitized.json` **no** contiene datos personales
+El fixture `tests/horario/fixtures/uasd-sanitized.json` **no** contiene datos personales
 y reproduce los casos académicos del PDF real (12 materias, 15 reuniones, 17
 items, 1 automático, saltos de página, `LMI`, PA/PA, hospital, multilínea).
-El PDF real solo se usa localmente desde `tests/fixtures/private/` (gitignored).
+El PDF real solo se usa localmente desde `tests/horario/fixtures/private/`
+(gitignored).
 
 ## Cómo ejecutar localmente
 
-Es estático. Cualquiera de estas opciones sirve:
+La app sigue siendo estática, pero ahora vive dentro de `public/`, así que la
+forma recomendada es el servidor de desarrollo de Astro (respeta las rutas
+absolutas `/horario/…` y `/assets/…`):
 
 ```bash
-# Opción A: abrir el archivo directamente
-#   file:///.../agnerdiaz.com/horario/index.html
-
-# Opción B: servidor estático desde la raíz del repo (recomendado, rutas /)
-python -m http.server 8080
-#   http://localhost:8080/horario/
+npm run dev
+#   http://localhost:4321/horario/
 ```
 
 En `localhost`, `file:` o con `?dev=1` aparece la sección **Desarrollo** dentro
