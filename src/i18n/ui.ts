@@ -5,6 +5,7 @@
  * en colecciones de contenido (src/content). Aquí solo van etiquetas de UI.
  */
 import type { Lang } from "@data/site";
+export type { Lang };
 
 export const LANGS: Lang[] = ["es", "en"];
 export const DEFAULT_LANG: Lang = "es";
@@ -61,6 +62,13 @@ export const ui = {
     "certs.title": "Certificaciones",
     "certs.subtitle": "Formación y credenciales, de lo más reciente a lo más antiguo.",
     "certs.verify": "Verificar",
+    "certs.viewAll": "Ver todas las certificaciones",
+    "certs.view": "Ver certificado",
+    "certs.close": "Cerrar",
+    "certs.openTab": "Abrir en pestaña nueva",
+    "certs.approx": "Fecha aproximada",
+    "certs.backHome": "Volver al inicio",
+    "certs.pageSubtitle": "Todos mis certificados, ordenados del más reciente al más antiguo. Pulsa uno para previsualizarlo.",
 
     "education.title": "Educación",
     "languages.title": "Idiomas",
@@ -140,6 +148,13 @@ export const ui = {
     "certs.title": "Certifications",
     "certs.subtitle": "Training and credentials, newest first.",
     "certs.verify": "Verify",
+    "certs.viewAll": "View all certifications",
+    "certs.view": "View certificate",
+    "certs.close": "Close",
+    "certs.openTab": "Open in new tab",
+    "certs.approx": "Approx. date",
+    "certs.backHome": "Back to home",
+    "certs.pageSubtitle": "All my certificates, newest first. Tap one to preview it.",
 
     "education.title": "Education",
     "languages.title": "Languages",

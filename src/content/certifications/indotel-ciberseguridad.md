@@ -2,7 +2,9 @@
 name:
   es: Ciberseguridad — Nivel Intermedio
   en: Cybersecurity — Intermediate Level
-issuer: Talento Digital
-issuedAt: "2026"
+issuer: INDOTEL · BID · Cymetria
+issuedAt: "2026-04"
+featured: true
+file: /certs/indotel-ciberseguridad-intermedio.pdf
 tags: [ciberseguridad, security]
 ---

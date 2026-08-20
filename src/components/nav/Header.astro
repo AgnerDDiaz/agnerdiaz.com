@@ -7,12 +7,16 @@ interface Props {
   lang: Lang;
   /** Ruta sin prefijo de idioma para el toggle de idioma. */
   path?: string;
+  /** true si el header está en la home (anclas directas #about). */
+  onHome?: boolean;
 }
-const { lang, path = "/" } = Astro.props;
+const { lang, path = "/", onHome = true } = Astro.props;
 const t = useTranslations(lang);
 const homeHref = localizePath("/", lang);
 const other = otherLang(lang);
 const otherHref = localizePath(path, other);
+// Fuera de la home, las anclas del menú apuntan a las secciones de la home.
+const sectionHref = (hash: string) => (onHome ? hash : `${homeHref}${hash}`);
 ---
 
 <header class="nav">
@@ -30,9 +34,9 @@ const otherHref = localizePath(path, other);
       {
         mainNav.map((item) =>
           item.cta ? (
-            <a class="btn btn--ghost" href={item.href}>{t(item.key as UIKey)}</a>
+            <a class="btn btn--ghost" href={sectionHref(item.href)}>{t(item.key as UIKey)}</a>
           ) : (
-            <a href={item.href}>{t(item.key as UIKey)}</a>
+            <a href={sectionHref(item.href)}>{t(item.key as UIKey)}</a>
           )
         )
       }

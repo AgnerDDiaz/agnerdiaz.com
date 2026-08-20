@@ -217,10 +217,15 @@ Las URLs legales (`/privacy/finclarity/`) ya están publicadas en App Store y Go
 
 **Criterio de salida:** agregar el proyecto n.º 4 toma menos de 15 minutos.
 
-### Fase 4 — Módulo de Certificados
-- Grid ordenado descendente por `issuedAt`, agrupado por año.
-- Click → **modal visor** (PDF en `<iframe>` o imagen), con cierre por `Esc`, foco atrapado y enlace de verificación si existe `credentialUrl`.
-- Filtro por emisor. Se elimina la dependencia del enlace a Google Drive.
+### Fase 4 — Módulo de Certificados — ✅ COMPLETADA (adelantada)
+El usuario aportó los 16 archivos, así que esta fase se adelantó.
+- ✅ 14 certificados reales en `public/certs/` (se descartó 1 duplicado exacto por folio; 1 par Fortinet FCA + curso base).
+- ✅ Contenido tipado en `src/content/certifications/` (un `.md` por certificado), con emisor, fecha e id/URL de verificación extraídos de los propios PDFs.
+- ✅ Home: 4 destacados (INDOTEL, Fortinet FCA, SAS, Huawei) + «Ver todas (14)».
+- ✅ Página `/[lang]/certificaciones/`: grid **agrupado por año** (2026→2023), orden descendente automático por `issuedAt`.
+- ✅ **Visor modal** con `<dialog>` nativo (foco atrapado + `Esc` + backdrop): PDF en `<iframe>`, PNG en `<img>`, botón «Abrir en pestaña» y «Verificar» solo si hay `credentialUrl`.
+- ✅ Se elimina la dependencia del enlace a Google Drive.
+- ⏳ **Pendiente de confirmar por el usuario**: fecha exacta de los certificados marcados `dateApprox: true` (ISOC ×2, Search and AI, SAS, Huawei) y el emisor de «Search and AI» (asumido Google).
 
 ### Fase 5 — Legales por proyecto (lo que te desbloquea publicar)
 Este es el punto que resuelve tu restricción de presupuesto: **una sola web aloja los legales de todas tus apps**.

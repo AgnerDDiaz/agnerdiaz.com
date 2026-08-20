@@ -45,9 +45,13 @@ const certifications = defineCollection({
     issuer: z.string(),
     /** "YYYY-MM" — el orden descendente sale solo de aquí. */
     issuedAt: z.string().regex(/^\d{4}(-\d{2})?$/),
+    /** true si la fecha se estimó (no se pudo leer del certificado). */
+    dateApprox: z.boolean().default(false),
     credentialId: z.string().optional(),
     credentialUrl: z.string().url().optional(),
-    /** PDF/imagen para el visor (Fase 4). Opcional mientras no exista. */
+    /** Se destaca en la home; los demás viven en /certificaciones/. */
+    featured: z.boolean().default(false),
+    /** PDF/imagen para el visor. */
     file: z.string().optional(),
     thumb: z.string().optional(),
     tags: z.array(z.string()).default([]),
@@ -83,14 +87,14 @@ const projects = defineCollection({
           live: z.string().optional(),
           demo: z.string().url().optional(),
         })
-        .default({}),
+        .default(() => ({})),
       legal: z
         .object({
           privacy: z.boolean().default(false),
           support: z.boolean().default(false),
           terms: z.boolean().default(false),
         })
-        .default({}),
+        .default({ privacy: false, support: false, terms: false }),
       cover: image().optional(),
       accent: z.string().optional(),
     }),

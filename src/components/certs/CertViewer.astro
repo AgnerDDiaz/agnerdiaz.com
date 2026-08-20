@@ -1,0 +1,74 @@
+---
+import { useTranslations, type Lang } from "@i18n/ui";
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+<dialog class="certviewer" id="certViewer" aria-label={t("certs.view")}>
+  <div class="certviewer__inner">
+    <div class="certviewer__head">
+      <div>
+        <p class="certviewer__title" id="cvTitle"></p>
+        <span class="certviewer__issuer" id="cvIssuer"></span>
+      </div>
+      <div class="certviewer__actions">
+        <a class="icon-btn" id="cvVerify" href="#" target="_blank" rel="noreferrer" hidden>✓ {t("certs.verify")}</a>
+        <a class="icon-btn" id="cvOpen" href="#" target="_blank" rel="noreferrer">↗ {t("certs.openTab")}</a>
+        <button class="icon-btn" id="cvClose" type="button" aria-label={t("certs.close")}>✕</button>
+      </div>
+    </div>
+    <div class="certviewer__body" id="cvBody"></div>
+  </div>
+</dialog>
+
+<script>
+  const dlg = document.getElementById("certViewer") as HTMLDialogElement | null;
+  if (dlg) {
+    const title = document.getElementById("cvTitle")!;
+    const issuer = document.getElementById("cvIssuer")!;
+    const body = document.getElementById("cvBody")!;
+    const openLink = document.getElementById("cvOpen") as HTMLAnchorElement;
+    const verifyLink = document.getElementById("cvVerify") as HTMLAnchorElement;
+    const closeBtn = document.getElementById("cvClose")!;
+
+    const open = (btn: HTMLElement) => {
+      const file = btn.getAttribute("data-cert-file");
+      if (!file) return;
+      const type = btn.getAttribute("data-cert-type");
+      const name = btn.getAttribute("data-cert-name") || "";
+      const iss = btn.getAttribute("data-cert-issuer") || "";
+      const verify = btn.getAttribute("data-cert-verify");
+
+      title.textContent = name;
+      issuer.textContent = iss;
+      openLink.href = file;
+      if (verify) { verifyLink.href = verify; verifyLink.hidden = false; }
+      else { verifyLink.hidden = true; }
+
+      body.innerHTML = "";
+      if (type === "pdf") {
+        const frame = document.createElement("iframe");
+        frame.src = file + "#view=FitH";
+        frame.title = name;
+        body.appendChild(frame);
+      } else {
+        const img = document.createElement("img");
+        img.src = file;
+        img.alt = name;
+        body.appendChild(img);
+      }
+      if (typeof dlg.showModal === "function") dlg.showModal();
+      else window.open(file, "_blank");
+    };
+
+    document.addEventListener("click", (e) => {
+      const btn = (e.target as HTMLElement)?.closest<HTMLElement>("[data-cert-file]");
+      if (btn) { e.preventDefault(); open(btn); }
+    });
+
+    const close = () => { dlg.close(); body.innerHTML = ""; };
+    closeBtn.addEventListener("click", close);
+    dlg.addEventListener("click", (e) => { if (e.target === dlg) close(); });
+    dlg.addEventListener("close", () => { body.innerHTML = ""; });
+  }
+</script>

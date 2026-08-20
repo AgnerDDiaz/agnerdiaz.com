@@ -5,6 +5,8 @@ import Header from "@components/nav/Header.astro";
 import Footer from "@components/nav/Footer.astro";
 import SocialIcons from "@components/nav/SocialIcons.astro";
 import TechChips from "@components/ui/TechChips.astro";
+import CertCard from "@components/certs/CertCard.astro";
+import CertViewer from "@components/certs/CertViewer.astro";
 import { site } from "@data/site";
 import { metrics, about, education, languages } from "@data/home";
 import { TECH, TECH_CATEGORY_ORDER } from "@data/tech";
@@ -26,9 +28,10 @@ const projects = (await getCollection("projects"))
   .filter((p) => p.data.featured)
   .sort((a, b) => a.data.order - b.data.order);
 
-const certifications = (await getCollection("certifications")).sort((a, b) =>
+const allCerts = (await getCollection("certifications")).sort((a, b) =>
   b.data.issuedAt.localeCompare(a.data.issuedAt),
 );
+const featuredCerts = allCerts.filter((c) => c.data.featured);
 
 // Skills agrupadas por categoría (a partir del registro único de tecnologías).
 const skillGroups = TECH_CATEGORY_ORDER.map((cat) => ({
@@ -223,20 +226,10 @@ const roles = JSON.stringify(site.roles[lang]);
           <p class="section__sub">{t("certs.subtitle")}</p>
         </div>
         <div class="certs-grid">
-          {certifications.map((cert) => (
-            <article class="card cert reveal">
-              {cert.data.thumb ? (
-                <img class="cert__thumb" src={cert.data.thumb} alt={cert.data.name[lang]} loading="lazy" />
-              ) : (
-                <div class="cert__thumb cert__thumb--ph" aria-hidden="true">{cert.data.issuer.slice(0, 2).toUpperCase()}</div>
-              )}
-              <div class="cert__body">
-                <span class="cert__issuer">{cert.data.issuer}</span>
-                <h3 class="cert__name">{cert.data.name[lang]}</h3>
-                <span class="cert__year">{cert.data.issuedAt}</span>
-              </div>
-            </article>
-          ))}
+          {featuredCerts.map((cert) => <CertCard cert={cert} lang={lang} />)}
+        </div>
+        <div style="margin-top:18px">
+          <a class="btn btn--soft" href={`/${lang}/certificaciones/`}>{t("certs.viewAll")} ({allCerts.length})</a>
         </div>
       </div>
     </section>
@@ -326,6 +319,7 @@ const roles = JSON.stringify(site.roles[lang]);
     </section>
   </main>
 
+  <CertViewer lang={lang} />
   <Footer lang={lang} />
 </BaseLayout>
 

@@ -1,0 +1,43 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { useTranslations, type Lang } from "@i18n/ui";
+
+interface Props {
+  cert: CollectionEntry<"certifications">;
+  lang: Lang;
+}
+const { cert, lang } = Astro.props;
+const t = useTranslations(lang);
+const d = cert.data;
+const name = d.name[lang];
+const isPdf = (d.file ?? "").toLowerCase().endsWith(".pdf");
+const type = isPdf ? "pdf" : "image";
+---
+<button
+  class="card cert reveal"
+  type="button"
+  data-cert-file={d.file}
+  data-cert-type={type}
+  data-cert-name={name}
+  data-cert-issuer={d.issuer}
+  data-cert-verify={d.credentialUrl}
+  aria-label={`${t("certs.view")}: ${name}`}
+>
+  {
+    d.thumb ? (
+      <img class="cert__thumb" src={d.thumb} alt="" loading="lazy" decoding="async" />
+    ) : (
+      <span class="cert__thumb cert__thumb--ph" aria-hidden="true">{d.issuer.slice(0, 2).toUpperCase()}</span>
+    )
+  }
+  <span class="cert__body">
+    <span class="cert__issuer">{d.issuer}</span>
+    <span class="cert__name">{name}</span>
+    <span class="cert__year">
+      {d.issuedAt}{d.dateApprox && <span class="cert__approx"> · {t("certs.approx")}</span>}
+    </span>
+    <span class="cert__view">{t("certs.view")}
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </span>
+  </span>
+</button>

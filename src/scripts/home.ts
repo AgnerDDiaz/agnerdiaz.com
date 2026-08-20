@@ -51,40 +51,6 @@ function initTyping() {
   type(roles[0], 0);
 }
 
-// ── Reveal on scroll ─────────────────────────────────────────
-function initReveal() {
-  const nodes = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
-  if (!nodes.length) return;
-  if (reduceMotion() || typeof IntersectionObserver === "undefined") {
-    nodes.forEach((n) => n.classList.add("is-in"));
-    return;
-  }
-  const io = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add("is-in");
-          io.unobserve(e.target);
-        }
-      });
-    },
-    { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
-  );
-  nodes.forEach((n) => io.observe(n));
-}
-
-// ── Botón «volver arriba» ────────────────────────────────────
-function initToTop() {
-  const btn = document.getElementById("toTop");
-  if (!btn) return;
-  const onScroll = () => btn.classList.toggle("is-visible", window.scrollY > 600);
-  window.addEventListener("scroll", onScroll, { passive: true });
-  btn.addEventListener("click", () =>
-    window.scrollTo({ top: 0, behavior: reduceMotion() ? "auto" : "smooth" }),
-  );
-  onScroll();
-}
-
 // ── Formulario de contacto (Netlify Forms) ───────────────────
 function initContact() {
   const form = document.getElementById("contactForm") as HTMLFormElement | null;
@@ -171,7 +137,5 @@ function initContact() {
 
 export function initHome() {
   initTyping();
-  initReveal();
-  initToTop();
   initContact();
 }
