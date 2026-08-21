@@ -5,6 +5,7 @@ import Header from "@components/nav/Header.astro";
 import Footer from "@components/nav/Footer.astro";
 import TechChips from "@components/ui/TechChips.astro";
 import PhoneMockup from "@components/projects/PhoneMockup.astro";
+import { getLegalApp, DOC_LABEL } from "@data/legal";
 import { useTranslations, toLang, type UIKey, type Lang } from "@i18n/ui";
 
 export async function getStaticPaths() {
@@ -27,6 +28,7 @@ const platformLabel: Record<string, string> = { ios: "iOS", android: "Android", 
 const periodText = `${d.period.start} — ${d.period.end ?? t("projects.present")}`;
 const cover = d.screenshots[0];
 const rest = d.screenshots.slice(1);
+const legalApp = getLegalApp(project.id);
 
 const title = `${d.title} | ${lang === "es" ? "Proyectos" : "Projects"} | Agner Díaz`;
 ---
@@ -113,7 +115,19 @@ const title = `${d.title} | ${lang === "es" ? "Proyectos" : "Projects"} | Agner 
           <h2>{t("skills.title")}</h2>
           <TechChips ids={d.tech} />
         </div>
-        {/* Los enlaces legales (privacidad / soporte / términos) se añaden en la Fase 5. */}
+
+        {legalApp && (
+          <div class="pd-section">
+            <h2>{t("projects.links")}</h2>
+            <div class="pd-actions">
+              {legalApp.docs.map((docKey) => (
+                <a class="btn btn--soft" href={`/${lang}/legal/${legalApp.slug}/${docKey}/`}>
+                  {DOC_LABEL[docKey][lang]}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   </main>

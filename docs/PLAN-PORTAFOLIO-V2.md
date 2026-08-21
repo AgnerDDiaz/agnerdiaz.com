@@ -237,12 +237,14 @@ El usuario aportó los 16 archivos, así que esta fase se adelantó.
 - ✅ Se elimina la dependencia del enlace a Google Drive.
 - ⏳ **Pendiente de confirmar por el usuario**: fecha exacta de los certificados marcados `dateApprox: true` (ISOC ×2, Search and AI, SAS, Huawei) y el emisor de «Search and AI» (asumido Google).
 
-### Fase 5 — Legales por proyecto (lo que te desbloquea publicar)
-Este es el punto que resuelve tu restricción de presupuesto: **una sola web aloja los legales de todas tus apps**.
-- Ruta genérica `/[lang]/legal/[project]/[privacy|support|terms]/`.
-- `LegalLayout` + plantilla con variables (nombre de app, email de soporte, fecha de actualización, si usa AdMob, si guarda datos en la nube).
-- Migrar los de FinClarity y **añadir Términos y Condiciones**, que hoy no existen y App Store los pide.
-- Resultado: publicar una app nueva no cuesta dominio ni hosting extra.
+### Fase 5 — Legales por proyecto — ✅ COMPLETADA
+**Una sola web aloja los legales de todas tus apps.**
+- ✅ Ruta genérica `/[lang]/legal/[app]/[privacy|support|terms]/` (bilingüe).
+- ✅ Plantilla parametrizada (`src/data/legal.ts`): nombre de app, email de soporte, fecha de actualización, `usesAds` (AdMob), `offlineFirst`. El texto se genera según esos flags.
+- ✅ FinClarity con Privacidad, Soporte y **Términos y Condiciones** (nuevos, que App Store exige).
+- ✅ Botones legales reactivados en la ficha de proyecto, desde el registro legal.
+- ✅ Publicar una app nueva = una entrada en `legalApps` (sin dominio ni hosting extra).
+- ⏳ **Al publicar**: los legales viejos en `public/privacy/finclarity/` y `public/support/finclarity/` siguen en su URL original (publicada en las tiendas). Decidir si se redirigen a las nuevas o se dejan como están.
 
 ### Fase 6 — Micro-apps
 - Formalizar `/horario/` como referencia: `public/<slug>/` que enlaza `/assets/css/tokens.css` y define su propio namespace CSS (`.hz-*`) — exactamente como ya lo hiciste.
