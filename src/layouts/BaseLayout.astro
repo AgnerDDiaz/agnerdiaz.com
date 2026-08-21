@@ -10,13 +10,25 @@ interface Props {
   /** Ruta sin prefijo de idioma, p. ej. "/" o "/proyectos/". */
   path?: string;
   ogImage?: string;
+  /** Canonical explícito (ruta absoluta del sitio). Sobrescribe el calculado. */
+  canonicalPath?: string;
+  /** hreflang explícitos (rutas absolutas del sitio) para páginas heredadas. */
+  alternates?: { es: string; en: string };
 }
 
-const { lang, title, description, path = "/", ogImage = "/assets/img/og.png" } = Astro.props;
+const {
+  lang,
+  title,
+  description,
+  path = "/",
+  ogImage = "/assets/img/og.png",
+  canonicalPath,
+  alternates,
+} = Astro.props;
 
-const canonical = new URL(localizePath(path, lang), site.url).href;
-const esHref = new URL(localizePath(path, "es"), site.url).href;
-const enHref = new URL(localizePath(path, "en"), site.url).href;
+const canonical = new URL(canonicalPath ?? localizePath(path, lang), site.url).href;
+const esHref = new URL(alternates?.es ?? localizePath(path, "es"), site.url).href;
+const enHref = new URL(alternates?.en ?? localizePath(path, "en"), site.url).href;
 
 const jsonLd = {
   "@context": "https://schema.org",

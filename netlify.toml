@@ -1,9 +1,4 @@
 # Netlify — agnerdiaz.com
-#
-# Fase 0: se activa el build de Astro. Las rutas públicas NO cambian todavía
-# (todo el sitio actual vive en `public/` y se copia tal cual a `dist/`), así
-# que aún no hacen falta redirects. Los 301 se añaden en la Fase 1, cuando las
-# rutas pasen a `/es/…` y `/en/…`.
 
 [build]
   command = "npm run build"
@@ -11,6 +6,26 @@
 
 [build.environment]
   NODE_VERSION = "24"
+
+# ── Redirects 301 de las URLs antiguas al sitio nuevo ─────────────────────
+# IMPORTANTE: /privacy/finclarity/ y /support/finclarity/ NO se redirigen:
+# están publicadas en las tiendas y ahora sirven contenido directo (200).
+# La raíz «/» tampoco: la resuelve src/pages/index.astro según el idioma.
+
+[[redirects]]
+  from = "/projects/finclarity/*"
+  to = "/es/proyectos/finclarity/"
+  status = 301
+
+[[redirects]]
+  from = "/projects/*"
+  to = "/es/proyectos/"
+  status = 301
+
+[[redirects]]
+  from = "/links/*"
+  to = "/es/links/"
+  status = 301
 
 # ── Cabeceras ─────────────────────────────────────────────────────────────
 [[headers]]

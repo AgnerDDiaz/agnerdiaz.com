@@ -246,9 +246,18 @@ El usuario aportó los 16 archivos, así que esta fase se adelantó.
 - ✅ Publicar una app nueva = una entrada en `legalApps` (sin dominio ni hosting extra).
 - ⏳ **Al publicar**: los legales viejos en `public/privacy/finclarity/` y `public/support/finclarity/` siguen en su URL original (publicada en las tiendas). Decidir si se redirigen a las nuevas o se dejan como están.
 
-### Fase 6 — Micro-apps
-- Formalizar `/horario/` como referencia: `public/<slug>/` que enlaza `/assets/css/tokens.css` y define su propio namespace CSS (`.hz-*`) — exactamente como ya lo hiciste.
-- Documentar el patrón en `docs/CONTENIDO.md` para que la siguiente herramienta (otra temática) sea copiar-adaptar.
+### Fase 6 — Migrar páginas viejas + redirects — ✅ COMPLETADA
+**Objetivo del usuario: no tener que cambiar las URLs de privacidad publicadas en las tiendas.**
+- ✅ `/privacy/finclarity/` y `/support/finclarity/` **conservan su URL exacta** y ahora sirven el contenido nuevo directo (200, sin redirección) desde el sistema legal. Canonical a sí mismas, hreflang al inglés. El usuario no toca nada en App Store / Google Play.
+- ✅ Para no duplicar, el ES de esos dos docs NO se genera en `/es/legal/…`; el helper `legalUrl()` enruta al ES heredado y al EN nuevo.
+- ✅ Redirects 301 en `netlify.toml` de las URLs no críticas: `/projects/*` → `/es/proyectos/…`, `/links/*` → `/es/links/`.
+- ✅ Páginas viejas eliminadas de `public/` (privacy, support, projects, links). `/horario/`, `/certs/` y `app-ads.txt` intactos.
+- ✅ `sitemap-index.xml` (con hreflang ES/EN) + `robots.txt`.
+- ⏳ Los redirects 301 solo actúan en Netlify (producción), no en el preview local.
+
+### Fase 6b — Micro-apps (pendiente)
+- Formalizar `/horario/` como referencia: `public/<slug>/` que enlaza `/assets/css/tokens.css` y define su propio namespace CSS (`.hz-*`).
+- Documentar el patrón en `docs/CONTENIDO.md`.
 
 ### Fase 7 — Pulido profesional
 `sitemap.xml` · `robots.txt` · imágenes OG por proyecto · JSON-LD `SoftwareApplication` por app · auditoría Lighthouse (objetivo 95+) · `prefers-reduced-motion` en todas las animaciones nuevas · verificación de Netlify Forms sobre el HTML generado.

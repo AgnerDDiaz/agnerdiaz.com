@@ -36,6 +36,29 @@ export function getLegalApp(slug: string): LegalApp | undefined {
   return legalApps.find((a) => a.slug === slug);
 }
 
+/**
+ * URLs heredadas ya publicadas en App Store / Google Play. Se conservan EXACTAS
+ * (sirven contenido, 200) para no tener que tocar la ficha de las tiendas.
+ * Solo aplican al español (el idioma en que se publicaron).
+ */
+export const LEGACY_LEGAL: Record<string, Partial<Record<LegalDoc, string>>> = {
+  finclarity: {
+    privacy: "/privacy/finclarity/",
+    support: "/support/finclarity/",
+  },
+};
+
+/** true si (app, doc, es) tiene una URL heredada que sirve el contenido. */
+export function isLegacyLegal(slug: string, doc: LegalDoc, lang: Lang): boolean {
+  return lang === "es" && Boolean(LEGACY_LEGAL[slug]?.[doc]);
+}
+
+/** URL pública de un documento legal para un idioma (heredada si existe). */
+export function legalUrl(slug: string, doc: LegalDoc, lang: Lang): string {
+  if (lang === "es" && LEGACY_LEGAL[slug]?.[doc]) return LEGACY_LEGAL[slug]![doc]!;
+  return `/${lang}/legal/${slug}/${doc}/`;
+}
+
 export const DOC_LABEL: Record<LegalDoc, { es: string; en: string }> = {
   privacy: { es: "Política de Privacidad", en: "Privacy Policy" },
   support: { es: "Soporte", en: "Support" },

@@ -14,6 +14,7 @@
     "test:horario": "node tests/horario/engine.test.js && node tests/horario/uasd-parser.test.js && node tests/horario/pdf-layout.test.js && node tests/horario/storage.test.js"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
     "astro": "^7.2.4"
   },
   "devDependencies": {

@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from "astro/config";
+import sitemap from "@astrojs/sitemap";
 
 /**
  * Portafolio de Agner Diaz — configuración base.
@@ -26,6 +27,17 @@ export default defineConfig({
   // URLs con barra final: /proyectos/finclarity/ — es lo que ya está indexado
   // hoy y lo que enlazan las páginas legales publicadas en las tiendas.
   trailingSlash: "always",
+
+  integrations: [
+    sitemap({
+      i18n: {
+        defaultLocale: "es",
+        locales: { es: "es-DO", en: "en-US" },
+      },
+      // Excluir la raíz-redirección (noindex) del sitemap.
+      filter: (page) => page !== "https://agnerdiaz.com/",
+    }),
+  ],
 
   build: {
     format: "directory",
