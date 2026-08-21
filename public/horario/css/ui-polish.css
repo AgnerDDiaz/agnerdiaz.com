@@ -537,23 +537,44 @@ html[data-theme="light"] {
   background: var(--surface);
   box-shadow: var(--shadow-soft);
 }
-.hz-controls__actions { gap: 8px; }
-.hz-controls__actions .btn svg { flex: 0 0 auto; }
-.hz-icon-action {
-  width: 40px;
-  padding: 0;
+.hz-controls__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
-/* Ocultar etiquetas de texto de los botones en pantallas estrechas:
-   quedan solo los iconos, sin que la barra se rompa. */
+/* Acciones grandes y SIEMPRE etiquetadas (icono + texto), para que cualquiera
+   las entienda. Antes se colapsaban a iconos sueltos en móvil y no se
+   comprendían. Se escopan bajo .hz-controls para ganar a la regla previa
+   `.hz-controls .btn { min-height: 38px }`. */
+.hz-controls .hz-action {
+  min-height: 48px;
+  padding: 0 18px;
+  gap: 9px;
+  font-size: 14px;
+  font-weight: 800;
+}
+.hz-controls .hz-action svg { flex: 0 0 auto; }
+
+/* Móvil: rejilla 2×2 de botones grandes, con texto visible. El color
+   distingue la acción principal (Descargar PDF, en rojo). */
 @media (max-width: 720px) {
-  .hz-controls { justify-content: space-between; }
-  .hz-controls__actions .hz-btn-label { display: none; }
-  .hz-controls__actions .btn.hz-btn-sm {
-    width: 40px;
-    padding: 0;
-    justify-content: center;
+  .hz-controls { flex-direction: column; align-items: stretch; }
+  .hz-controls__group { justify-content: center; }
+  .hz-controls__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
   }
-  .hz-controls__actions .btn svg { margin: 0; }
+  .hz-controls .hz-action {
+    width: 100%;
+    min-height: 56px;
+    font-size: 15px;
+  }
+}
+/* Teléfonos muy estrechos: una sola columna, imposible de malinterpretar. */
+@media (max-width: 380px) {
+  .hz-controls__actions { grid-template-columns: 1fr; }
 }
 
 /* ---- Encabezados de día del calendario ------------------------- */
