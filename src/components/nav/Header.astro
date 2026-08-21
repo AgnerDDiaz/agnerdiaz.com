@@ -1,6 +1,6 @@
 ---
 import { site, type Lang } from "@data/site";
-import { mainNav } from "@data/nav";
+import { mainNav, subNav } from "@data/nav";
 import { useTranslations, otherLang, localizePath, type UIKey } from "@i18n/ui";
 
 interface Props {
@@ -17,11 +17,13 @@ const t = useTranslations(lang);
 const homeHref = localizePath("/", lang);
 const other = otherLang(lang);
 const otherHref = localizePath(path, other);
-// Fuera de la home, las anclas del menú apuntan a las secciones de la home.
-const sectionHref = (hash: string) => (onHome ? hash : `${homeHref}${hash}`);
+
+// La home usa anclas a sus secciones; las sub-páginas un menú corto de rutas.
+const navItems = onHome ? mainNav : subNav;
+const itemHref = (href: string) => (onHome ? href : localizePath(href, lang));
 ---
 
-<header class="nav">
+<header class={`nav${onHome ? "" : " nav--compact"}`}>
   <div class="container nav__inner">
     <a class="brand" href={homeHref} aria-label={t("nav.home")}>
       <span class="brand__dot"></span>
@@ -41,11 +43,11 @@ const sectionHref = (hash: string) => (onHome ? hash : `${homeHref}${hash}`);
           </button>
 
           <nav class="nav__menu" id="navMenu" aria-label={t("nav.home")}>
-            {mainNav.map((item) =>
+            {navItems.map((item) =>
               item.cta ? (
-                <a class="btn btn--ghost" href={sectionHref(item.href)}>{t(item.key as UIKey)}</a>
+                <a class="btn btn--ghost" href={itemHref(item.href)}>{t(item.key as UIKey)}</a>
               ) : (
-                <a href={sectionHref(item.href)}>{t(item.key as UIKey)}</a>
+                <a href={itemHref(item.href)}>{t(item.key as UIKey)}</a>
               )
             )}
             <div class="nav__actions">

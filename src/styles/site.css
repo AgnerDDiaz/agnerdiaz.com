@@ -704,6 +704,47 @@ html[data-theme="light"] .phone::before { background: #cfd6e2; }
 .project.is-hidden { display: none; }
 
 /* ------------------------------------------------------------
+   Section CTA row + web tools band
+------------------------------------------------------------ */
+.section-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.section-cta .btn svg { width: 16px; height: 16px; fill: currentColor; }
+
+.webtools { display: grid; gap: 14px; }
+.webtool {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 22px 24px;
+  border: 1px solid var(--accent-line);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(420px 200px at 100% 0%, var(--accent-soft), transparent 70%),
+    var(--surface);
+  box-shadow: var(--shadow-soft);
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+.webtool:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--accent-ring); }
+.webtool__icon {
+  flex: 0 0 auto;
+  width: 58px; height: 58px;
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+  border-radius: 16px;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-line);
+}
+.webtool__body { flex: 1; min-width: 0; }
+.webtool__title { margin: 0 0 4px; font-weight: 900; font-size: 1.2rem; }
+.webtool__tagline { margin: 0; color: var(--muted); }
+.webtool__actions { display: flex; flex-wrap: wrap; gap: 10px; flex: 0 0 auto; }
+@media (max-width: 680px) {
+  .webtool { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .webtool__actions { width: 100%; }
+  .webtool__actions .btn { flex: 1; }
+}
+
+/* ------------------------------------------------------------
    Skills (grouped by category)
 ------------------------------------------------------------ */
 .skills { display: grid; gap: 16px; }
@@ -937,9 +978,12 @@ button.cert {
   .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .contact-grid { grid-template-columns: 1fr; }
 }
-@media (max-width: 900px) {
-  .nav__toggle { display: flex; }
-  .nav__menu {
+/* Menú colapsado (hamburguesa). El menú de la home (7 secciones) colapsa a
+   1080px; el menú corto de las sub-páginas colapsa a 720px, así ninguno se
+   superpone en anchos intermedios. */
+@media (max-width: 1080px) {
+  .nav:not(.nav--compact) .nav__toggle { display: flex; }
+  .nav:not(.nav--compact) .nav__menu {
     position: absolute;
     top: calc(var(--nav-h) + 10px);
     right: 20px; left: 20px;
@@ -955,10 +999,32 @@ button.cert {
     gap: 8px;
     z-index: 60;
   }
-  .nav__menu a { width: 100%; }
-  .nav__menu.is-open { display: flex; }
-  .nav__inline-actions { display: none; }
+  .nav:not(.nav--compact) .nav__menu a { width: 100%; }
+  .nav:not(.nav--compact) .nav__menu.is-open { display: flex; }
 }
+
+@media (max-width: 720px) {
+  .nav--compact .nav__toggle { display: flex; }
+  .nav--compact .nav__menu {
+    position: absolute;
+    top: calc(var(--nav-h) + 10px);
+    right: 20px; left: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    gap: 8px;
+    z-index: 60;
+  }
+  .nav--compact .nav__menu a { width: 100%; }
+  .nav--compact .nav__menu.is-open { display: flex; }
+}
+
 @media (max-width: 760px) {
   .section { padding: 44px 0; }
   .grid--2, .grid--3 { grid-template-columns: 1fr; }
