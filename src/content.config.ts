@@ -96,6 +96,17 @@ const projects = defineCollection({
         })
         .default({ privacy: false, support: false, terms: false }),
       cover: image().optional(),
+      /** Capturas para los mockups de teléfono. Se sueltan en
+          public/img/projects/<slug>/ y se referencian por ruta. */
+      screenshots: z
+        .array(
+          z.object({
+            src: z.string(),
+            alt: z.string().optional(),
+            caption: bilingual.optional(),
+          }),
+        )
+        .default([]),
       accent: z.string().optional(),
     }),
 });

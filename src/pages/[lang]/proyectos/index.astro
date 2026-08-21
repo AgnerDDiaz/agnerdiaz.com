@@ -1,0 +1,71 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Header from "@components/nav/Header.astro";
+import Footer from "@components/nav/Footer.astro";
+import ProjectCard from "@components/projects/ProjectCard.astro";
+import { useTranslations, toLang } from "@i18n/ui";
+
+export function getStaticPaths() {
+  return [{ params: { lang: "es" } }, { params: { lang: "en" } }];
+}
+
+const lang = toLang(Astro.params.lang);
+const t = useTranslations(lang);
+
+const projects = (await getCollection("projects")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const kinds = ["mobile", "web", "tool"] as const;
+const present = kinds.filter((k) => projects.some((p) => p.data.kind === k));
+
+const title = lang === "es" ? "Proyectos | Agner Díaz" : "Projects | Agner Díaz";
+---
+
+<BaseLayout lang={lang} title={title} description={t("projects.pageSubtitle")} path="/proyectos/">
+  <a class="skip-link" href="#main">{t("a11y.skip")}</a>
+  <Header lang={lang} path="/proyectos/" onHome={false} />
+
+  <main id="main">
+    <section class="section">
+      <div class="container">
+        <div class="section__head">
+          <a class="section__eyebrow" href={`/${lang}/#projects`}>← {t("projects.back")}</a>
+          <h2>{t("projects.title")}</h2>
+          <p class="section__sub">{t("projects.pageSubtitle")}</p>
+        </div>
+
+        <div class="filters" id="projectFilters" role="group" aria-label={t("projects.title")}>
+          <button class="filter-btn" type="button" data-filter="all" aria-pressed="true">{t("projects.filter.all")}</button>
+          {present.map((k) => (
+            <button class="filter-btn" type="button" data-filter={k} aria-pressed="false">{t(`projects.filter.${k}` as any)}</button>
+          ))}
+        </div>
+
+        <div class="projects-grid" id="projectsGrid">
+          {projects.map((proj) => <ProjectCard project={proj} lang={lang} />)}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>
+
+<script>
+  const filters = document.getElementById("projectFilters");
+  const cards = Array.from(document.querySelectorAll<HTMLElement>("#projectsGrid .project"));
+  filters?.querySelectorAll<HTMLButtonElement>(".filter-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const kind = btn.getAttribute("data-filter");
+      filters.querySelectorAll(".filter-btn").forEach((b) =>
+        b.setAttribute("aria-pressed", b === btn ? "true" : "false"),
+      );
+      cards.forEach((card) => {
+        const show = kind === "all" || card.getAttribute("data-kind") === kind;
+        card.classList.toggle("is-hidden", !show);
+      });
+    });
+  });
+</script>

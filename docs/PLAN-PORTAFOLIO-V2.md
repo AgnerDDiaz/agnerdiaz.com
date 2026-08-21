@@ -216,13 +216,16 @@ Las URLs legales (`/privacy/finclarity/`) ya están publicadas en App Store y Go
 
 **Criterio de salida:** cualquier reclutador que compare tu CV y tu sitio ve lo mismo.
 
-### Fase 3 — Módulo de Proyectos
-- `/[lang]/proyectos/`: grid con **filtros por tipo** (Móvil · Web · Herramientas) y por estado (Publicado · En desarrollo).
-- `/[lang]/proyectos/[slug]/`: hero con mockup, resumen, rol, período, métricas, chips de stack, galería de capturas, badges de tienda, y enlaces a sus legales.
-- Fichas iniciales: **FinClarity** (publicado), **MercaVerde**, **Horario UASD**, y una plantilla `_template.md` documentada.
-- `PhoneMockup`: componente que enmarca capturas en un teléfono. Dado que tu foco es móvil, es el mayor salto visual por unidad de esfuerzo.
+### Fase 3 — Módulo de Proyectos — ✅ COMPLETADA
+- ✅ `/[lang]/proyectos/`: grid con **filtros por tipo** (Móvil · Web · Herramientas), toggle en cliente.
+- ✅ `/[lang]/proyectos/[slug]/`: hero con **mockup de teléfono**, estado, rol, período, plataformas, resumen, destacados, **galería de capturas** y chips de stack. Botones de tienda/repo/live condicionales.
+- ✅ Fichas: **FinClarity** (publicado), **MercaVerde** (en desarrollo), **Horario UASD** (herramienta).
+- ✅ `PhoneMockup`: marco de teléfono con estado «Captura próximamente» cuando no hay imagen.
+- ✅ `ProjectCard` unificado: la home y el listado usan el mismo componente; la tarjeta entera enlaza al detalle.
+- ✅ Carpetas `public/img/projects/<slug>/` con README para soltar capturas.
+- ⏳ **Pendiente del usuario**: capturas de FinClarity y MercaVerde + URLs de App Store/Google Play. Los enlaces legales del detalle se activan en la Fase 5.
 
-**Criterio de salida:** agregar el proyecto n.º 4 toma menos de 15 minutos.
+**Criterio de salida:** ✅ agregar un proyecto = 1 archivo `.md`; el detalle, el listado, el filtro y la tarjeta salen solos.
 
 ### Fase 4 — Módulo de Certificados — ✅ COMPLETADA (adelantada)
 El usuario aportó los 16 archivos, así que esta fase se adelantó.

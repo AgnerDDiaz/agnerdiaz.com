@@ -7,6 +7,7 @@ import SocialIcons from "@components/nav/SocialIcons.astro";
 import TechChips from "@components/ui/TechChips.astro";
 import CertCard from "@components/certs/CertCard.astro";
 import CertViewer from "@components/certs/CertViewer.astro";
+import ProjectCard from "@components/projects/ProjectCard.astro";
 import { site } from "@data/site";
 import { about, education, languages } from "@data/home";
 import { TECH, TECH_CATEGORY_ORDER } from "@data/tech";
@@ -141,34 +142,10 @@ const roles = JSON.stringify(site.roles[lang]);
           <p class="section__sub">{t("projects.subtitle")}</p>
         </div>
         <div class="projects-grid">
-          {projects.map((proj) => (
-            <article class="card project reveal" style={`--proj-accent:${proj.data.accent ?? "var(--accent)"}`}>
-              <div class="project__topline">
-                <h3 class="project__title">{proj.data.title}</h3>
-                <span class={`status status--${proj.data.status}`}>
-                  {t(`projects.status.${proj.data.status}` as UIKey)}
-                </span>
-              </div>
-              <p class="project__role">{proj.data.role[lang]}</p>
-              <p class="project__tagline">{proj.data.tagline[lang]}</p>
-              {proj.data.metrics.length > 0 && (
-                <div class="project__metrics">
-                  {proj.data.metrics.map((m) => (
-                    <div class="project__metric"><b>{m.value}</b><span>{m.label[lang]}</span></div>
-                  ))}
-                </div>
-              )}
-              <TechChips ids={proj.data.tech} />
-              <div class="project__actions">
-                {proj.data.links.live && (
-                  <a class="btn btn--primary" href={proj.data.links.live}>{t("projects.open")}</a>
-                )}
-                {proj.data.links.repo && (
-                  <a class="btn btn--soft" href={proj.data.links.repo} target="_blank" rel="noreferrer">GitHub</a>
-                )}
-              </div>
-            </article>
-          ))}
+          {projects.map((proj) => <ProjectCard project={proj} lang={lang} />)}
+        </div>
+        <div style="margin-top:18px">
+          <a class="btn btn--soft" href={`/${lang}/proyectos/`}>{t("projects.viewAll")}</a>
         </div>
       </div>
     </section>
