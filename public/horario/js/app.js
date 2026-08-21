@@ -30,6 +30,7 @@
       view: "week", // "week" | "day"
       selectedDay: currentDayKey(),
       viewUserSet: false,
+      manualMode: false, // user chose "crear manualmente" on the empty state
       editingId: null,
       dialogOpener: null
     }
@@ -86,12 +87,38 @@
   // Rendering — calendar
   // ----------------------------------------------------------------------
   function render() {
+    updateWorkspaceVisibility();
     renderCalendar();
     renderDayChips();
     renderBanner();
     renderLegend();
     syncViewToggle();
     persist();
+  }
+
+  // Import-first UX: when the schedule is empty we show the onboarding screen
+  // ("¿Quieres importar tu horario de la UASD?"); once there are activities —
+  // or the user chose to build manually — we reveal the workspace (toolbar +
+  // calendar) so they land straight on the platform where the schedule lives.
+  function showWorkspace() {
+    return state.items.length > 0 || state.ui.manualMode;
+  }
+
+  function updateWorkspaceVisibility() {
+    var workspace = showWorkspace();
+    if (els.onboard) els.onboard.hidden = workspace;
+    if (els.workspace) els.workspace.hidden = !workspace;
+  }
+
+  // "Crear horario manualmente" → go directly to the calendar (empty grid /
+  // agenda with a helper card), no intermediate dialog.
+  function enterManualMode(opener) {
+    state.ui.manualMode = true;
+    render();
+    if (els.workspace && typeof els.workspace.scrollIntoView === "function") {
+      els.workspace.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    if (opener) { /* focus stays sensible; the toolbar add button is visible */ }
   }
 
   // ----------------------------------------------------------------------
@@ -206,9 +233,21 @@
     });
   }
 
+  // On phones the compressed time-grid is hard to read; the day view becomes a
+  // clean agenda (a vertical list of full-detail cards) instead.
+  function useAgenda() {
+    return state.ui.view === "day" && window.innerWidth <= 640;
+  }
+
   function renderCalendar() {
     var cal = els.calendar;
     U.clearNode(cal);
+
+    if (els.cal) els.cal.classList.toggle("hz-cal--agenda", useAgenda());
+    if (useAgenda()) {
+      cal.appendChild(buildAgenda(state.ui.selectedDay));
+      return;
+    }
 
     var range = currentRange();
     var startMin = range.startMin;
@@ -265,12 +304,101 @@
     });
 
     scroll.appendChild(grid);
-
+    // In manual mode the schedule can be visible while still empty — show a
+    // helper card inside the grid inviting the first activity.
     if (state.items.length === 0) {
       scroll.appendChild(buildEmptyState());
     }
-
     cal.appendChild(scroll);
+  }
+
+  // ----------------------------------------------------------------------
+  // Rendering — mobile agenda (day view on phones)
+  // ----------------------------------------------------------------------
+  function buildAgenda(day) {
+    var wrap = U.el("div", { class: "hz-agenda" });
+
+    var head = U.el("div", { class: "hz-agenda__head" });
+    head.appendChild(U.el("span", { class: "hz-agenda__day", text: Model.DAY_LABELS[day] }));
+    if (day === currentDayKey()) {
+      head.appendChild(U.el("span", { class: "hz-agenda__today", text: "Hoy" }));
+    }
+    var dayItems = state.items
+      .filter(function (it) { return it.day === day; })
+      .filter(function (it) {
+        var s = U.timeToMinutes(it.startTime), e = U.timeToMinutes(it.endTime);
+        return !isNaN(s) && !isNaN(e) && e > s;
+      })
+      .sort(function (a, b) { return U.timeToMinutes(a.startTime) - U.timeToMinutes(b.startTime); });
+    head.appendChild(U.el("span", {
+      class: "hz-agenda__count",
+      text: dayItems.length + (dayItems.length === 1 ? " actividad" : " actividades")
+    }));
+    wrap.appendChild(head);
+
+    if (dayItems.length === 0) {
+      var empty = U.el("div", { class: "hz-agenda__empty" });
+      empty.appendChild(U.el("p", { class: "hz-agenda__empty-text", text: "Sin actividades este día." }));
+      var addBtn = U.el("button", { class: "btn btn--soft", attrs: { type: "button" } });
+      addBtn.appendChild(document.createTextNode("+ Agregar actividad"));
+      addBtn.addEventListener("click", function () { openAdd(addBtn); });
+      empty.appendChild(addBtn);
+      wrap.appendChild(empty);
+      return wrap;
+    }
+
+    var list = U.el("div", { class: "hz-agenda__list" });
+    dayItems.forEach(function (item) {
+      list.appendChild(buildAgendaCard(item));
+    });
+    wrap.appendChild(list);
+    return wrap;
+  }
+
+  function buildAgendaCard(item) {
+    var type = Types.findType(state.types, item.typeId);
+    var style = Types.deriveStyle(type.color);
+    var startMin = U.timeToMinutes(item.startTime);
+    var endMin = U.timeToMinutes(item.endTime);
+
+    var card = U.el("article", {
+      class: "hz-agenda-item",
+      attrs: {
+        "data-id": item.id,
+        tabindex: "0",
+        role: "button",
+        "aria-label": ariaLabelFor(item, { startMin: startMin, endMin: endMin })
+      }
+    });
+    card.style.setProperty("--ev-accent", style.accent);
+    card.style.setProperty("--ev-bg", style.bg);
+    card.style.setProperty("--ev-border", style.border);
+
+    // Time rail on the left (start over end).
+    var rail = U.el("div", { class: "hz-agenda-item__time" });
+    rail.appendChild(U.el("span", { class: "hz-agenda-item__start", text: U.formatClock(startMin, use12()) }));
+    rail.appendChild(U.el("span", { class: "hz-agenda-item__end", text: U.formatClock(endMin, use12()) }));
+    card.appendChild(rail);
+
+    var body = U.el("div", { class: "hz-agenda-item__body" });
+    var titleEl = U.el("h4", { class: "hz-agenda-item__title" });
+    titleEl.appendChild(document.createTextNode(item.title || "Sin título"));
+    if (item.section) {
+      titleEl.appendChild(U.el("span", { class: "hz-agenda-item__section", text: " — " + item.section }));
+    }
+    body.appendChild(titleEl);
+
+    if (item.location) body.appendChild(U.el("p", { class: "hz-agenda-item__meta", text: item.location }));
+    if (item.professor) body.appendChild(U.el("p", { class: "hz-agenda-item__meta", text: item.professor }));
+
+    var tag = U.el("span", { class: "hz-agenda-item__tag" });
+    tag.appendChild(U.el("span", { class: "hz-event__dot" }));
+    tag.appendChild(U.el("span", { text: type.name || "" }));
+    body.appendChild(tag);
+
+    card.appendChild(body);
+    card.setAttribute("title", "Pulsa para editar");
+    return card;
   }
 
   function buildEventCard(p) {
@@ -414,6 +542,9 @@
   function renderBanner() {
     var banner = els.banner;
     if (!banner) return;
+    // The agenda shows every activity regardless of the visible range, so the
+    // out-of-range banner does not apply there.
+    if (useAgenda()) { banner.hidden = true; return; }
     var range = currentRange();
     var out = state.items.filter(function (it) {
       var s = U.timeToMinutes(it.startTime);
@@ -1028,6 +1159,9 @@
   }
 
   function cacheEls() {
+    els.onboard = document.getElementById("hzOnboard");
+    els.workspace = document.getElementById("hzWorkspace");
+    els.cal = document.querySelector(".hz-cal");
     els.calendar = document.getElementById("hzCalendar");
     els.dayChips = document.getElementById("hzDayChips");
     els.viewToggle = document.getElementById("hzViewToggle");
@@ -1122,7 +1256,7 @@
 
   function bindEvents() {
     // Toolbar / hero
-    bindClick("hzAddHero", function (e) { openAdd(e.currentTarget); });
+    bindClick("hzAddHero", function (e) { enterManualMode(e.currentTarget); });
     bindClick("hzAdd", function (e) { openAdd(e.currentTarget); });
     bindClick("hzImportHero", onImportClick);
     bindClick("hzImport", onImportClick);
@@ -1145,13 +1279,13 @@
     // Delegated events on the calendar (single set of listeners)
     if (els.calendar) {
       els.calendar.addEventListener("click", function (e) {
-        var card = e.target.closest(".hz-event");
+        var card = e.target.closest(".hz-event, .hz-agenda-item");
         if (!card) return;
         openEdit(card.getAttribute("data-id"), card);
       });
       els.calendar.addEventListener("keydown", function (e) {
         if (e.key !== "Enter" && e.key !== " ") return;
-        var card = e.target.closest(".hz-event");
+        var card = e.target.closest(".hz-event, .hz-agenda-item");
         if (!card) return;
         e.preventDefault();
         openEdit(card.getAttribute("data-id"), card);

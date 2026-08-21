@@ -52,17 +52,18 @@
   <!-- Header (compact, coherent with the site nav) -->
   <header class="nav hz-tool-nav">
     <div class="container nav__inner">
-      <a class="brand" href="/" aria-label="Ir al inicio">
+      <a class="brand" href="/es/" aria-label="Ir al inicio">
         <span class="brand__dot"></span>
         <span class="brand__text">Agner<span class="brand__accent">Diaz</span></span>
       </a>
 
+      <span class="hz-tool-title" aria-hidden="true">
+        <span class="hz-tool-title__dot"></span>Horario UASD
+      </span>
+
       <nav class="nav__menu" aria-label="Navegación de la herramienta">
-        <span class="hz-tool-title" aria-hidden="true">
-          <span class="hz-tool-title__dot"></span>Horario UASD
-        </span>
-        <a href="/">Inicio</a>
-        <a href="/projects/">Proyectos</a>
+        <a href="/es/">Inicio</a>
+        <a href="/es/proyectos/">Proyectos</a>
         <button class="icon-btn" id="themeToggle" type="button" aria-label="Cambiar tema">☾</button>
       </nav>
     </div>
@@ -70,47 +71,81 @@
 
   <main id="main">
     <section class="container">
-      <!-- Hero / initial state -->
-      <div class="hz-hero">
-        <h1 class="hz-hero__title">Crea tu horario semanal</h1>
-        <p class="hz-hero__subtitle">Organiza tus clases, laboratorios y actividades en un solo lugar.</p>
-        <div class="hz-hero__actions">
-          <button class="btn btn--soft" id="hzImportHero" type="button">Importar horario UASD</button>
-          <button class="btn btn--primary" id="hzAddHero" type="button">+ Agregar actividad</button>
-        </div>
-      </div>
+      <!-- Onboarding: import-first. Shown when the schedule is empty. -->
+      <div class="hz-onboard" id="hzOnboard">
+        <div class="hz-onboard__card">
+          <span class="hz-onboard__badge"><span class="hz-onboard__badge-dot"></span>Horario UASD · Gratis</span>
+          <h1 class="hz-onboard__title">¿Quieres importar tu horario de la UASD?</h1>
+          <p class="hz-onboard__sub">
+            Sube tu PDF de «Horario de Detalle de Alumno» y lo convertimos en un
+            horario semanal claro, editable y listo para descargar.
+          </p>
 
-      <!-- Controls -->
-      <div class="hz-controls">
-        <div class="hz-controls__group">
-          <div class="hz-segment" id="hzViewToggle" role="group" aria-label="Cambiar vista">
-            <button class="hz-segment__btn" type="button" data-hz-view="week" aria-pressed="true">Semana</button>
-            <button class="hz-segment__btn" type="button" data-hz-view="day" aria-pressed="false">Día</button>
+          <div class="hz-onboard__actions">
+            <button class="btn btn--primary hz-onboard__cta" id="hzImportHero" type="button">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4m0 0L8 8m4-4l4 4M4 20h16"/></svg>
+              Importar horario UASD
+            </button>
+            <button class="btn btn--soft" id="hzAddHero" type="button">Crear horario manualmente</button>
           </div>
-          <div class="hz-chips" id="hzDayChips" aria-label="Seleccionar día" hidden></div>
+
+          <ol class="hz-steps" aria-label="Cómo funciona">
+            <li class="hz-step"><span class="hz-step__n">1</span><span>Descarga tu PDF desde el portal de la UASD.</span></li>
+            <li class="hz-step"><span class="hz-step__n">2</span><span>Impórtalo aquí: se procesa en tu propio dispositivo.</span></li>
+            <li class="hz-step"><span class="hz-step__n">3</span><span>Edita, personaliza colores y descárgalo en PDF.</span></li>
+          </ol>
+
+          <p class="hz-onboard__privacy">
+            <span aria-hidden="true">🔒</span> Todo ocurre en tu navegador. El PDF nunca se sube a ningún servidor.
+          </p>
+        </div>
+      </div>
+
+      <!-- Workspace: toolbar + calendar. Shown when there are activities. -->
+      <div class="hz-workspace" id="hzWorkspace" hidden>
+        <div class="hz-controls">
+          <div class="hz-controls__group">
+            <div class="hz-segment" id="hzViewToggle" role="group" aria-label="Cambiar vista">
+              <button class="hz-segment__btn" type="button" data-hz-view="week" aria-pressed="true">Semana</button>
+              <button class="hz-segment__btn" type="button" data-hz-view="day" aria-pressed="false">Día</button>
+            </div>
+            <div class="hz-chips" id="hzDayChips" aria-label="Seleccionar día" hidden></div>
+          </div>
+
+          <div class="hz-controls__actions">
+            <button class="btn btn--soft hz-action" id="hzImport" type="button">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4m0 0L8 8m4-4l4 4M4 20h16"/></svg>
+              <span>Importar UASD</span>
+            </button>
+            <button class="btn btn--soft hz-action" id="hzAdd" type="button">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+              <span>Agregar</span>
+            </button>
+            <button class="btn btn--primary hz-action" id="hzExport" type="button">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16"/></svg>
+              <span>Descargar PDF</span>
+            </button>
+            <button class="btn btn--soft hz-action" id="hzSettingsBtn" type="button">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              <span>Ajustes</span>
+            </button>
+          </div>
         </div>
 
-        <div class="hz-controls__group">
-          <button class="btn btn--soft hz-btn-sm" id="hzAdd" type="button">+ Agregar</button>
-          <button class="btn btn--soft hz-btn-sm" id="hzImport" type="button">Importar UASD</button>
-          <button class="btn btn--primary hz-btn-sm" id="hzExport" type="button">Descargar PDF</button>
-          <button class="btn btn--soft hz-btn-sm" id="hzSettingsBtn" type="button">Configurar</button>
+        <!-- Out-of-range banner -->
+        <div class="hz-banner" id="hzBanner" role="status" aria-live="polite" hidden>
+          <span id="hzBannerText"></span>
+          <button class="btn btn--soft hz-btn-sm" id="hzBannerFix" type="button">Ajustar rango</button>
         </div>
-      </div>
 
-      <!-- Out-of-range banner -->
-      <div class="hz-banner" id="hzBanner" role="status" aria-live="polite" hidden>
-        <span id="hzBannerText"></span>
-        <button class="btn btn--soft hz-btn-sm" id="hzBannerFix" type="button">Ajustar rango</button>
-      </div>
+        <!-- Calendar -->
+        <div class="hz-cal">
+          <div id="hzCalendar"></div>
+        </div>
 
-      <!-- Calendar -->
-      <div class="hz-cal">
-        <div id="hzCalendar"></div>
+        <!-- Legend (type names + colors) -->
+        <div class="hz-legend" id="hzLegend" hidden></div>
       </div>
-
-      <!-- Legend (type names + colors) -->
-      <div class="hz-legend" id="hzLegend" hidden></div>
     </section>
   </main>
 

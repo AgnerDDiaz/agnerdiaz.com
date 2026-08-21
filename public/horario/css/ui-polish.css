@@ -355,281 +355,380 @@ html:has(dialog[open]) {
 html[data-theme="light"] {
   color-scheme: light;
 }
+
 /* ============================================================
-   Horario UASD — ui-polish.css  (iteration 05)
-   Loaded AFTER horario.css. Corrective layer only: it fixes the
-   dialog clipping bug, the card/axis overflow and the button
-   reflow without rewriting horario.css, so the diff stays
-   reviewable and this file can be dropped to revert.
+   7. Rediseño UI/UX (iteración 06)
+   Onboarding «import-first», barra de herramientas más limpia,
+   header responsive y pulido general para móvil y escritorio.
    ============================================================ */
 
-/* ------------------------------------------------------------
-   1. Dialogs — the whole dialog scrolls (P0)
-   Cause of the bug: .hz-dialog had overflow:hidden and only
-   .hz-dialog__body scrolled, so every .hz-dialog__section that
-   lives OUTSIDE the body (Settings has four) plus the footer
-   were simply clipped away and unreachable.
-   Fix: the dialog itself is the scroll container; head and foot
-   stay pinned with position:sticky.
------------------------------------------------------------- */
-.hz-dialog {
-  max-height: min(88vh, 900px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--text) 26%, transparent) transparent;
+/* ---- Header de la herramienta ---------------------------------- */
+.hz-tool-nav .nav__inner {
+  gap: 12px;
 }
-.hz-dialog::-webkit-scrollbar {
-  width: 10px;
+.hz-tool-nav .hz-tool-title {
+  margin-right: auto; /* empuja los enlaces a la derecha */
+  padding-left: 4px;
 }
-.hz-dialog::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--text) 24%, transparent);
-  border-radius: 999px;
-  border: 3px solid transparent;
-  background-clip: content-box;
+/* El nav de la herramienta es simple (2 enlaces + tema): NUNCA colapsa a
+   dropdown. Neutralizamos las reglas responsive de styles.css (que abajo de
+   1250px lo vuelven un menú absoluto en columna, esperando una hamburguesa
+   que aquí no existe). Se mantiene siempre como fila horizontal. */
+.hz-tool-nav .nav__menu {
+  position: static;
+  inset: auto;
+  top: auto;
+  right: auto;
+  left: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  width: auto;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  z-index: auto;
 }
-.hz-dialog::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--text) 40%, transparent);
-  background-clip: content-box;
+.hz-tool-nav .nav__menu a {
+  font-weight: 600;
+  font-size: 14px;
+  color: color-mix(in srgb, var(--text) 86%, var(--muted));
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: background var(--transition), border-color var(--transition);
 }
-
-/* The body is no longer a scroller of its own. */
-.hz-dialog__body {
-  max-height: none;
-  overflow: visible;
-  padding: 4px 20px 12px;
+.hz-tool-nav .nav__menu a:hover {
+  background: var(--bg-soft);
+  border-color: var(--accent-line, rgba(217, 4, 41, 0.35));
 }
-
-/* Head and foot ride along the scroll so the title and the
-   actions ("Listo", "Guardar", "Crear mi horario") are always
-   reachable, whatever the content height. */
-.hz-dialog__head {
-  position: sticky;
-  top: 0;
-  z-index: 3;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 16px 20px 12px;
-}
-.hz-dialog__foot {
-  position: sticky;
-  bottom: 0;
-  z-index: 3;
-  background: var(--surface);
-  /* covers the rounded corner gap under the sticky bar */
-  box-shadow: 0 -1px 0 var(--border);
+/* En pantallas estrechas el título de la herramienta cede espacio. */
+@media (max-width: 560px) {
+  .hz-tool-nav .hz-tool-title { display: none; }
+  .hz-tool-nav .nav__menu a { padding: 8px 8px; font-size: 13px; }
 }
 
-/* Keep the background page still while a dialog is open, and
-   reserve the scrollbar gutter so nothing jumps sideways. */
-html:has(dialog[open]) {
-  overflow: hidden;
-  scrollbar-gutter: stable;
+/* ---- Onboarding (estado vacío) --------------------------------- */
+.hz-onboard {
+  display: flex;
+  justify-content: center;
+  padding: clamp(20px, 5vw, 56px) 0 24px;
 }
-
-/* Section rhythm: clearer separation and a readable heading. */
-.hz-dialog__section {
-  padding: 16px 20px;
-}
-.hz-dialog__section + .hz-dialog__section {
-  border-top: 1px solid var(--border);
-}
-.hz-dialog__section h3 {
-  font-size: 12.5px;
-  letter-spacing: 0.6px;
-  color: color-mix(in srgb, var(--text) 72%, var(--muted));
-  margin-bottom: 12px;
-}
-
-/* Roomier form controls inside the tool. */
-.hz-field input,
-.hz-field select,
-.hz-field textarea {
-  padding: 10px 12px;
-  font-size: 14.5px;
-}
-.hz-field > span {
-  font-size: 12.5px;
-}
-
-/* "Formato de hora" as selectable chips, so the active one reads
-   as active instead of being a bare radio. */
-#hzSettings fieldset label {
+.hz-onboard[hidden] { display: none; }
+.hz-onboard__card {
+  position: relative;
+  width: min(720px, 100%);
+  text-align: center;
+  padding: clamp(24px, 4vw, 44px);
+  border-radius: calc(var(--radius) + 6px);
   border: 1px solid var(--border);
+  background:
+    radial-gradient(520px 260px at 50% -10%, rgba(217, 4, 41, 0.16), transparent 70%),
+    var(--surface);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.hz-onboard__card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: var(--accent);
+}
+.hz-onboard__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
   border-radius: 999px;
-  padding: 8px 14px;
+  background: var(--accent-soft, rgba(217, 4, 41, 0.14));
+  border: 1px solid var(--accent-line, rgba(217, 4, 41, 0.35));
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+.hz-onboard__badge-dot {
+  width: 8px; height: 8px; border-radius: 999px; background: var(--accent);
+}
+.hz-onboard__title {
+  margin: 18px auto 10px;
+  max-width: 18ch;
+  font-size: clamp(26px, 4.6vw, 42px);
+  font-weight: 900;
+  letter-spacing: 0.3px;
+  line-height: 1.08;
+}
+.hz-onboard__sub {
+  margin: 0 auto 24px;
+  max-width: 52ch;
+  color: var(--muted);
+  font-size: clamp(15px, 1.4vw, 17px);
+  line-height: 1.55;
+}
+.hz-onboard__actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.hz-onboard__cta {
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 26px;
+  font-size: 15px;
+}
+.hz-onboard__cta svg { flex: 0 0 auto; }
+
+/* Pasos 1-2-3 */
+.hz-steps {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 20px 0 0;
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  text-align: left;
+}
+.hz-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  color: color-mix(in srgb, var(--text) 84%, var(--muted));
+  line-height: 1.4;
+}
+.hz-step__n {
+  flex: 0 0 26px;
+  width: 26px; height: 26px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 13px;
+  color: var(--accent);
+  background: var(--accent-soft, rgba(217, 4, 41, 0.14));
+  border: 1px solid var(--accent-line, rgba(217, 4, 41, 0.35));
+}
+.hz-onboard__privacy {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+@media (max-width: 620px) {
+  .hz-steps { grid-template-columns: 1fr; gap: 12px; }
+  .hz-onboard__actions { flex-direction: column; align-items: stretch; }
+  .hz-onboard__actions .btn { width: 100%; }
+}
+
+/* ---- Barra de herramientas (workspace) ------------------------- */
+.hz-workspace[hidden] { display: none; }
+.hz-controls {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+.hz-controls__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+/* Acciones grandes y SIEMPRE etiquetadas (icono + texto), para que cualquiera
+   las entienda. Antes se colapsaban a iconos sueltos en móvil y no se
+   comprendían. Se escopan bajo .hz-controls para ganar a la regla previa
+   `.hz-controls .btn { min-height: 38px }`. */
+.hz-controls .hz-action {
+  min-height: 48px;
+  padding: 0 18px;
+  gap: 9px;
+  font-size: 14px;
+  font-weight: 800;
+}
+.hz-controls .hz-action svg { flex: 0 0 auto; }
+
+/* Móvil: rejilla 2×2 de botones grandes, con texto visible. El color
+   distingue la acción principal (Descargar PDF, en rojo). */
+@media (max-width: 720px) {
+  .hz-controls { flex-direction: column; align-items: stretch; }
+  .hz-controls__group { justify-content: center; }
+  .hz-controls__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+  }
+  .hz-controls .hz-action {
+    width: 100%;
+    min-height: 56px;
+    font-size: 15px;
+  }
+}
+/* Teléfonos muy estrechos: una sola columna, imposible de malinterpretar. */
+@media (max-width: 380px) {
+  .hz-controls__actions { grid-template-columns: 1fr; }
+}
+
+/* ---- Encabezados de día del calendario ------------------------- */
+.hz-dayhead__name {
+  font-size: 12.5px;
+}
+
+/* ---- Agenda móvil (vista «Día» en teléfonos) ------------------- */
+/* En agenda el panel-cuadrícula sobra: las tarjetas son las protagonistas. */
+.hz-cal--agenda {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  overflow: visible;
+  border-radius: 0;
+}
+.hz-agenda {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.hz-agenda__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 2px 0;
+}
+.hz-agenda__day {
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0.3px;
+}
+.hz-agenda__today {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--accent);
+  background: var(--accent-soft, rgba(217, 4, 41, 0.14));
+  border: 1px solid var(--accent-line, rgba(217, 4, 41, 0.35));
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.hz-agenda__count {
+  margin-left: auto;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.hz-agenda__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.hz-agenda-item {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--ev-border, var(--border));
+  border-left: 5px solid var(--ev-accent, var(--accent));
+  background: var(--ev-bg, var(--surface));
+  color: var(--text);
   cursor: pointer;
-  transition: border-color var(--transition), background var(--transition);
-  min-height: 40px;
-  box-sizing: border-box;
+  text-align: left;
+  width: 100%;
+  transition: transform 120ms ease, box-shadow var(--transition);
 }
-#hzSettings fieldset label:hover {
-  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
-}
-#hzSettings fieldset label:has(input:checked) {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
-}
-#hzSettings fieldset label:has(input:focus-visible) {
-  outline: 3px solid rgba(217, 4, 41, 0.5);
+.hz-agenda-item:active { transform: scale(0.995); }
+.hz-agenda-item:focus-visible {
+  outline: 3px solid rgba(217, 4, 41, 0.55);
   outline-offset: 2px;
 }
-
-/* ------------------------------------------------------------
-   2. Buttons — no shouting, no reflow
-   The global .btn is uppercase with 1px tracking, which made the
-   tool's dense button rows grow and rewrap on every relabel.
------------------------------------------------------------- */
-.hz-page .btn,
-.hz-dialog .btn,
-.hz-segment__btn {
-  text-transform: none;
-  letter-spacing: 0.2px;
+.hz-agenda-item__time {
+  flex: 0 0 66px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  padding-right: 12px;
+  border-right: 1px solid var(--border);
+}
+.hz-agenda-item__start {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-
-/* Uniform heights per group. */
-.hz-controls .btn,
-.hz-banner .btn,
-.btn.hz-btn-sm {
-  min-height: 38px;
-  padding-top: 0;
-  padding-bottom: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.hz-agenda-item__end {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
-.hz-hero__actions .btn {
-  min-height: 46px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.hz-agenda-item__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
-.hz-segment__btn {
-  min-height: 32px;
-}
-.hz-dialog__foot .btn,
-.hz-dialog__section .btn {
-  min-height: 40px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* ------------------------------------------------------------
-   3. Calendar — more air
------------------------------------------------------------- */
-:root {
-  --hz-hour-h: 70px;   /* read by app.js via getComputedStyle */
-  --hz-colmin: 152px;
-  --hz-gutter: 78px;
-}
-
-/* The first hour label is centred on the line (translateY(-50%)),
-   so at offset 0 half of it fell outside the grid. Shift the axis
-   and the day columns together with a margin so the geometry set
-   by app.js (label tops, event tops, hour gradient) stays aligned. */
-.hz-gutter,
-.hz-daycol {
-  margin-top: 10px;
-}
-
-/* ------------------------------------------------------------
-   4. Event cards — text must never be cut mid-word
-   The blocks could not shrink (min-height:auto on flex items),
-   so long words like LABORATORIO / CARDIOLOGIA overflowed the
-   card instead of wrapping.
------------------------------------------------------------- */
-.hz-event__body {
-  min-height: 0;
-  overflow: hidden;
-}
-.hz-event__body > * {
-  min-height: 0;
-  flex: 0 1 auto;
-}
-.hz-event__title,
-.hz-event__meta {
+.hz-agenda-item__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.25;
   overflow-wrap: anywhere;
-  word-break: normal;
 }
-/* The time is the anchor: pinned to the bottom and never squeezed. */
-.hz-event__time {
-  margin-top: auto;
-  flex: 0 0 auto;
+.hz-agenda-item__section {
+  font-weight: 700;
+  color: color-mix(in srgb, var(--text) 70%, var(--muted));
 }
-
-/* Degradation by priority: title -> time -> location -> professor
-   -> description. Full detail always stays available on click and
-   on hover (title attribute). */
-
-/* is-md (66-108px): drop description and the type chip. */
-.hz-event.is-md .hz-event__desc,
-.hz-event.is-md .hz-event__tag {
-  display: none;
+.hz-agenda-item__meta {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
 }
-.hz-event.is-md .hz-event__prof {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
+.hz-agenda-item__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: color-mix(in srgb, var(--text) 80%, var(--muted));
 }
-.hz-event.is-md .hz-event__title {
-  -webkit-line-clamp: 2;
+.hz-agenda__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  padding: 40px 20px;
+  border: 1px dashed var(--border);
+  border-radius: 16px;
+  background: var(--surface);
 }
-
-/* is-sm (36-66px): a 50-minute class. Location MUST still show,
-   so the title gives up its second line instead. */
-.hz-event.is-sm .hz-event__prof,
-.hz-event.is-sm .hz-event__desc,
-.hz-event.is-sm .hz-event__tag {
-  display: none;
-}
-.hz-event.is-sm .hz-event__loc {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-}
-.hz-event.is-sm .hz-event__title {
-  -webkit-line-clamp: 1;
+.hz-agenda__empty-text {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 600;
 }
 
-/* is-xs (<36px): only what is guaranteed to fit. */
-.hz-event.is-xs .hz-event__meta,
-.hz-event.is-xs .hz-event__time,
-.hz-event.is-xs .hz-event__tag {
-  display: none;
+/* ---- Motion ---------------------------------------------------- */
+.hz-onboard__card { animation: hzFadeUp 420ms cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes hzFadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
 }
-.hz-event.is-xs .hz-event__title {
-  -webkit-line-clamp: 1;
-}
-
-/* ------------------------------------------------------------
-   5. Mobile — one-handed use
------------------------------------------------------------- */
-@media (max-width: 640px) {
-  .hz-hero__actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .hz-hero__actions .btn {
-    width: 100%;
-  }
-  .hz-dialog__foot {
-    flex-direction: column-reverse;
-    align-items: stretch;
-  }
-  .hz-dialog__foot-left,
-  .hz-dialog__foot-right {
-    width: 100%;
-  }
-  .hz-dialog__foot .btn {
-    flex: 1 1 auto;
-  }
-  /* Touch targets stay >= 40px. */
-  .hz-iconbtn {
-    width: 40px;
-    height: 40px;
-  }
-  .hz-dialog {
-    max-height: 92vh;
-  }
+@media (prefers-reduced-motion: reduce) {
+  .hz-onboard__card { animation: none; }
 }
