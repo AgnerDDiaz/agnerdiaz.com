@@ -86,12 +86,22 @@
   // Rendering — calendar
   // ----------------------------------------------------------------------
   function render() {
+    updateWorkspaceVisibility();
     renderCalendar();
     renderDayChips();
     renderBanner();
     renderLegend();
     syncViewToggle();
     persist();
+  }
+
+  // Import-first UX: when the schedule is empty we show the onboarding screen
+  // ("¿Quieres importar tu horario de la UASD?"); once there are activities we
+  // reveal the workspace (toolbar + calendar).
+  function updateWorkspaceVisibility() {
+    var empty = state.items.length === 0;
+    if (els.onboard) els.onboard.hidden = !empty;
+    if (els.workspace) els.workspace.hidden = empty;
   }
 
   // ----------------------------------------------------------------------
@@ -265,11 +275,8 @@
     });
 
     scroll.appendChild(grid);
-
-    if (state.items.length === 0) {
-      scroll.appendChild(buildEmptyState());
-    }
-
+    // Empty state is handled by the onboarding screen (updateWorkspaceVisibility),
+    // so the calendar itself never needs an in-grid empty card.
     cal.appendChild(scroll);
   }
 
@@ -1028,6 +1035,8 @@
   }
 
   function cacheEls() {
+    els.onboard = document.getElementById("hzOnboard");
+    els.workspace = document.getElementById("hzWorkspace");
     els.calendar = document.getElementById("hzCalendar");
     els.dayChips = document.getElementById("hzDayChips");
     els.viewToggle = document.getElementById("hzViewToggle");
