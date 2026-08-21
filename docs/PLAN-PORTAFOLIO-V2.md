@@ -259,8 +259,16 @@ El usuario aportó los 16 archivos, así que esta fase se adelantó.
 - Formalizar `/horario/` como referencia: `public/<slug>/` que enlaza `/assets/css/tokens.css` y define su propio namespace CSS (`.hz-*`).
 - Documentar el patrón en `docs/CONTENIDO.md`.
 
-### Fase 7 — Pulido profesional
-`sitemap.xml` · `robots.txt` · imágenes OG por proyecto · JSON-LD `SoftwareApplication` por app · auditoría Lighthouse (objetivo 95+) · `prefers-reduced-motion` en todas las animaciones nuevas · verificación de Netlify Forms sobre el HTML generado.
+### Fase 7 — Pulido profesional — ✅ (mayormente completada)
+- ✅ `sitemap-index.xml` + `robots.txt` (Fase 6).
+- ✅ **Iconos de tecnologías auto-hospedados** en `public/img/tech/` (24 SVG de Devicon). Cero dependencia de CDN en el sitio nuevo; funciona sin conexión.
+- ✅ **Imagen OG** de marca (1200×630) generada con sharp (`scripts/gen-og.mjs`), en negro + rojo con nombre, roles y dominio.
+- ✅ **Netlify Forms**: `public/__forms.html` garantiza la detección del formulario `contact`.
+- ✅ Limpieza de assets huérfanos (`public/assets/i18n/` eliminado). Se conservan `main.js` y `styles.css` (los usa `/horario/`).
+- ✅ `prefers-reduced-motion` cubierto en todas las animaciones nuevas.
+- ⏳ Único externo que queda (intencional): Google Fonts (Montserrat) y el PDF.js de `/horario/` por CDN.
+- ⏳ **Publicación**: merge de `feature/portfolio-v2` a `main` y push; Netlify compila con `npm run build`.
+- ⏳ Opcional futuro: JSON-LD `SoftwareApplication` por app, auditoría Lighthouse.
 
 ---
 
