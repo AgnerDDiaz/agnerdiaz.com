@@ -1,0 +1,104 @@
+---
+import { site, type Lang } from "@data/site";
+import { mainNav, subNav } from "@data/nav";
+import { useTranslations, otherLang, localizePath, type UIKey } from "@i18n/ui";
+
+interface Props {
+  lang: Lang;
+  /** Ruta sin prefijo de idioma para el toggle de idioma. */
+  path?: string;
+  /** true si el header está en la home (anclas directas #about). */
+  onHome?: boolean;
+  /** Solo marca + toggles, sin menú de secciones (p. ej. /links). */
+  minimal?: boolean;
+}
+const { lang, path = "/", onHome = true, minimal = false } = Astro.props;
+const t = useTranslations(lang);
+const homeHref = localizePath("/", lang);
+const other = otherLang(lang);
+const otherHref = localizePath(path, other);
+
+// La home usa anclas a sus secciones; las sub-páginas un menú corto de rutas.
+const navItems = onHome ? mainNav : subNav;
+const itemHref = (href: string) => (onHome ? href : localizePath(href, lang));
+---
+
+<header class={`nav${onHome ? "" : " nav--compact"}`}>
+  <div class="container nav__inner">
+    <a class="brand" href={homeHref} aria-label={t("nav.home")}>
+      <span class="brand__dot"></span>
+      <span class="brand__text">{site.brand.first}<span class="brand__accent">{site.brand.last}</span></span>
+    </a>
+
+    {
+      minimal ? (
+        <div class="nav__actions">
+          <a class="icon-btn" id="langToggle" href={otherHref} data-lang={other} aria-label={t("a11y.lang")}>{other.toUpperCase()}</a>
+          <button class="icon-btn" id="themeToggle" type="button" aria-label={t("a11y.theme")}>☾</button>
+        </div>
+      ) : (
+        <>
+          <button class="nav__toggle" id="navToggle" aria-label={t("a11y.menu.open")} aria-expanded="false" aria-controls="navMenu">
+            <span></span><span></span><span></span>
+          </button>
+
+          <nav class="nav__menu" id="navMenu" aria-label={t("nav.home")}>
+            {navItems.map((item) =>
+              item.cta ? (
+                <a class="btn btn--ghost" href={itemHref(item.href)}>{t(item.key as UIKey)}</a>
+              ) : (
+                <a href={itemHref(item.href)}>{t(item.key as UIKey)}</a>
+              )
+            )}
+            <div class="nav__actions">
+              <a class="icon-btn" id="langToggle" href={otherHref} data-lang={other} aria-label={t("a11y.lang")}>{other.toUpperCase()}</a>
+              <button class="icon-btn" id="themeToggle" type="button" aria-label={t("a11y.theme")}>☾</button>
+            </div>
+          </nav>
+        </>
+      )
+    }
+  </div>
+</header>
+
+<script>
+  // ── Menú móvil ────────────────────────────────────────────
+  const toggle = document.getElementById("navToggle");
+  const menu = document.getElementById("navMenu");
+  const closeMenu = () => {
+    menu?.classList.remove("is-open");
+    toggle?.setAttribute("aria-expanded", "false");
+  };
+  toggle?.addEventListener("click", () => {
+    const open = menu?.classList.toggle("is-open");
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+  document.addEventListener("click", (e) => {
+    const target = e.target as Node;
+    if (menu && toggle && !menu.contains(target) && !toggle.contains(target)) closeMenu();
+  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenu(); });
+  menu?.querySelectorAll('a[href^="#"]').forEach((a) => a.addEventListener("click", closeMenu));
+
+  // ── Tema ──────────────────────────────────────────────────
+  const themeBtn = document.getElementById("themeToggle");
+  const getTheme = () =>
+    document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+  const paintThemeBtn = () => {
+    if (themeBtn) themeBtn.textContent = getTheme() === "light" ? "☀" : "☾";
+  };
+  paintThemeBtn();
+  themeBtn?.addEventListener("click", () => {
+    const next = getTheme() === "light" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (_) {}
+    paintThemeBtn();
+  });
+
+  // ── Idioma: recordar preferencia para el redirect de la raíz ──
+  const langLink = document.getElementById("langToggle");
+  langLink?.addEventListener("click", () => {
+    const lang = langLink.getAttribute("data-lang");
+    if (lang) { try { localStorage.setItem("lang", lang); } catch (_) {} }
+  });
+</script>

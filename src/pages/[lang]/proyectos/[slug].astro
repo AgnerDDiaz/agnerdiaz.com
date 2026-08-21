@@ -1,0 +1,136 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Header from "@components/nav/Header.astro";
+import Footer from "@components/nav/Footer.astro";
+import TechChips from "@components/ui/TechChips.astro";
+import PhoneMockup from "@components/projects/PhoneMockup.astro";
+import { getLegalApp, DOC_LABEL, legalUrl } from "@data/legal";
+import { useTranslations, toLang, type UIKey, type Lang } from "@i18n/ui";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  const langs: Lang[] = ["es", "en"];
+  return langs.flatMap((lang) =>
+    projects.map((project) => ({
+      params: { lang, slug: project.id },
+      props: { project },
+    })),
+  );
+}
+
+const { project } = Astro.props;
+const lang = toLang(Astro.params.lang);
+const t = useTranslations(lang);
+const d = project.data;
+
+const platformLabel: Record<string, string> = { ios: "iOS", android: "Android", web: "Web" };
+const periodText = `${d.period.start} — ${d.period.end ?? t("projects.present")}`;
+const cover = d.screenshots[0];
+const rest = d.screenshots.slice(1);
+const legalApp = getLegalApp(project.id);
+
+const title = `${d.title} | ${lang === "es" ? "Proyectos" : "Projects"} | Agner Díaz`;
+---
+
+<BaseLayout lang={lang} title={title} description={d.tagline[lang]} path={`/proyectos/${project.id}/`}>
+  <a class="skip-link" href="#main">{t("a11y.skip")}</a>
+  <Header lang={lang} path={`/proyectos/${project.id}/`} onHome={false} />
+
+  <main id="main" style={`--proj-accent:${d.accent ?? "var(--accent)"}`}>
+    <section class="section">
+      <div class="container">
+        <a class="section__eyebrow" href={`/${lang}/proyectos/`}>← {t("projects.back")}</a>
+
+        <div class="pd-hero" style="margin-top:14px">
+          <div>
+            <div class="pd-eyebrow">
+              <span class={`status status--${d.status}`}>{t(`projects.status.${d.status}` as UIKey)}</span>
+            </div>
+            <h1 class="pd-title">{d.title}</h1>
+            <p class="pd-tagline">{d.tagline[lang]}</p>
+
+            <div class="pd-meta">
+              <div class="pd-meta__item">
+                <div class="pd-meta__k">{t("projects.role")}</div>
+                <div class="pd-meta__v">{d.role[lang]}</div>
+              </div>
+              <div class="pd-meta__item">
+                <div class="pd-meta__k">{t("projects.period")}</div>
+                <div class="pd-meta__v">{periodText}</div>
+              </div>
+              {d.platforms.length > 0 && (
+                <div class="pd-meta__item">
+                  <div class="pd-meta__k">{t("projects.platforms")}</div>
+                  <div class="pd-meta__v">{d.platforms.map((p) => platformLabel[p]).join(" · ")}</div>
+                </div>
+              )}
+            </div>
+
+            <div class="pd-actions">
+              {d.links.live && <a class="btn btn--primary" href={d.links.live}>{t("projects.open")}</a>}
+              {d.links.appStore && <a class="btn btn--soft" href={d.links.appStore} target="_blank" rel="noreferrer">App Store</a>}
+              {d.links.googlePlay && <a class="btn btn--soft" href={d.links.googlePlay} target="_blank" rel="noreferrer">Google Play</a>}
+              {d.links.demo && <a class="btn btn--soft" href={d.links.demo} target="_blank" rel="noreferrer">{t("projects.demo")}</a>}
+              {d.links.repo && <a class="btn btn--soft" href={d.links.repo} target="_blank" rel="noreferrer">{t("projects.repo")}</a>}
+            </div>
+          </div>
+
+          <div class="pd-hero__phone">
+            <PhoneMockup src={cover?.src} alt={cover?.alt ?? d.title} lang={lang} />
+          </div>
+        </div>
+
+        {d.overview && (
+          <div class="pd-section">
+            <h2>{t("projects.overview")}</h2>
+            <p class="pd-overview">{d.overview[lang]}</p>
+          </div>
+        )}
+
+        {d.highlights && d.highlights[lang].length > 0 && (
+          <div class="pd-section">
+            <h2>{t("projects.highlights")}</h2>
+            <ul class="pd-highlights">
+              {d.highlights[lang].map((h) => <li>{h}</li>)}
+            </ul>
+          </div>
+        )}
+
+        <div class="pd-section">
+          <h2>{t("projects.gallery")}</h2>
+          <div class="pd-gallery">
+            {
+              (rest.length > 0 ? rest : [undefined, undefined, undefined]).map((shot) => (
+                <figure class="pd-shot">
+                  <PhoneMockup src={shot?.src} alt={shot?.alt ?? d.title} lang={lang} />
+                  {shot?.caption && <figcaption>{shot.caption[lang]}</figcaption>}
+                </figure>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="pd-section">
+          <h2>{t("skills.title")}</h2>
+          <TechChips ids={d.tech} />
+        </div>
+
+        {legalApp && (
+          <div class="pd-section">
+            <h2>{t("projects.links")}</h2>
+            <div class="pd-actions">
+              {legalApp.docs.map((docKey) => (
+                <a class="btn btn--soft" href={legalUrl(legalApp.slug, docKey, lang)}>
+                  {DOC_LABEL[docKey][lang]}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>

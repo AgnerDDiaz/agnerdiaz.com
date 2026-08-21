@@ -1,0 +1,63 @@
+/* ============================================================
+   tokens.css — Sistema de diseño de agnerdiaz.com
+   ------------------------------------------------------------
+   Fuente ÚNICA de verdad de los tokens visuales (color, radios,
+   sombras, tipografía, ritmo). URL estable y sin hash a propósito:
+   la consumen tanto el sitio (Astro) como las micro-apps que NO
+   pasan por el bundler (p. ej. /horario/). No mover ni versionar.
+   ============================================================ */
+
+:root {
+  --bg: #0A0A0B;
+  --surface: #161B22;
+  --accent: #D90429;
+  --text: #EDF2F4;
+  --muted: #8D99AE;
+
+  --bg-soft: rgba(255, 255, 255, 0.03);
+  --border: rgba(255, 255, 255, 0.08);
+
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --shadow-soft: 0 10px 20px rgba(0, 0, 0, 0.22);
+
+  --radius: 18px;
+  --radius-sm: 12px;
+
+  --container: 1100px;
+  --container-wide: 1280px;
+  --nav-h: 72px;
+
+  --transition: 220ms cubic-bezier(.2, .8, .2, 1);
+  --font: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+
+  /* Tipografía editorial */
+  --fs-body: 16px;
+  --lh-body: 1.65;
+  --lh-prose: 1.75;
+  --measure: 72ch;
+  --para-gap: 14px;
+  --content-gap: 12px;
+
+  /* Derivados de acento reutilizables */
+  --accent-soft: rgba(217, 4, 41, 0.14);
+  --accent-line: rgba(217, 4, 41, 0.35);
+  --accent-ring: rgba(217, 4, 41, 0.55);
+}
+
+html[data-theme="light"] {
+  --bg: #F8F9FA;
+  --surface: #FFFFFF;
+  --accent: #BC002D;
+  --text: #2B2D42;
+  --muted: #5C677D;
+
+  --bg-soft: #F1F3F5;
+  --border: rgba(0, 0, 0, 0.06);
+
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  --accent-soft: rgba(188, 0, 45, 0.10);
+  --accent-line: rgba(188, 0, 45, 0.28);
+  --accent-ring: rgba(188, 0, 45, 0.45);
+}

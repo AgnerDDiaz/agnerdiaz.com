@@ -1,0 +1,73 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Header from "@components/nav/Header.astro";
+import Footer from "@components/nav/Footer.astro";
+import CertCard from "@components/certs/CertCard.astro";
+import CertViewer from "@components/certs/CertViewer.astro";
+import { useTranslations, toLang } from "@i18n/ui";
+
+export function getStaticPaths() {
+  return [{ params: { lang: "es" } }, { params: { lang: "en" } }];
+}
+
+const lang = toLang(Astro.params.lang);
+const t = useTranslations(lang);
+
+const certs = (await getCollection("certifications")).sort((a, b) =>
+  b.data.issuedAt.localeCompare(a.data.issuedAt),
+);
+
+// Agrupar por año (el orden ya es descendente).
+const byYear = new Map<string, typeof certs>();
+for (const c of certs) {
+  const year = c.data.issuedAt.slice(0, 4);
+  if (!byYear.has(year)) byYear.set(year, []);
+  byYear.get(year)!.push(c);
+}
+const years = [...byYear.keys()];
+
+const title = lang === "es" ? "Certificaciones | Agner Díaz" : "Certifications | Agner Díaz";
+---
+
+<BaseLayout lang={lang} title={title} description={t("certs.pageSubtitle")} path="/certificaciones/">
+  <a class="skip-link" href="#main">{t("a11y.skip")}</a>
+  <Header lang={lang} path="/certificaciones/" onHome={false} />
+
+  <main id="main">
+    <section class="section">
+      <div class="container">
+        <div class="section__head">
+          <a class="section__eyebrow" href={`/${lang}/#certs`}>← {t("certs.backHome")}</a>
+          <h2>{t("certs.title")}</h2>
+          <p class="section__sub">{t("certs.pageSubtitle")}</p>
+        </div>
+
+        {
+          years.map((year) => (
+            <div class="cert-year">
+              <h3 class="cert-year__label">{year}</h3>
+              <div class="certs-grid">
+                {byYear.get(year)!.map((cert) => <CertCard cert={cert} lang={lang} />)}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+  </main>
+
+  <CertViewer lang={lang} />
+  <Footer lang={lang} />
+</BaseLayout>
+
+<style>
+  .cert-year { margin-bottom: 30px; }
+  .cert-year__label {
+    margin: 0 0 14px;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: var(--accent);
+  }
+</style>

@@ -1,0 +1,32 @@
+---
+// URL heredada, publicada en App Store / Google Play. Se conserva EXACTA y
+// sirve el contenido (200) para no tener que cambiar nada en las tiendas.
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Header from "@components/nav/Header.astro";
+import Footer from "@components/nav/Footer.astro";
+import LegalContent from "@components/legal/LegalContent.astro";
+import { getLegalApp, DOC_LABEL, BACK_LABEL, legalUrl } from "@data/legal";
+
+const lang = "es" as const;
+const app = getLegalApp("finclarity")!;
+const doc = "support" as const;
+const title = `${DOC_LABEL[doc][lang]} — ${app.name} | Agner Díaz`;
+const alternates = { es: legalUrl(app.slug, doc, "es"), en: legalUrl(app.slug, doc, "en") };
+---
+
+<BaseLayout
+  lang={lang}
+  title={title}
+  description={`${DOC_LABEL[doc][lang]} — ${app.name}`}
+  canonicalPath={`/support/${app.slug}/`}
+  alternates={alternates}
+>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+  <Header lang={lang} path={`/legal/${app.slug}/${doc}/`} onHome={false} />
+  <main id="main">
+    <section class="section">
+      <LegalContent app={app} doc={doc} lang={lang} backHref={`/${lang}/proyectos/${app.slug}/`} backLabel={BACK_LABEL[lang]} />
+    </section>
+  </main>
+  <Footer lang={lang} />
+</BaseLayout>

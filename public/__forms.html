@@ -1,0 +1,19 @@
+<!doctype html>
+<!--
+  Detección de Netlify Forms. Netlify escanea los HTML del deploy en busca de
+  formularios con `data-netlify`. Este archivo estático garantiza el registro
+  del formulario "contact" aunque el formulario real se renderice en /es/ y /en/.
+  No se enlaza desde ningún sitio; solo lo lee el build de Netlify.
+-->
+<html lang="es">
+  <head><meta charset="utf-8" /><title>Netlify Forms</title></head>
+  <body>
+    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="contact" />
+      <input name="bot-field" />
+      <input type="text" name="subject" />
+      <input type="email" name="email" />
+      <textarea name="message"></textarea>
+    </form>
+  </body>
+</html>

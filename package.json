@@ -1,0 +1,27 @@
+{
+  "name": "agnerdiaz-com",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Portafolio personal de Agner Diaz — Ingeniero de Software y Desarrollador Flutter.",
+  "//type": "No declaramos \"type\": \"module\" a propósito. astro.config.mjs ya es ESM por su extensión, y marcar todo el proyecto como ESM haría que Node tratase los scripts clásicos de /public/horario/js/*.js como módulos ESM, rompiendo los tests (los módulos ESM no viven en require.cache).",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "npm run test:horario",
+    "test:horario": "node tests/horario/engine.test.js && node tests/horario/uasd-parser.test.js && node tests/horario/pdf-layout.test.js && node tests/horario/storage.test.js"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^7.2.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

@@ -1,0 +1,106 @@
+---
+import "../styles/site.css";
+import { site, type Lang } from "@data/site";
+import { localizePath } from "@i18n/ui";
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  /** Ruta sin prefijo de idioma, p. ej. "/" o "/proyectos/". */
+  path?: string;
+  ogImage?: string;
+  /** Canonical explícito (ruta absoluta del sitio). Sobrescribe el calculado. */
+  canonicalPath?: string;
+  /** hreflang explícitos (rutas absolutas del sitio) para páginas heredadas. */
+  alternates?: { es: string; en: string };
+}
+
+const {
+  lang,
+  title,
+  description,
+  path = "/",
+  ogImage = "/assets/img/og.png",
+  canonicalPath,
+  alternates,
+} = Astro.props;
+
+const canonical = new URL(canonicalPath ?? localizePath(path, lang), site.url).href;
+const esHref = new URL(alternates?.es ?? localizePath(path, "es"), site.url).href;
+const enHref = new URL(alternates?.en ?? localizePath(path, "en"), site.url).href;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: site.fullName,
+  url: site.url,
+  email: `mailto:${site.email}`,
+  jobTitle: lang === "es" ? "Ingeniero de Software" : "Software Engineer",
+  sameAs: [site.socials.linkedin, site.socials.github],
+};
+---
+
+<!doctype html>
+<html lang={lang} data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="es" href={esHref} />
+    <link rel="alternate" hreflang="en" href={enHref} />
+    <link rel="alternate" hreflang="x-default" href={esHref} />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(ogImage, site.url).href} />
+    <meta property="og:locale" content={lang === "es" ? "es_DO" : "en_US"} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Tokens del sistema de diseño: URL estable, compartida con las micro-apps -->
+    <link rel="stylesheet" href="/assets/css/tokens.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Evita el flash de tema: aplica el tema guardado/sistema antes de pintar -->
+    <script is:inline>
+      (function () {
+        try {
+          var saved = localStorage.getItem("theme");
+          if (saved === "dark" || saved === "light") {
+            document.documentElement.setAttribute("data-theme", saved);
+            return;
+          }
+          var hasMatch = typeof window.matchMedia === "function";
+          if (hasMatch && window.matchMedia("(prefers-color-scheme: light)").matches) {
+            document.documentElement.setAttribute("data-theme", "light");
+          } else {
+            document.documentElement.setAttribute("data-theme", "dark");
+          }
+        } catch (e) {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+      })();
+    </script>
+
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+  </head>
+
+  <body>
+    <slot />
+    <script>
+      import { initBase } from "@scripts/base";
+      initBase();
+    </script>
+  </body>
+</html>

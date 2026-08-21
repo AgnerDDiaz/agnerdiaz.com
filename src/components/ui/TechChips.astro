@@ -1,0 +1,20 @@
+---
+import { resolveTech } from "@data/tech";
+interface Props { ids: readonly string[]; }
+const { ids } = Astro.props;
+const items = resolveTech(ids);
+---
+{
+  items.length > 0 && (
+    <div class="chips" role="list">
+      {items.map((tech) => (
+        <span class={`chip${tech.invertOnDark ? " is-inverted" : ""}`} role="listitem" title={tech.label}>
+          {tech.icon && (
+            <img src={tech.icon} alt="" width="18" height="18" loading="lazy" decoding="async" onerror="this.remove()" />
+          )}
+          <span>{tech.label}</span>
+        </span>
+      ))}
+    </div>
+  )
+}

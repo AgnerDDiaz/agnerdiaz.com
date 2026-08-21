@@ -1,7 +1,24 @@
-# Private test fixtures — real UASD PDFs contain a student's name and matrícula.
-# Never commit them; they are used locally only.
-horario/tests/fixtures/private/
-*.pdf
+# ── Node / Astro ───────────────────────────────────────────────
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+!.env.example
+.netlify/
 
-# OS noise
+# ── Datos privados ─────────────────────────────────────────────
+# Los PDFs reales de la UASD contienen nombre y matrícula de un
+# estudiante. Nunca se versionan; solo se usan localmente.
+tests/horario/fixtures/private/
+
+# Los PDFs son privados por defecto…
+*.pdf
+# …excepto los que publicamos deliberadamente en el sitio.
+!public/certs/*.pdf
+!public/cv/*.pdf
+
+# ── Ruido del sistema operativo ────────────────────────────────
 .DS_Store
+Thumbs.db
+desktop.ini

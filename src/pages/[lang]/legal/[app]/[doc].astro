@@ -1,0 +1,53 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Header from "@components/nav/Header.astro";
+import Footer from "@components/nav/Footer.astro";
+import LegalContent from "@components/legal/LegalContent.astro";
+import { toLang, type Lang } from "@i18n/ui";
+import { legalApps, DOC_LABEL, BACK_LABEL, isLegacyLegal, legalUrl, type LegalDoc } from "@data/legal";
+
+export function getStaticPaths() {
+  const langs: Lang[] = ["es", "en"];
+  return langs.flatMap((lang) =>
+    legalApps.flatMap((app) =>
+      app.docs
+        // El ES de docs heredados se sirve en su URL publicada (no duplicar).
+        .filter((doc) => !isLegacyLegal(app.slug, doc, lang))
+        .map((doc) => ({
+          params: { lang, app: app.slug, doc },
+          props: { app, doc },
+        })),
+    ),
+  );
+}
+
+const { app, doc } = Astro.props as { app: (typeof legalApps)[number]; doc: LegalDoc };
+const lang = toLang(Astro.params.lang);
+
+const docTitle = DOC_LABEL[doc][lang];
+const title = `${docTitle} — ${app.name} | Agner Díaz`;
+const alternates = { es: legalUrl(app.slug, doc, "es"), en: legalUrl(app.slug, doc, "en") };
+---
+
+<BaseLayout
+  lang={lang}
+  title={title}
+  description={`${docTitle} — ${app.name}`}
+  path={`/legal/${app.slug}/${doc}/`}
+  alternates={alternates}
+>
+  <a class="skip-link" href="#main">Skip</a>
+  <Header lang={lang} path={`/legal/${app.slug}/${doc}/`} onHome={false} />
+  <main id="main">
+    <section class="section">
+      <LegalContent
+        app={app}
+        doc={doc}
+        lang={lang}
+        backHref={`/${lang}/proyectos/${app.slug}/`}
+        backLabel={BACK_LABEL[lang]}
+      />
+    </section>
+  </main>
+  <Footer lang={lang} />
+</BaseLayout>

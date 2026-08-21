@@ -1,0 +1,26 @@
+---
+import { site, type Lang } from "@data/site";
+import { useTranslations } from "@i18n/ui";
+import SocialIcons from "./SocialIcons.astro";
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="container footer__inner">
+    <div>
+      <small>© {year} {site.name}. {t("footer.rights")}</small><br />
+      <small class="muted">{t("footer.built")}</small>
+    </div>
+    <div class="footer__socials">
+      <SocialIcons size="sm" />
+    </div>
+  </div>
+</footer>
+
+<button class="to-top" id="toTop" type="button" aria-label={t("a11y.top")}>
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7" />
+  </svg>
+</button>
