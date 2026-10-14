@@ -111,4 +111,26 @@ const projects = defineCollection({
     }),
 });
 
-export const collections = { experience, certifications, projects };
+// ── Propuestas ─────────────────────────────────────────────────
+// Propuestas para clientes. La página vive en public/propuestas/<slug>/ (como
+// /horario/, es HTML independiente). Son temporales: al cerrarse se borra el
+// archivo de aquí y su carpeta en public/, y la sección desaparece sola.
+const proposals = defineCollection({
+  loader: glob({ base: "./src/content/proposals", pattern: "**/*.md" }),
+  schema: z.object({
+    title: bilingual,
+    client: z.string(),
+    summary: bilingual,
+    /** "YYYY-MM-DD", fecha de entrega al cliente. */
+    date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    /** Ruta de la página publicada, p. ej. /propuestas/presclick-movil/. */
+    href: z.string().startsWith("/"),
+    /** Idioma en que está escrita la propuesta. */
+    lang: z.enum(["es", "en"]).default("es"),
+    tech: z.array(z.string()).default([]),
+    accent: z.string().optional(),
+    order: z.number().default(0),
+  }),
+});
+
+export const collections = { experience, certifications, projects, proposals };

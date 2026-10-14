@@ -1,0 +1,31 @@
+---
+import type { CollectionEntry } from "astro:content";
+import TechChips from "@components/ui/TechChips.astro";
+import { useTranslations, type Lang } from "@i18n/ui";
+
+interface Props {
+  proposal: CollectionEntry<"proposals">;
+  lang: Lang;
+}
+const { proposal, lang } = Astro.props;
+const t = useTranslations(lang);
+const d = proposal.data;
+const [year, month, day] = d.date.split("-").map(Number);
+const date = new Intl.DateTimeFormat(lang === "es" ? "es-DO" : "en-US", { month: "long", year: "numeric" }).format(
+  new Date(year, month - 1, day),
+);
+const openLabel = d.lang !== lang && d.lang === "es" ? t("proposals.inSpanish") : t("proposals.open");
+---
+<a class="card project proposal reveal" href={d.href} style={`--proj-accent:${d.accent ?? "var(--accent)"}`}>
+  <div class="project__topline">
+    <h3 class="project__title">{d.title[lang]}</h3>
+    <span class="status status--proposal">{t("proposals.badge")}</span>
+  </div>
+  <p class="project__role">{t("proposals.for")} {d.client} · {date}</p>
+  <p class="project__tagline">{d.summary[lang]}</p>
+  <TechChips ids={d.tech} />
+  <span class="project__more">
+    {openLabel}
+    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </span>
+</a>

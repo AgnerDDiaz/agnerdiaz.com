@@ -4,6 +4,7 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import Header from "@components/nav/Header.astro";
 import Footer from "@components/nav/Footer.astro";
 import ProjectCard from "@components/projects/ProjectCard.astro";
+import ProposalCard from "@components/projects/ProposalCard.astro";
 import { site } from "@data/site";
 import { useTranslations, toLang } from "@i18n/ui";
 
@@ -15,6 +16,10 @@ const lang = toLang(Astro.params.lang);
 const t = useTranslations(lang);
 
 const projects = (await getCollection("projects")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const proposals = (await getCollection("proposals")).sort(
   (a, b) => a.data.order - b.data.order,
 );
 
@@ -56,6 +61,22 @@ const title = lang === "es" ? "Proyectos | Agner Díaz" : "Projects | Agner Día
         </div>
       </div>
     </section>
+
+    {
+      proposals.length > 0 && (
+        <section class="section section--proposals" id="propuestas" aria-labelledby="proposals-title">
+          <div class="container">
+            <div class="section__head">
+              <h2 id="proposals-title">{t("proposals.title")}</h2>
+              <p class="section__sub">{t("proposals.subtitle")}</p>
+            </div>
+            <div class="projects-grid">
+              {proposals.map((proposal) => <ProposalCard proposal={proposal} lang={lang} />)}
+            </div>
+          </div>
+        </section>
+      )
+    }
   </main>
 
   <Footer lang={lang} />
