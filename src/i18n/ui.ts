@@ -77,6 +77,13 @@ export const ui = {
     "projects.shotSoon": "Captura próximamente",
     "projects.present": "Actualidad",
 
+    "proposals.title": "Propuestas",
+    "proposals.subtitle": "Propuestas de producto para clientes: el flujo explicado pantalla por pantalla y un prototipo para probar.",
+    "proposals.badge": "Propuesta",
+    "proposals.for": "Para",
+    "proposals.open": "Ver propuesta",
+    "proposals.inSpanish": "Ver propuesta",
+
     "skills.title": "Tecnologías",
     "skills.subtitle": "El stack con el que trabajo a diario.",
     "skills.cat.mobile": "Móvil y frontend",
@@ -191,6 +198,13 @@ export const ui = {
     "projects.terms": "Terms",
     "projects.shotSoon": "Screenshot coming soon",
     "projects.present": "Present",
+
+    "proposals.title": "Proposals",
+    "proposals.subtitle": "Product proposals for clients: the flow explained screen by screen and a prototype to try.",
+    "proposals.badge": "Proposal",
+    "proposals.for": "For",
+    "proposals.open": "View proposal",
+    "proposals.inSpanish": "View proposal (in Spanish)",
 
     "skills.title": "Tech Stack",
     "skills.subtitle": "The stack I work with every day.",

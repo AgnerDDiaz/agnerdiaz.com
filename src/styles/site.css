@@ -585,6 +585,8 @@ p { text-wrap: pretty; }
 .status::before { content: ""; width: 7px; height: 7px; border-radius: 999px; background: currentColor; }
 .status--live { color: #2ecc71; border-color: color-mix(in srgb, #2ecc71 40%, var(--border)); }
 .status--wip { color: #e0a70a; border-color: color-mix(in srgb, #e0a70a 40%, var(--border)); }
+.status--proposal { color: #3b82f6; border-color: color-mix(in srgb, #3b82f6 40%, var(--border)); }
+.section--proposals { padding-top: 0; }
 
 /* ------------------------------------------------------------
    Phone mockup

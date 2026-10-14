@@ -1,0 +1,857 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>PresClick Móvil | Propuesta de Agner Díaz</title>
+<meta name="description" content="Propuesta de la versión para teléfono de PresClick: crear recetas en tres pasos, con un prototipo para probar.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="PresClick Móvil">
+<meta property="og:description" content="Prescribir, a un toque de distancia. Propuesta de la versión para teléfono, con prototipo interactivo.">
+<meta property="og:url" content="https://agnerdiaz.com/propuestas/presclick-movil/">
+<meta property="og:image" content="https://agnerdiaz.com/propuestas/presclick-movil/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#2563EB">
+<script>try{var t=localStorage.getItem("presclick-movil-theme")||localStorage.getItem("theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: a chaptered product pitch. Each chapter states one idea and shows it on real-scale phones; the prescription chapter is a filmstrip with numbered taps; the page ends in a working prototype. */
+:root{
+  --bg:#F3F6FA; --bg-2:#E8EEF6; --surface:#FFFFFF; --ink:#111B2E; --ink-2:#46536B; --ink-3:#64718A; --line:#DCE3EE;
+  --navy:#2F3157; --teal:#3E8F8B; --accent:#2563EB; --accent-ink:#1D4ED8; --accent-soft:#E4ECFE;
+  --tap:#EA580C; --tap-soft:rgba(234,88,12,.16); --bar:rgba(243,246,250,.86);
+  --frame:#161C2B; --frame-edge:#46506A; --phone-shadow:rgba(30,58,138,.30);
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"Instrument Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+
+  /* App tokens ("Clínico Glacial"), light */
+  --a-canvas:#EDF1F7; --a-glow1:rgba(97,148,247,.42); --a-glow2:rgba(103,232,249,.36); --a-glow3:rgba(165,180,252,.34);
+  --a-chrome:rgba(255,255,255,.7); --a-card:rgba(255,255,255,.8); --a-modal:rgba(255,255,255,.94); --a-border:rgba(255,255,255,.85);
+  --a-hair:rgba(15,23,42,.08); --a-outline:rgba(15,23,42,.15); --a-fill:rgba(15,23,42,.055); --a-field:rgba(255,255,255,.78);
+  --a-t1:#0F172A; --a-t2:#475569; --a-t3:#64748B;
+  --a-acc:#2563EB; --a-acc-muted:rgba(37,99,235,.11); --a-acc-text:#1D4ED8;
+  --a-pri-top:#3B74F1; --a-pri-bot:#2563EB; --a-pri-border:#1D4ED8; --a-pri-glow:rgba(37,99,235,.45);
+  --a-btn-top:#FFFFFF; --a-btn-bot:#F2F5F9; --a-btn-border:rgba(15,23,42,.12); --a-btn-edge:rgba(15,23,42,.1); --a-btn-shadow:rgba(15,23,42,.1);
+  --a-ok:#15803D; --a-ok-bg:#DCFCE7; --a-warn:#B45309; --a-warn-bg:#FEF3C7; --a-bad:#B91C1C; --a-bad-bg:#FEE2E2;
+  --a-info:#1D4ED8; --a-info-bg:#DCE8FE; --a-teal:#0E7490; --a-teal-bg:#CFFAFE; --a-vio:#6D28D9; --a-vio-bg:#EDE9FE; --a-neu:#475569; --a-neu-bg:#EBEFF4;
+  --a-shadow:0 1px 2px rgba(15,23,42,.04),0 10px 30px rgba(30,58,138,.07);
+  --a-scrim:rgba(8,13,23,.32); --a-switch-off:#D5DBE5;
+  --a-more:rgba(237,241,247,.9); --a-navy:#3D3F62; --a-brandteal:#4E9E9A;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#080D17; --bg-2:#0D1424; --surface:#111A2B; --ink:#EEF2F8; --ink-2:#AAB6CA; --ink-3:#8593AA; --line:#1F2B40;
+    --navy:#E9EBF7; --teal:#87C4C1; --accent:#3B82F6; --accent-ink:#8AB4FF; --accent-soft:rgba(59,130,246,.16);
+    --tap:#FB923C; --tap-soft:rgba(251,146,60,.22); --bar:rgba(8,13,23,.86);
+    --frame:#020409; --frame-edge:#2C3549; --phone-shadow:rgba(0,0,0,.6);
+    --a-canvas:#080D17; --a-glow1:rgba(37,99,235,.4); --a-glow2:rgba(8,145,178,.3); --a-glow3:rgba(79,70,229,.28);
+    --a-chrome:rgba(20,28,44,.66); --a-card:rgba(26,35,54,.66); --a-modal:rgba(15,22,36,.94); --a-border:rgba(255,255,255,.09);
+    --a-hair:rgba(255,255,255,.07); --a-outline:rgba(255,255,255,.16); --a-fill:rgba(255,255,255,.07); --a-field:rgba(255,255,255,.05);
+    --a-t1:#F1F5F9; --a-t2:#A9B6C9; --a-t3:#8392A8;
+    --a-acc:#3B82F6; --a-acc-muted:rgba(59,130,246,.18); --a-acc-text:#8AB4FF;
+    --a-pri-top:#4B8CF7; --a-pri-bot:#3B82F6; --a-pri-border:#2F6FE0; --a-pri-glow:rgba(59,130,246,.45);
+    --a-btn-top:rgba(255,255,255,.15); --a-btn-bot:rgba(255,255,255,.07); --a-btn-border:rgba(255,255,255,.14); --a-btn-edge:rgba(0,0,0,.5); --a-btn-shadow:rgba(0,0,0,.4);
+    --a-ok:#4ADE80; --a-ok-bg:rgba(74,222,128,.14); --a-warn:#FBBF24; --a-warn-bg:rgba(251,191,36,.14); --a-bad:#F87171; --a-bad-bg:rgba(248,113,113,.14);
+    --a-info:#8AB4FF; --a-info-bg:rgba(59,130,246,.18); --a-teal:#67E8F9; --a-teal-bg:rgba(103,232,249,.14); --a-vio:#C4B5FD; --a-vio-bg:rgba(167,139,250,.17); --a-neu:#A3B1C6; --a-neu-bg:rgba(163,177,198,.13);
+    --a-shadow:0 12px 32px rgba(0,0,0,.35);
+    --a-scrim:rgba(0,0,0,.5); --a-switch-off:rgba(255,255,255,.18);
+    --a-more:rgba(8,13,23,.9); --a-navy:#F1F3F9; --a-brandteal:#87C4C1;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#080D17; --bg-2:#0D1424; --surface:#111A2B; --ink:#EEF2F8; --ink-2:#AAB6CA; --ink-3:#8593AA; --line:#1F2B40;
+  --navy:#E9EBF7; --teal:#87C4C1; --accent:#3B82F6; --accent-ink:#8AB4FF; --accent-soft:rgba(59,130,246,.16);
+  --tap:#FB923C; --tap-soft:rgba(251,146,60,.22); --bar:rgba(8,13,23,.86);
+  --frame:#020409; --frame-edge:#2C3549; --phone-shadow:rgba(0,0,0,.6);
+  --a-canvas:#080D17; --a-glow1:rgba(37,99,235,.4); --a-glow2:rgba(8,145,178,.3); --a-glow3:rgba(79,70,229,.28);
+  --a-chrome:rgba(20,28,44,.66); --a-card:rgba(26,35,54,.66); --a-modal:rgba(15,22,36,.94); --a-border:rgba(255,255,255,.09);
+  --a-hair:rgba(255,255,255,.07); --a-outline:rgba(255,255,255,.16); --a-fill:rgba(255,255,255,.07); --a-field:rgba(255,255,255,.05);
+  --a-t1:#F1F5F9; --a-t2:#A9B6C9; --a-t3:#8392A8;
+  --a-acc:#3B82F6; --a-acc-muted:rgba(59,130,246,.18); --a-acc-text:#8AB4FF;
+  --a-pri-top:#4B8CF7; --a-pri-bot:#3B82F6; --a-pri-border:#2F6FE0; --a-pri-glow:rgba(59,130,246,.45);
+  --a-btn-top:rgba(255,255,255,.15); --a-btn-bot:rgba(255,255,255,.07); --a-btn-border:rgba(255,255,255,.14); --a-btn-edge:rgba(0,0,0,.5); --a-btn-shadow:rgba(0,0,0,.4);
+  --a-ok:#4ADE80; --a-ok-bg:rgba(74,222,128,.14); --a-warn:#FBBF24; --a-warn-bg:rgba(251,191,36,.14); --a-bad:#F87171; --a-bad-bg:rgba(248,113,113,.14);
+  --a-info:#8AB4FF; --a-info-bg:rgba(59,130,246,.18); --a-teal:#67E8F9; --a-teal-bg:rgba(103,232,249,.14); --a-vio:#C4B5FD; --a-vio-bg:rgba(167,139,250,.17); --a-neu:#A3B1C6; --a-neu-bg:rgba(163,177,198,.13);
+  --a-shadow:0 12px 32px rgba(0,0,0,.35);
+  --a-scrim:rgba(0,0,0,.5); --a-switch-off:rgba(255,255,255,.18);
+  --a-more:rgba(8,13,23,.9); --a-navy:#F1F3F9; --a-brandteal:#87C4C1;
+  color-scheme:dark;
+}
+
+.only-dark{display:none!important}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .only-dark{display:block!important}
+  :root:not([data-theme="light"]) .only-light{display:none!important}
+}
+:root[data-theme="dark"] .only-dark{display:block!important}
+:root[data-theme="dark"] .only-light{display:none!important}
+
+[hidden]{display:none!important}
+html{background:var(--bg)}
+body{margin:0}
+img{max-width:100%}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;padding-inline:16px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1180px;margin:0 auto;padding-block:0 96px}
+
+/* Top bar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;margin-inline:-16px;padding:10px 16px;background:var(--bar);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:10px}
+.topbar nav{flex:1;min-width:0;display:flex;align-items:center;gap:4px;overflow-x:auto;scrollbar-width:none}
+.theme-toggle{flex:none;display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 14px;border-radius:11px;border:1px solid var(--line);background:linear-gradient(var(--surface),var(--bg-2));color:var(--ink);font:600 14px var(--f-body);cursor:pointer;box-shadow:inset 0 -2px 0 rgba(15,23,42,.06),0 2px 6px rgba(15,23,42,.06)}
+.theme-toggle svg{width:18px;height:18px}
+@media (max-width:560px){.theme-toggle span{display:none}.theme-toggle{padding:0 10px}}
+.topbar nav::-webkit-scrollbar{display:none}
+.topbar a{flex:none;font-size:14px;font-weight:600;color:var(--ink-2);text-decoration:none;padding:6px 10px;border-radius:8px}
+.topbar a:hover{background:var(--surface);color:var(--ink)}
+.topbar .brand{font-family:var(--f-display);font-weight:800;font-size:17px;color:var(--navy);margin-right:8px;letter-spacing:-.02em}
+.topbar .brand span{color:var(--teal)}
+
+section{scroll-margin-top:70px}
+.kicker{font-family:var(--f-mono);font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)}
+h1,h2,h3{font-family:var(--f-display);color:var(--navy);text-wrap:balance;margin:0}
+h1{font-size:clamp(2.6rem,6.4vw,4.6rem);line-height:1;font-weight:800;letter-spacing:-.04em}
+h2{font-size:clamp(1.9rem,4vw,3rem);line-height:1.05;font-weight:800;letter-spacing:-.035em}
+h3{font-size:1.45rem;line-height:1.15;font-weight:700;letter-spacing:-.02em}
+p{margin:0;max-width:66ch}
+.lede{font-size:1.16rem;color:var(--ink-2);max-width:62ch}
+.muted{color:var(--ink-3)}
+.chapter{padding-top:110px}
+.chap-head{display:grid;gap:14px;max-width:760px;margin-bottom:38px}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:40px;align-items:center;padding-top:64px}
+.hero-copy{display:grid;gap:22px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:6px}
+.stats div{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:grid;gap:2px}
+.stats b{font-family:var(--f-display);font-size:2.4rem;line-height:1;font-weight:800;color:var(--navy);letter-spacing:-.03em}
+.stats div:nth-child(2) b{color:var(--tap)}
+.stats span{font-size:.92rem;color:var(--ink-2);line-height:1.35}
+.cta{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 20px;border-radius:12px;font-weight:600;font-size:1rem;text-decoration:none;color:var(--ink);background:linear-gradient(var(--surface),var(--bg-2));border:1px solid var(--line);box-shadow:inset 0 -2px 0 rgba(15,23,42,.06),0 2px 6px rgba(15,23,42,.06);cursor:pointer;font-family:inherit}
+.btn.pri{color:#fff;background:linear-gradient(#3B74F1,#2563EB);border-color:#1D4ED8;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),inset 0 -2px 0 rgba(0,0,0,.2),0 10px 22px -8px rgba(37,99,235,.55)}
+.btn:active{transform:translateY(1px)}
+.hero-visual{position:relative;height:620px}
+.hero-tablet{position:absolute;top:30px;right:0;width:92%}
+.hero-visual .phone-a{position:absolute;left:0;bottom:0;z-index:2}
+.hero-visual .phone-b{position:absolute;left:31%;bottom:-24px;z-index:3}
+
+/* Tablet frame */
+.tablet{margin:0;background:var(--frame);border-radius:30px;padding:12px;box-shadow:0 0 0 1.5px var(--frame-edge),0 40px 80px -36px var(--phone-shadow)}
+.tablet img{display:block;width:100%;height:auto;border-radius:19px}
+
+/* Principles */
+.principles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:12px}
+.principle{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;display:grid;gap:8px;align-content:start}
+.principle .ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-ink)}
+.principle .ico svg{width:22px;height:22px}
+.principle b{font-family:var(--f-display);font-size:1.18rem;color:var(--navy);letter-spacing:-.015em}
+.principle p{font-size:.97rem;color:var(--ink-2)}
+
+/* Phone shots */
+.shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(266px,1fr));gap:44px 24px;justify-items:center;align-items:start}
+.shot{margin:0;width:266px;display:grid;gap:14px}
+.shot figcaption{font-size:.95rem;color:var(--ink-2);line-height:1.45}
+.shot figcaption b{color:var(--ink)}
+.phone{--s:.64;display:block}
+.still .m-phone{pointer-events:none}
+.aside{display:grid;gap:12px;margin-top:40px;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px 24px;display:grid;gap:10px;align-content:start}
+.box h3{font-size:1.2rem}
+.box p,.box li{color:var(--ink-2);font-size:1rem}
+.box ul{margin:0;padding-left:1.1em;display:grid;gap:8px}
+.box.accent{background:var(--accent-soft);border-color:transparent}
+.tapdot{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:11px;background:var(--tap);color:#fff;font:600 12px/1 var(--f-mono);vertical-align:-4px}
+
+/* Flow */
+.bigstat{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin:6px 0 10px}
+.bigstat b{font-family:var(--f-display);font-size:clamp(5rem,13vw,9rem);line-height:.8;font-weight:800;color:var(--tap);letter-spacing:-.06em}
+.bigstat span{font-size:1.15rem;color:var(--ink-2);max-width:26ch;padding-bottom:10px;line-height:1.4}
+.bigstat span strong{color:var(--ink);display:block;font-family:var(--f-display);font-size:1.6rem;letter-spacing:-.02em}
+.step{margin-top:70px;display:grid;gap:30px}
+.step-head{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:start;max-width:860px}
+.step-num{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;background:var(--accent);color:#fff;font-family:var(--f-display);font-weight:800;font-size:1.8rem;box-shadow:0 12px 24px -12px rgba(37,99,235,.7)}
+.step-head h3{margin-bottom:6px}
+.step-head p{color:var(--ink-2)}
+
+/* Comparison */
+.compare{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:34px;align-items:center;margin-top:60px}
+.compare:first-of-type{margin-top:0}
+.compare .side{display:grid;gap:14px}
+.compare .label{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--ink)}
+.compare .label .tag{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:var(--bg-2);color:var(--ink-2)}
+.compare .label .tag.new{background:var(--accent-soft);color:var(--accent-ink)}
+.compare p{font-size:.98rem;color:var(--ink-2)}
+.compare .phone{--s:.56}
+
+/* Prototype */
+.proto{display:grid;grid-template-columns:auto minmax(0,1fr);gap:48px;align-items:start}
+.proto-phone{--s:.9}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:26px;display:grid;gap:18px;position:sticky;top:84px}
+.panel h3{font-size:1.25rem}
+.panel ol{margin:0;padding-left:1.2em;display:grid;gap:8px;color:var(--ink-2)}
+.panel ol b{color:var(--ink)}
+.now{background:var(--accent-soft);border-radius:14px;padding:12px 14px;font-size:.98rem;color:var(--ink)}
+.now span{display:block;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:2px}
+.counter{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.counter div{border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.counter span{font-size:.85rem;color:var(--ink-3)}
+.counter b{display:block;font-family:var(--f-display);font-size:2.2rem;line-height:1.05;color:var(--navy);font-variant-numeric:tabular-nums}
+.counter div:first-child b{color:var(--tap)}
+.result{min-height:1.5em;font-weight:600;color:var(--ink)}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.seg{display:inline-flex;padding:3px;border-radius:12px;background:var(--bg-2);gap:2px}
+.seg button{border:0;background:none;font:inherit;font-size:.92rem;font-weight:600;color:var(--ink-2);padding:7px 12px;border-radius:9px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(15,23,42,.12)}
+.btn.small{height:40px;padding:0 14px;font-size:.92rem}
+.fine{font-size:.88rem;color:var(--ink-3)}
+
+/* Closing */
+.benefits{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px}
+.plan{counter-reset:p;list-style:none;margin:28px 0 0;padding:0;display:grid;gap:10px;max-width:760px}
+.plan li{counter-increment:p;display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;color:var(--ink-2)}
+.plan li::before{content:counter(p);width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-ink);font-family:var(--f-display);font-weight:800}
+.plan b{color:var(--ink)}
+footer.fin{margin-top:80px;padding-top:20px;border-top:1px solid var(--line);font-size:.9rem;color:var(--ink-3);display:grid;gap:6px}
+
+@media (max-width:980px){
+  .hero{grid-template-columns:minmax(0,1fr)}
+  .hero-visual{height:auto;display:flex;flex-wrap:wrap;justify-content:center;gap:20px}
+  .hero-tablet{display:none}
+  .hero-visual .phone-a,.hero-visual .phone-b{position:static}
+  .compare{grid-template-columns:minmax(0,1fr);justify-items:center}
+  .compare .side{width:100%}
+  .proto{grid-template-columns:minmax(0,1fr);justify-items:center}
+  .panel{position:static;width:100%}
+}
+@media (max-width:560px){
+  .stats{grid-template-columns:minmax(0,1fr)}
+  .stats div{grid-template-columns:auto 1fr;align-items:center;gap:12px}
+  .step-head{grid-template-columns:minmax(0,1fr)}
+}
+
+/* ───────── Phone mockups: drawn at 393 × 852 pt and scaled with --s ───────── */
+.m-wrap{position:relative;width:calc(415px * var(--s));height:calc(874px * var(--s))}
+.m-phone{box-sizing:content-box;position:absolute;top:0;left:0;width:393px;height:852px;border:11px solid var(--frame);border-radius:60px;transform:scale(var(--s));transform-origin:0 0;box-shadow:0 0 0 1.5px var(--frame-edge),0 40px 70px -30px var(--phone-shadow);background:var(--a-canvas);overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,system-ui,sans-serif;color:var(--a-t1);letter-spacing:-.01em;line-height:1.25;display:flex;flex-direction:column;font-size:15px;-webkit-tap-highlight-color:transparent}
+.m-phone::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 38% at 8% 4%,var(--a-glow1),transparent 70%),radial-gradient(55% 34% at 100% 38%,var(--a-glow2),transparent 70%),radial-gradient(65% 40% at 28% 100%,var(--a-glow3),transparent 70%);pointer-events:none}
+:where(.m-phone button){font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;text-align:inherit;cursor:pointer;letter-spacing:inherit}
+.m-phone button:disabled{cursor:default;opacity:.45}
+:where(.m-phone input,.m-phone textarea){font:inherit;color:inherit;background:transparent;border:0;outline:0;width:100%;min-width:0;padding:0;margin:0;resize:none}
+.m-phone input::placeholder,.m-phone textarea::placeholder{color:var(--a-t3)}
+.m-phone input[type="search"]::-webkit-search-cancel-button{-webkit-appearance:none}
+.m-phone img{max-width:none}
+.m-sb{height:54px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:6px 30px 0 48px;font-weight:600;font-size:17px;position:relative;z-index:25}
+.m-island{position:absolute;top:11px;left:50%;margin-left:-62px;width:124px;height:36px;border-radius:20px;background:#000}
+.m-sbi{width:72px;height:13px;fill:currentColor}
+.m-view{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}
+.m-body{flex:1;min-height:0;overflow:hidden;padding:4px 16px 112px;display:flex;flex-direction:column;gap:12px;position:relative;scrollbar-width:none}
+.m-body::-webkit-scrollbar{display:none}
+.m-body.has-foot{padding-bottom:120px}
+.m-body.has-foot2{padding-bottom:180px}
+.proto-phone .m-body{overflow-y:auto}
+.m-fixed{flex:none;padding:0 16px 8px;display:flex;flex-direction:column;gap:10px}
+.m-home{position:absolute;bottom:8px;left:50%;width:136px;height:5px;margin-left:-68px;border-radius:3px;background:var(--a-t1);z-index:60;pointer-events:none}
+.ic{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.m-ico{width:20px;height:20px;flex:none}
+.m-ico.s{width:17px;height:17px}
+.m-chev{width:18px;height:18px;flex:none;color:var(--a-t3)}
+.m-lt{font-size:34px;line-height:41px;font-weight:700;letter-spacing:-.025em}
+.m-h28{font-size:28px;line-height:34px;font-weight:700;letter-spacing:-.025em}
+.m-h22{font-size:22px;line-height:28px;font-weight:700;letter-spacing:-.02em}
+.m-h20{font-size:20px;line-height:25px;font-weight:700;letter-spacing:-.015em}
+.m-hd{font-size:17px;line-height:22px;font-weight:600}
+.m-bd{font-size:17px;line-height:22px}
+.m-sub{font-size:15px;line-height:20px;color:var(--a-t2)}
+.m-fn{font-size:13px;line-height:18px;color:var(--a-t3)}
+.m-cap{font-size:11.5px;line-height:15px;font-weight:700;letter-spacing:.05em}
+.m-sec{font-size:12.5px;font-weight:600;color:var(--a-t3);text-transform:uppercase;letter-spacing:.06em}
+.m-rx{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-weight:700;letter-spacing:0}
+.m-t1{color:var(--a-t1)}.m-t2{color:var(--a-t2)}
+.c-ok{color:var(--a-ok)}.c-warn{color:var(--a-warn)}.c-bad{color:var(--a-bad)}.c-acc{color:var(--a-acc-text)}
+.m-row{display:flex;align-items:center;gap:10px;min-width:0}
+.m-between{justify-content:space-between}
+.m-center{text-align:center;justify-content:center}
+.m-col{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.m-trunc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.m-hr{height:1px;background:var(--a-hair);margin:10px 0;flex:none}
+.m-card{background:var(--a-card);border:1px solid var(--a-border);border-radius:22px;box-shadow:var(--a-shadow);padding:14px 16px;flex:none}
+.m-stack{display:flex;flex-direction:column;gap:12px}
+.m-list{background:var(--a-card);border:1px solid var(--a-border);border-radius:20px;box-shadow:var(--a-shadow);overflow:hidden;flex:none;display:flex;flex-direction:column}
+.m-li{display:flex;align-items:center;gap:12px;padding:10px 16px;min-height:58px;position:relative;width:100%;text-align:left}
+.m-li+.m-li::before{content:"";position:absolute;top:0;left:68px;right:0;height:1px;background:var(--a-hair)}
+.m-list.flat .m-li+.m-li::before{left:16px}
+.m-tile{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none}
+.m-tile svg{width:19px;height:19px}
+.m-tile.big{width:52px;height:52px;border-radius:16px}
+.m-tile.big svg{width:28px;height:28px}
+.tn-ok{color:var(--a-ok);background:var(--a-ok-bg)}
+.tn-warn{color:var(--a-warn);background:var(--a-warn-bg)}
+.tn-bad{color:var(--a-bad);background:var(--a-bad-bg)}
+.tn-info{color:var(--a-info);background:var(--a-info-bg)}
+.tn-teal{color:var(--a-teal);background:var(--a-teal-bg)}
+.tn-vio{color:var(--a-vio);background:var(--a-vio-bg)}
+.tn-neu{color:var(--a-neu);background:var(--a-neu-bg)}
+.m-pill{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;flex:none}
+.m-pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.m-avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:15px;flex:none}
+.m-btn{height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 14px;font-size:16px;font-weight:600;color:var(--a-t1);background:linear-gradient(var(--a-btn-top),var(--a-btn-bot));border:1px solid var(--a-btn-border)!important;box-shadow:inset 0 -2px 0 var(--a-btn-edge),0 2px 6px var(--a-btn-shadow);white-space:nowrap;flex:none}
+.m-btn.lg{height:56px;font-size:17px;justify-content:flex-start;padding:0 16px;border-radius:14px;width:100%}
+.m-btn.tall{height:52px;font-size:17px;width:100%;border-radius:14px}
+.m-btn.sm{height:36px;font-size:15px;padding:0 12px;border-radius:10px}
+.m-btn.sq{width:44px;padding:0}
+.m-btn.sm.sq{width:36px}
+.m-btn.tall.sq{width:52px}
+.m-btn.pri{color:#fff;background:linear-gradient(var(--a-pri-top),var(--a-pri-bot));border-color:var(--a-pri-border)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.28),inset 0 -2px 0 rgba(0,0,0,.2),0 8px 18px -6px var(--a-pri-glow)}
+.m-btn.danger{color:#fff;background:linear-gradient(#E5484D,#C9302C);border-color:#B42318!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),inset 0 -2px 0 rgba(0,0,0,.2),0 8px 18px -6px rgba(201,48,44,.45)}
+.m-btn.tint{color:var(--a-acc-text);background:linear-gradient(var(--a-acc-muted),var(--a-acc-muted)),linear-gradient(var(--a-btn-top),var(--a-btn-bot))}
+.m-btn.ghost{background:var(--a-fill);box-shadow:none;border-color:transparent!important;color:var(--a-t1)}
+.m-btn.vio{color:var(--a-vio)}
+.m-btn.red{color:var(--a-bad)}
+.m-btn.tray{height:50px;width:100%;justify-content:flex-start;border-radius:14px}
+.m-btn .grow{flex:1;text-align:left;overflow:hidden;text-overflow:ellipsis}
+.m-link{color:var(--a-acc-text);font-weight:600;font-size:15px;white-space:nowrap}
+.m-link.red{color:var(--a-bad)}
+.m-link.muted{color:var(--a-t2);font-weight:500}
+.m-back{display:flex;align-items:center;gap:2px;height:34px;color:var(--a-acc-text);font-size:17px;flex:none;align-self:flex-start}
+.m-back svg{width:22px;height:22px}
+.m-field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.m-lbl{font-size:13px;font-weight:600;color:var(--a-t2)}
+.m-opt-l{font-weight:500;color:var(--a-t3)}
+.m-inp{height:44px;border-radius:12px;border:1px solid var(--a-outline)!important;background:var(--a-field);display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 12px!important;font-size:16px;color:var(--a-t1);white-space:nowrap;overflow:hidden;width:100%}
+.m-inp svg{width:18px;height:18px;color:var(--a-t3);flex:none}
+.m-inp.ph{color:var(--a-t3)}
+.m-inp.locked{background:var(--a-fill);color:var(--a-t2);border-color:transparent!important}
+.m-inp.bad{border-color:var(--a-bad)!important;box-shadow:0 0 0 3px var(--a-bad-bg)}
+.m-inp.area{height:86px;align-items:flex-start;padding:11px 12px!important;white-space:normal}
+.m-inp.area textarea{height:100%}
+.m-err{font-size:12px;color:var(--a-bad);font-weight:600}
+.m-pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.m-search{height:42px;border-radius:12px;background:var(--a-fill);display:flex;align-items:center;gap:8px;padding:0 12px;color:var(--a-t3);font-size:16px;flex:none}
+.m-search svg{width:18px;height:18px;flex:none}
+.m-search input{color:var(--a-t1)}
+.m-search.focus{background:var(--a-field);box-shadow:0 0 0 2px var(--a-acc),0 0 0 6px var(--a-acc-muted)}
+.m-seg{display:flex;padding:3px;border-radius:12px;background:var(--a-fill);gap:2px;flex:none}
+.m-seg span{flex:1;height:32px;display:grid;place-items:center;border-radius:9px;font-size:14px;font-weight:600;color:var(--a-t2);white-space:nowrap;padding:0 6px}
+.m-seg span.on{background:linear-gradient(var(--a-btn-top),var(--a-btn-bot));color:var(--a-t1);box-shadow:0 1px 3px var(--a-btn-shadow),inset 0 -1px 0 var(--a-btn-edge)}
+.m-empty{padding:18px;text-align:center;color:var(--a-t3);font-size:14px}
+.m-top{display:flex;align-items:center;height:34px;margin-top:2px}
+.m-wordmark{font-size:22px;line-height:28px;font-weight:800;letter-spacing:-.035em;color:var(--a-navy)}
+.m-wordmark b{font-weight:800;color:var(--a-brandteal)}
+.m-titleblock{margin-top:6px}
+.m-sechead{display:flex;align-items:center;justify-content:space-between;padding:6px 4px 0}
+.m-sechead span{font-size:17px;font-weight:600}
+.m-kv{display:flex;justify-content:space-between;align-items:baseline;gap:12px;min-height:24px}
+.m-kv span{font-size:14px;color:var(--a-t3);flex:none}
+.m-kv b{font-size:15px;font-weight:500;color:var(--a-t1);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.m-amt-s{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--a-t1);white-space:nowrap}
+.m-amt-m{font-size:20px;line-height:25px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.m-amt-l{font-size:30px;line-height:36px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.m-amt-xl{font-size:38px;line-height:44px;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+
+/* Dashboard cards */
+.m-pairrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;flex:none}
+.m-pairrow.stack{grid-template-columns:minmax(0,1fr)}
+.m-stat{background:var(--a-card);border:1px solid var(--a-border);border-radius:20px;box-shadow:var(--a-shadow);padding:14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.m-stat-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.m-stat-l{font-size:13.5px;font-weight:600;color:var(--a-t2);line-height:17px}
+.m-amt{font-size:26px;line-height:32px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;color:var(--a-t1)}
+.m-amt.c-acc{color:var(--a-acc-text)}.m-amt.c-ok{color:var(--a-ok)}.m-amt.c-warn{color:var(--a-warn)}
+.m-banner{display:block;width:100%;height:auto;border-radius:18px;box-shadow:var(--a-shadow);flex:none}
+
+/* Recetas */
+.m-hero{display:flex;align-items:center;gap:14px;width:100%;min-height:78px;padding:12px 18px 12px 12px!important;border-radius:20px;color:#fff;background:linear-gradient(135deg,var(--a-pri-top),var(--a-pri-bot))!important;border:1px solid var(--a-pri-border)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 -3px 0 rgba(0,0,0,.2),0 14px 28px -10px var(--a-pri-glow);flex:none}
+.m-hero-ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);flex:none}
+.m-hero-ic svg{width:26px;height:26px}
+.m-hero b{font-size:19px;line-height:24px}
+.m-hero small{font-size:13.5px;opacity:.88}
+.m-rxmini{display:flex;flex-direction:column;gap:6px;width:100%;background:var(--a-card)!important;border:1px solid var(--a-border)!important;border-radius:18px;box-shadow:var(--a-shadow);padding:12px 14px!important;flex:none}
+.m-rxcard{padding:0;display:flex;flex-direction:column;overflow:hidden}
+.m-rxcard-main{display:flex;flex-direction:column;gap:4px;padding:14px 16px 10px!important;width:100%}
+.m-rxcard-actions{padding:10px 16px 14px;border-top:1px solid var(--a-hair);gap:8px}
+.m-pathead{display:flex;align-items:center;gap:14px}
+.m-item{display:flex;flex-direction:column;gap:3px}
+.m-item+.m-item{border-top:1px solid var(--a-hair);padding-top:12px}
+
+/* Citas */
+.m-dayhead{padding:6px 4px 0}
+.m-appt{display:flex;align-items:flex-start;gap:14px}
+.m-time{width:56px;flex:none;display:flex;flex-direction:column}
+.m-time b{font-size:20px;line-height:25px;font-variant-numeric:tabular-nums}
+.m-time span{font-size:13px;color:var(--a-t3)}
+
+/* Switch */
+.m-switch{width:51px;height:31px;border-radius:16px;background:var(--a-switch-off);position:relative;flex:none;transition:background .2s}
+.m-switch::after{content:"";position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.2);transition:transform .2s}
+.m-switch.on{background:#34C759}
+.m-switch.on::after{transform:translateX(20px)}
+
+/* Flow */
+.m-fhead{display:flex;align-items:center;justify-content:space-between;height:44px}
+.m-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.m-steps div{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:var(--a-t3);white-space:nowrap}
+.m-steps i{display:block;height:5px;border-radius:3px;background:var(--a-outline)}
+.m-steps .done{color:var(--a-acc-text)}
+.m-steps .done i{background:var(--a-acc)}
+.m-steps .on{color:var(--a-t1)}
+.m-steps .on i{background:linear-gradient(90deg,var(--a-acc) 55%,var(--a-outline) 55%)}
+.m-newpat{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px!important;border-radius:18px;background:var(--a-card)!important;border:1.5px dashed var(--a-outline)!important;flex:none}
+.m-newpat b{font-size:16px}
+.m-newpat small{font-size:13px;color:var(--a-t3)}
+.m-patchip{display:flex;align-items:center;gap:10px;width:100%;padding:8px 14px 8px 8px!important;border-radius:16px;background:var(--a-acc-muted)!important;flex:none}
+.m-patchip b{font-size:15px}
+.m-patchip small{font-size:12.5px;color:var(--a-t2)}
+.m-prod{display:flex;align-items:flex-start;gap:10px;padding:12px}
+.m-prod .m-btn.sm{padding:0 10px}
+.m-amt-p{font-size:18px;line-height:23px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.m-prodname{font-size:16px;line-height:21px}
+.m-thumb{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;flex:none}
+.m-thumb svg{width:26px;height:26px}
+.m-badge{min-width:26px;height:26px;border-radius:13px;background:var(--a-acc);color:#fff;font-size:13.5px;font-weight:700;display:grid;place-items:center;padding:0 7px;flex:none}
+.m-docrow{display:flex;align-items:center;gap:12px;width:100%;padding:8px 0!important;text-align:left}
+.m-sendrow{display:flex!important;align-items:center;gap:12px;width:100%;text-align:left}
+.m-done{align-items:center;text-align:center;padding-top:30px;gap:14px}
+.m-donecheck{width:84px;height:84px;border-radius:26px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#22C55E,#15803D);box-shadow:0 18px 34px -14px rgba(21,128,61,.7)}
+.m-donecheck svg{width:44px;height:44px;stroke-width:2.6}
+.m-donenum{font-size:16px;color:var(--a-t2)}
+
+/* Chips and steppers */
+.m-chips{display:flex;flex-wrap:wrap;gap:8px}
+.m-chip{height:36px;padding:0 14px!important;border-radius:10px;border:1px solid var(--a-outline)!important;background:var(--a-field)!important;font-size:15px;font-weight:500;color:var(--a-t1)}
+.m-chip.on{background:var(--a-acc)!important;border-color:var(--a-acc)!important;color:#fff;font-weight:600;box-shadow:0 6px 14px -6px var(--a-pri-glow)}
+.m-stepper{display:flex;align-items:center;justify-content:space-between;height:44px;border-radius:12px;background:var(--a-field);border:1px solid var(--a-outline);padding:0 4px}
+.m-stepper b{font-size:18px;font-variant-numeric:tabular-nums}
+.m-sigbox{display:flex;flex-direction:column;gap:3px;border-radius:14px;padding:11px 14px;background:var(--a-acc-muted);color:var(--a-t1);font-size:15px;line-height:20px}
+.m-sigbox .m-cap{color:var(--a-acc-text)}
+.m-sigbox.empty{background:var(--a-fill);color:var(--a-t3)}
+
+/* Tab bar and menu */
+.m-tabbar{position:absolute;left:12px;right:12px;bottom:26px;height:66px;border-radius:26px;background:var(--a-chrome);backdrop-filter:blur(24px) saturate(1.6);-webkit-backdrop-filter:blur(24px) saturate(1.6);border:1px solid var(--a-border);box-shadow:0 12px 30px -8px rgba(15,23,42,.3);display:grid;grid-template-columns:repeat(4,1fr);align-items:center;padding:0 6px;z-index:20}
+.m-tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:54px;border-radius:18px;font-size:11px;font-weight:600;color:var(--a-t3)}
+.m-tab svg{width:24px;height:24px}
+.m-tab.on{color:var(--a-acc-text);background:var(--a-acc-muted)}
+.m-more{position:absolute;inset:0;z-index:19;padding-top:54px;display:flex;flex-direction:column;background:var(--a-more);backdrop-filter:blur(30px) saturate(1.6);-webkit-backdrop-filter:blur(30px) saturate(1.6)}
+.m-more-body{flex:1;min-height:0;overflow:hidden;padding:4px 16px 108px;display:flex;flex-direction:column;gap:12px;scrollbar-width:none}
+.m-more-body::-webkit-scrollbar{display:none}
+.proto-phone .m-more-body{overflow-y:auto}
+.m-more-brand{display:flex;align-items:center;height:52px;padding:0 6px;flex:none}
+.m-more-brand .m-wordmark{font-size:28px;line-height:34px}
+.m-navlist{display:flex;flex-direction:column;gap:4px;flex:none}
+.m-navitem{display:flex;align-items:center;gap:14px;height:52px;padding:0 16px!important;border-radius:14px;font-size:17px;font-weight:500;color:var(--a-t2);width:100%}
+.m-navitem svg{width:22px;height:22px;flex:none}
+.m-navitem.on{background:var(--a-acc-muted)!important;color:var(--a-acc-text);font-weight:600}
+.m-more-foot{margin-top:auto;display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--a-hair);padding-top:14px;flex:none}
+.m-footrow{display:flex;gap:8px}
+.m-footbtn{height:46px;border-radius:12px;background:var(--a-fill)!important;display:flex;align-items:center;gap:8px;color:var(--a-t2);font-size:15px;font-weight:600}
+.m-footbtn.sq{width:54px;justify-content:center}
+.m-footbtn.grow{flex:1;padding:0 14px!important}
+.m-footbtn .code{margin-left:auto;padding:2px 7px;border-radius:6px;background:var(--a-acc-muted);color:var(--a-acc-text);font-size:12px;font-weight:700}
+.m-account{border-radius:14px;background:var(--a-fill);padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.m-account b{font-size:15px;font-weight:600;color:var(--a-t1)}
+.m-account span{font-size:13.5px;color:var(--a-t3)}
+.m-logout{display:flex;align-items:center;gap:12px;height:44px;padding:0 12px!important;color:var(--a-bad);font-size:16px;font-weight:500}
+
+/* Bottom bars and sheets */
+.m-foot{position:absolute;left:0;right:0;bottom:0;padding:12px 16px 34px;background:var(--a-chrome);backdrop-filter:blur(24px) saturate(1.6);-webkit-backdrop-filter:blur(24px) saturate(1.6);border-top:1px solid var(--a-hair);display:flex;flex-direction:column;gap:10px;z-index:15}
+.m-foot.above-tabs{bottom:100px;background:none;border-top:0;backdrop-filter:none;-webkit-backdrop-filter:none;padding:0 16px 6px}
+.m-scrim{position:absolute;inset:0;background:var(--a-scrim);z-index:30;width:100%;cursor:default}
+.m-sheet{position:absolute;left:0;right:0;bottom:0;max-height:86%;background:var(--a-modal);backdrop-filter:blur(40px) saturate(1.6);-webkit-backdrop-filter:blur(40px) saturate(1.6);border-radius:36px 36px 0 0;border-top:1px solid var(--a-border);padding:8px 16px 34px;display:flex;flex-direction:column;gap:12px;z-index:31;box-shadow:0 -20px 50px rgba(15,23,42,.22)}
+.m-sheet.tall{height:92%;max-height:92%}
+.m-sheet.mid{max-height:74%}
+.m-grab{width:38px;height:5px;border-radius:3px;background:var(--a-outline);margin:0 auto 2px;flex:none;display:block}
+.m-sheethead{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:32px;flex:none}
+.m-sheet-scroll{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;scrollbar-width:none}
+.m-sheet-scroll::-webkit-scrollbar{display:none}
+.proto-phone .m-sheet-scroll{overflow-y:auto}
+.m-sheet-scroll.m-stack{gap:12px}
+.m-sheet-foot{flex:none;display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:6px}
+.m-prodhero{height:150px;border-radius:22px;display:grid;place-items:center;flex:none}
+.m-prodhero svg{width:56px;height:56px}
+.m-opts{background:var(--a-card);border:1px solid var(--a-border);border-radius:16px;overflow:hidden;flex:none;display:flex;flex-direction:column}
+.m-opt{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:50px;padding:0 16px!important;font-size:17px;position:relative;width:100%}
+.m-opt+.m-opt::before{content:"";position:absolute;top:0;left:16px;right:0;height:1px;background:var(--a-hair)}
+.m-opt.on{font-weight:600}
+.m-opt.on svg{color:var(--a-acc-text);width:20px;height:20px;stroke-width:2.6}
+.m-opt.start{justify-content:flex-start;gap:12px}
+.m-note{display:flex;gap:10px;align-items:flex-start;border-radius:14px;padding:11px 12px;font-size:13.5px;line-height:18px;flex:none}
+.m-note b{display:block;font-size:15px;margin-bottom:2px}
+.m-note svg{width:18px;height:18px;flex:none;margin-top:1px}
+.m-wheel{position:relative;display:grid;grid-template-columns:.8fr 1.4fr 1fr;height:216px;overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 28%,#000 72%,transparent);mask-image:linear-gradient(transparent,#000 28%,#000 72%,transparent);flex:none}
+.m-wheel::before{content:"";position:absolute;left:0;right:0;top:90px;height:36px;border-radius:10px;background:var(--a-fill)}
+.m-wheel div{display:flex;flex-direction:column;align-items:center;padding-top:18px;position:relative}
+.m-wheel span{height:36px;line-height:36px;font-size:20px;color:var(--a-t3)}
+.m-wheel span.on{color:var(--a-t1);font-weight:600;font-size:22px}
+.m-toast{position:absolute;top:58px;left:50%;transform:translateX(-50%);z-index:70;max-width:330px;padding:11px 16px;border-radius:14px;background:rgba(15,23,42,.92);color:#fff;font-size:14.5px;font-weight:600;text-align:center;box-shadow:0 14px 30px -10px rgba(0,0,0,.45);pointer-events:none}
+
+/* Tap markers on the still images */
+.m-phone .tap{position:relative;z-index:6;box-shadow:0 0 0 3px var(--tap),0 0 0 10px var(--tap-soft)!important}
+.m-phone .tap::after{content:attr(data-n);position:absolute;top:-14px;right:-12px;min-width:30px;height:30px;padding:0 7px;border-radius:15px;background:var(--tap);color:#fff;font:600 15px/30px var(--f-mono);text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.25);z-index:7;letter-spacing:0}
+.m-phone .tap-in{box-shadow:inset 0 0 0 3px var(--tap)!important;background:var(--tap-soft)!important}
+.m-phone .tap-in::after{top:50%;right:46px;transform:translateY(-50%)}
+
+@media (prefers-reduced-motion:no-preference){
+  .m-view.enter{animation:m-view .22s ease-out}
+  .m-sheet.enter{animation:m-sheet .32s cubic-bezier(.2,.8,.2,1)}
+  .m-more.enter{animation:m-more .3s cubic-bezier(.2,.8,.2,1)}
+  .m-toast{animation:m-toast .25s ease-out}
+  .proto-phone .m-btn:active,.proto-phone .m-chip:active,.proto-phone .m-hero:active{transform:translateY(1px)}
+}
+@keyframes m-view{from{opacity:.35;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes m-sheet{from{transform:translateY(100%)}to{transform:none}}
+@keyframes m-more{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+@keyframes m-toast{from{opacity:0;transform:translate(-50%,-8px)}to{opacity:1;transform:translateX(-50%)}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="sb" viewBox="0 0 72 13"><rect x="0" y="8" width="3" height="4.5" rx="1"/><rect x="4.5" y="6" width="3" height="6.5" rx="1"/><rect x="9" y="3.5" width="3" height="9" rx="1"/><rect x="13.5" y="1" width="3" height="11.5" rx="1"/><path d="M30 12.2l-2.3-2.6a3.4 3.4 0 0 1 4.6 0Z M24.6 6a8.5 8.5 0 0 1 10.8 0l-1.6 1.9a6 6 0 0 0-7.6 0Z M21.4 2.6a13.4 13.4 0 0 1 17.2 0L37 4.5a10.9 10.9 0 0 0-14 0Z"/><rect x="44" y="1" width="24" height="11.5" rx="3.5" fill="none" stroke="currentColor" stroke-opacity=".45"/><rect x="46" y="3" width="20" height="7.5" rx="2"/><rect x="69" y="4.5" width="1.6" height="4.5" rx=".8" opacity=".45"/></symbol>
+  <symbol id="i-house" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8Z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.8" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.8" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21v-1a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v1"/><path d="M16 3.5a4 4 0 0 1 0 8"/><path d="M22 21v-1a6 6 0 0 0-4-5.6"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3"/><path d="M6.5 18.5a6 6 0 0 1 11 0"/></symbol>
+  <symbol id="i-user-search" viewBox="0 0 24 24"><circle cx="10" cy="8" r="4"/><path d="M3 21v-1a6 6 0 0 1 9-5.2"/><circle cx="17.5" cy="17.5" r="3"/><path d="m22 22-2.3-2.3"/></symbol>
+  <symbol id="i-user-plus" viewBox="0 0 24 24"><circle cx="10" cy="8" r="4"/><path d="M3 21v-1a6 6 0 0 1 9.5-4.9"/><path d="M18 14v6M15 17h6"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-chev-r" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="i-chev-l" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
+  <symbol id="i-chev-d" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-chev-u" viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+  <symbol id="i-arrow-r" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+  <symbol id="i-checkc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3 10 14"/><path d="m21 3-7 18-4-7-7-4Z"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1 1 21 12Z"/></symbol>
+  <symbol id="i-xc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M20 4 11 13"/><path d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></symbol>
+  <symbol id="i-swap" viewBox="0 0 24 24"><path d="M4 9h14l-3-3"/><path d="M20 15H6l3 3"/></symbol>
+  <symbol id="i-bank" viewBox="0 0 24 24"><path d="M3 10 12 4l9 6"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/><path d="M3 21h18"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+  <symbol id="i-face" viewBox="0 0 24 24"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M9 9v1M15 9v1M12 9v4h-1"/><path d="M9 15.5a4 4 0 0 0 6 0"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"/><path d="M10 17l-5-5 5-5"/><path d="M5 12h11"/></symbol>
+  <symbol id="i-pill" viewBox="0 0 24 24"><path d="M10.5 20.5a5 5 0 0 1-7-7l7-7a5 5 0 0 1 7 7Z"/><path d="m8.5 8.5 7 7"/></symbol>
+  <symbol id="i-clip" viewBox="0 0 24 24"><path d="M21 11.5 12.5 20a5 5 0 0 1-7-7L14 4.5a3.5 3.5 0 0 1 5 5L10.5 18a2 2 0 0 1-3-3L15 7.5"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.8 4.7 4.7 1.8-4.7 1.8L12 16l-1.8-4.7-4.7-1.8 4.7-1.8Z"/><path d="M19 15l.8 2.2 2.2.8-2.2.8L19 21l-.8-2.2-2.2-.8 2.2-.8Z"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.5"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4 2.5 20h19Z"/><path d="M12 10v4M12 17v.5"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V4"/><path d="M4 20h16"/><path d="m7 15 4-4 3 3 5-6"/></symbol>
+  <symbol id="i-seal" viewBox="0 0 24 24"><path d="M12 3l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 21l-2.4-1.8-3 .2-.9-2.9-2.5-1.7 1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2Z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-hand" viewBox="0 0 24 24"><path d="M9 11V5a1.5 1.5 0 0 1 3 0v5"/><path d="M12 10V4a1.5 1.5 0 0 1 3 0v6"/><path d="M15 10V6a1.5 1.5 0 0 1 3 0v8a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-2.7L3.5 14a1.5 1.5 0 0 1 2.4-1.8L9 15"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5Z"/><path d="m3 13 9 5 9-5"/></symbol>
+</svg>
+
+<header class="topbar">
+  <div class="topbar-in">
+  <nav aria-label="Capítulos">
+    <a class="brand" href="#portada">PresClick <span>Móvil</span></a>
+    <a href="#idea">La idea</a>
+    <a href="#navegacion">Navegación</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#recetas">Recetas</a>
+    <a href="#flujo">Nueva receta</a>
+    <a href="#seguimiento">Seguimiento</a>
+    <a href="#comparacion">Tablet y teléfono</a>
+    <a href="#prototipo">Pruébelo</a>
+  </nav>
+  <button type="button" class="theme-toggle" data-theme-toggle aria-label="Cambiar tema"><svg class="ic only-light" aria-hidden="true"><use href="#i-moon"/></svg><svg class="ic only-dark" aria-hidden="true"><use href="#i-sun"/></svg><span data-theme-label>Modo oscuro</span></button>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="portada" class="hero">
+  <div class="hero-copy">
+    <div class="kicker">Propuesta · PresClick para teléfono</div>
+    <h1>Prescribir, a un toque de <em>distancia</em>.</h1>
+    <p class="lede">PresClick ya funciona en la tablet. Esta propuesta lleva lo esencial al teléfono del médico: crear una receta en tres pasos, revisar las que ya envió y ver sus cifras, con una mano y en pocos toques.</p>
+    <div class="stats">
+      <div><b>3</b><span>pasos para crear una receta</span></div>
+      <div><b>9</b><span>toques para una receta habitual, sin escribir</span></div>
+      <div><b>1</b><span>sola app y una sola cuenta, en tablet y teléfono</span></div>
+    </div>
+    <div class="cta"><a class="btn pri" href="#flujo">Ver el flujo de la receta</a><a class="btn" href="#prototipo">Probar el prototipo</a></div>
+  </div>
+  <div class="hero-visual">
+    <figure class="tablet hero-tablet" aria-hidden="true"><img class="only-light" src="img/tablet_recetas.jpg" alt=""><img class="only-dark" src="img/tablet_recetas_dark.jpg" alt=""></figure>
+    <div class="phone still phone-a" data-p="recetas" data-s=".6" role="img" aria-label="Pantalla de Recetas en el teléfono"></div>
+    <div class="phone still phone-b" data-p="heroDose" data-s=".6" role="img" aria-label="Hoja para indicar la dosis de un medicamento"></div>
+  </div>
+</section>
+
+<section id="idea" class="chapter">
+  <div class="chap-head">
+    <div class="kicker">La idea</div>
+    <h2>El teléfono no es una tablet pequeña</h2>
+    <p class="lede">En la tablet el médico tiene todo a la vista y trabaja sentado. El teléfono se usa de pie, con una mano y entre una consulta y otra. Por eso la versión móvil cambia el orden de las cosas: lo que más se usa queda primero y a la altura del pulgar.</p>
+  </div>
+  <div class="principles">
+    <div class="principle"><span class="ico"><svg class="ic" aria-hidden="true"><use href="#i-pen"/></svg></span><b>Prescribir primero</b><p>Recetas tiene su pestaña, y el botón más grande de la app es «Nueva prescripción».</p></div>
+    <div class="principle"><span class="ico"><svg class="ic" aria-hidden="true"><use href="#i-layers"/></svg></span><b>Un paso por pantalla</b><p>La receta se arma en tres pantallas cortas. El botón para seguir siempre está a la vista.</p></div>
+    <div class="principle"><span class="ico"><svg class="ic" aria-hidden="true"><use href="#i-hand"/></svg></span><b>Al alcance del pulgar</b><p>La barra de secciones, los botones principales y las opciones viven en la mitad de abajo.</p></div>
+    <div class="principle"><span class="ico"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></span><b>Elegir en vez de escribir</b><p>Paciente, dosis, frecuencia y duración se eligen con un toque. El teclado aparece solo cuando hace falta.</p></div>
+    <div class="principle"><span class="ico"><svg class="ic" aria-hidden="true"><use href="#i-face"/></svg></span><b>La misma cuenta</b><p>El médico entra con su usuario y su Face ID de siempre. Ve los mismos pacientes y recetas que en la tablet y en la web.</p></div>
+  </div>
+</section>
+
+<section id="navegacion" class="chapter">
+  <div class="chap-head">
+    <div class="kicker">Navegación</div>
+    <h2>Tres pestañas para el día a día. Todo lo demás, en Más.</h2>
+    <p class="lede">La barra inferior lleva directo a Dashboard, Recetas y Citas. «Más» se despliega como una pantalla completa que repite el menú lateral de la tablet, con las secciones en el mismo orden. No hay nada nuevo que aprender.</p>
+  </div>
+  <div class="shots">
+    <figure class="shot"><div class="phone still" data-p="navMenu"></div><figcaption><b>«Más» a pantalla completa</b>, con las mismas partes del menú lateral de la tablet: las secciones, el tema, el idioma, la cuenta del médico y cerrar sesión.</figcaption></figure>
+    <figure class="shot"><div class="phone still" data-p="navPacientes"></div><figcaption><b>En Pacientes, Billetera o Perfil se ilumina «Más»</b>, para que el médico sepa siempre dónde está.</figcaption></figure>
+    <figure class="shot"><div class="phone still" data-p="dashSmall"></div><figcaption><b>En Dashboard, Recetas o Citas</b> se ilumina su propia pestaña.</figcaption></figure>
+  </div>
+  <p class="muted" style="margin-top:28px">Mis Órdenes aparece en el menú solo cuando la cuenta está vinculada al marketplace, igual que en la tablet.</p>
+</section>
+
+<section id="dashboard" class="chapter">
+  <div class="chap-head">
+    <div class="kicker">Dashboard</div>
+    <h2>Las cifras que importan, sin saturar la pantalla</h2>
+    <p class="lede">Arriba, la bienvenida con el nombre del médico. Debajo, el total de recetas y las ganancias totales. Después, el resumen de comisiones con sus cuatro datos, cada uno en su tarjeta. Al final, el banner «Conectamos».</p>
+  </div>
+  <div class="shots">
+    <figure class="shot"><div class="phone still" data-p="dashSmall"></div><figcaption><b>Cifras cortas:</b> caben completas, así que van dos tarjetas por fila.</figcaption></figure>
+    <figure class="shot"><div class="phone still" data-p="dashLarge"></div><figcaption><b>Cifras largas:</b> la fila pasa a una tarjeta por línea para mostrar el número entero.</figcaption></figure>
+  </div>
+  <div class="aside">
+    <div class="box accent"><h3>Las tarjetas se acomodan solas</h3><p>Cada cifra se muestra completa y a su tamaño. Si las dos cifras de una fila caben, van lado a lado. Si una no cabe, esa fila pasa a una tarjeta por línea. La letra nunca se achica y ningún número se corta.</p><p>En el prototipo del final se puede probar con el botón «Grandes».</p></div>
+    <div class="box"><h3>Lo que sale del Dashboard en el teléfono</h3><ul><li>Estadísticas de citas: Citas tiene su propia pestaña.</li><li>Acciones rápidas: «Nueva prescripción» vive en Recetas.</li><li>Accesos a la tienda, productos destacados y artículos. Siguen en la tablet y en la web.</li></ul></div>
+  </div>
+</section>
+
+<section id="recetas" class="chapter">
+  <div class="chap-head">
+    <div class="kicker">Recetas</div>
+    <h2>La pantalla principal</h2>
+    <p class="lede">Es la pestaña que más se usa. Arriba, el botón más importante de la app: «Nueva prescripción». Debajo, «Buscar paciente» para ver todo lo que se le ha recetado a una persona, y las últimas recetas, de la más nueva a la más antigua.</p>
+  </div>
+  <div class="shots">
+    <figure class="shot"><div class="phone still" data-p="recetas"></div><figcaption><b>Nueva prescripción, Buscar paciente y las recetas recientes.</b> Cada receta abre su detalle.</figcaption></figure>
+    <figure class="shot"><div class="phone still" data-p="buscar"></div><figcaption><b>«Buscar paciente» abre una hoja</b> con el buscador y los pacientes del médico.</figcaption></figure>
+    <figure class="shot"><div class="phone still" data-p="pacienteRx"></div><figcaption><b>Las recetas de ese paciente</b>, con un atajo para hacerle una nueva.</figcaption></figure>
+  </div>
+</section>
+
+<section id="flujo" class="chapter">
+  <div class="chap-head">
+    <div class="kicker">Nueva receta</div>
+    <h2>Una receta en tres pasos</h2>
+    <p class="lede">Así se hace la receta más común desde el teléfono: un paciente que ya está registrado y un medicamento. Los círculos naranjas <span class="tapdot">1</span> marcan cada toque.</p>
+  </div>
+  <div class="bigstat"><b>9</b><span><strong>toques</strong>de «Nueva prescripción» a «Crear receta», sin escribir una sola palabra.</span></div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-num">1</span><div><h3>Paciente</h3><p>Al tocar «Nueva prescripción» se abre directamente el buscador de pacientes, porque en el teléfono casi siempre se receta a alguien que ya está registrado. Al elegirlo, sus datos se completan solos y la app pasa a los medicamentos. Si es alguien nuevo, «Paciente sin registrar» abre el formulario.</p></div></div>
+    <div class="shots">
+      <figure class="shot"><div class="phone still" data-p="f1"></div><figcaption><span class="tapdot">1</span> <b>Nueva prescripción.</b></figcaption></figure>
+      <figure class="shot"><div class="phone still" data-p="f2"></div><figcaption><span class="tapdot">2</span> <b>El paciente.</b> Se puede buscar por nombre, cédula o correo, y sus datos se cargan solos.</figcaption></figure>
+      <figure class="shot"><div class="phone still" data-p="f2b"></div><figcaption><b>Paciente sin registrar.</b> Sus datos se llenan en una sola pantalla, con el tipo de ID y la fecha en hojas.</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-num">2</span><div><h3>Medicamentos</h3><p>El catálogo muestra cada producto con su precio y dos botones: «Detalles» y «Agregar». «Agregar» abre una hoja para indicar cantidad, dosis, frecuencia y duración antes de sumarlo a la receta. Así ningún medicamento entra sin sus indicaciones.</p></div></div>
+    <div class="shots">
+      <figure class="shot"><div class="phone still" data-p="f3"></div><figcaption><span class="tapdot">3</span> <b>Agregar.</b> El paciente queda arriba, por si hay que cambiarlo.</figcaption></figure>
+      <figure class="shot"><div class="phone still" data-p="f3b"></div><figcaption><b>Detalles</b> abre la ficha del producto en una hoja, con su registro y la comisión del médico.</figcaption></figure>
+      <figure class="shot"><div class="phone still" data-p="f4"></div><figcaption><span class="tapdot">4</span> <span class="tapdot">5</span> <span class="tapdot">6</span> <span class="tapdot">7</span> <b>Dosis, frecuencia, duración y «Agregar a la receta».</b> Abajo se ve cómo lo leerá el paciente.</figcaption></figure>
+      <figure class="shot"><div class="phone still" data-p="f4tipo"></div><figcaption><b>Dosificación avanzada.</b> Los diez tipos de dosis de la plataforma se eligen en otra hoja.</figcaption></figure>
+      <figure class="shot"><div class="phone still" data-p="f5"></div><figcaption><span class="tapdot">8</span> <b>Continuar.</b> La bandeja de abajo muestra lo que lleva la receta y su total.</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-num">3</span><div><h3>Finalizar</h3><p>Un resumen de toda la receta, una nota opcional, los documentos de la galería que se quieran incluir y la opción de enviarla al paciente en ese momento. Un toque más y la receta queda creada.</p></div></div>
+    <div class="shots">
+      <figure class="shot"><div class="phone still" data-p="f6"></div><figcaption><span class="tapdot">9</span> <b>Crear receta.</b> Cada documento se incluye o no con un interruptor.</figcaption></figure>
+      <figure class="shot"><div class="phone still" data-p="f7"></div><figcaption><b>Lista.</b> Se puede abrir la receta, compartir su enlace o volver a Recetas.</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="aside">
+    <div class="box accent">
+      <h3>Por qué este orden funciona mejor en el teléfono</h3>
+      <ul>
+        <li>En la tablet, la dosis se completa debajo del catálogo, después de agregar el medicamento. En el teléfono esa parte quedaría fuera de la pantalla y sería fácil olvidarla. Aquí se indica en el momento de agregar.</li>
+        <li>Cada paso cabe en una pantalla, así que el botón para seguir siempre está a la vista.</li>
+        <li>Antes de crearla, el médico ve la receta completa y puede volver a cualquier paso.</li>
+        <li>Si cierra por error, la app pregunta antes de descartar lo que lleva.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="seguimiento" class="chapter">
+  <div class="chap-head">
+    <div class="kicker">Seguimiento</div>
+    <h2>Después de crearla: enviar, compartir y revisar</h2>
+    <p class="lede">«Ver todas» abre la lista completa con buscador. Cada receta muestra al paciente, su estado y el monto, con la acción más útil a la vista: «Enviar» si es un borrador y «Enviar enlace» si ya salió. Las demás acciones quedan en el botón •••.</p>
+  </div>
+  <div class="shots">
+    <figure class="shot"><div class="phone still" data-p="todas"></div><figcaption><b>Todas las recetas</b>, cada una con su acción principal.</figcaption></figure>
+    <figure class="shot"><div class="phone still" data-p="detalle"></div><figcaption><b>El detalle</b>, con las acciones fijas abajo.</figcaption></figure>
+    <figure class="shot"><div class="phone still" data-p="acciones"></div><figcaption><b>••• reúne el resto.</b> Cancelar va aparte, en rojo y con confirmación.</figcaption></figure>
+    <figure class="shot"><div class="phone still" data-p="enlace"></div><figcaption><b>El enlace</b> se copia o se comparte por WhatsApp, Mensajes o correo.</figcaption></figure>
+  </div>
+</section>
+
+<section id="secciones" class="chapter">
+  <div class="chap-head">
+    <div class="kicker">Lo demás</div>
+    <h2>Citas, pacientes, billetera y perfil, a dos toques</h2>
+    <p class="lede">Las demás secciones de la tablet siguen en el teléfono, ordenadas para leerse en vertical.</p>
+  </div>
+  <div class="shots">
+    <figure class="shot"><div class="phone still" data-p="citas"></div><figcaption><b>Citas</b> agrupadas por día, con la videoconsulta a un toque.</figcaption></figure>
+    <figure class="shot"><div class="phone still" data-p="pacientes"></div><figcaption><b>Pacientes</b>, del más reciente al más antiguo.</figcaption></figure>
+    <figure class="shot"><div class="phone still" data-p="billetera"></div><figcaption><b>Billetera:</b> saldo, canje y movimientos.</figcaption></figure>
+    <figure class="shot"><div class="phone still" data-p="perfil"></div><figcaption><b>Perfil:</b> información personal y profesional, cuenta bancaria, galería y Face ID.</figcaption></figure>
+  </div>
+</section>
+
+<section id="comparacion" class="chapter">
+  <div class="chap-head">
+    <div class="kicker">Tablet y teléfono</div>
+    <h2>La misma app, a la medida de cada momento</h2>
+    <p class="lede">A la izquierda, capturas de la app de tablet que ya existe. A la derecha, la misma pantalla en el teléfono. La tablet no cambia: el teléfono la complementa.</p>
+  </div>
+
+  <div class="compare">
+    <div class="side">
+      <div class="label"><span class="tag">Tablet</span>Dashboard</div>
+      <figure class="tablet"><img class="only-light" src="img/tablet_dashboard.jpg" alt="Dashboard de la app de tablet"><img class="only-dark" src="img/tablet_dashboard_dark.jpg" alt="Dashboard de la app de tablet"></figure>
+      <p>En la tablet, el Dashboard reúne diez bloques: citas, recetas, comisiones, tienda, productos, artículos y acciones rápidas.</p>
+    </div>
+    <div class="side" style="justify-items:center">
+      <div class="label"><span class="tag new">Teléfono</span></div>
+      <div class="phone still" data-p="dashSmall"></div>
+      <p style="max-width:240px">En el teléfono quedan las cifras clave y el banner.</p>
+    </div>
+  </div>
+
+  <div class="compare">
+    <div class="side">
+      <div class="label"><span class="tag">Tablet</span>Recetas</div>
+      <figure class="tablet"><img class="only-light" src="img/tablet_recetas.jpg" alt="Lista de recetas de la app de tablet"><img class="only-dark" src="img/tablet_recetas_dark.jpg" alt="Lista de recetas de la app de tablet"></figure>
+      <p>En la tablet, cada receta muestra todas sus acciones en una fila.</p>
+    </div>
+    <div class="side" style="justify-items:center">
+      <div class="label"><span class="tag new">Teléfono</span></div>
+      <div class="phone still" data-p="recetas"></div>
+      <p style="max-width:240px">En el teléfono, crear y buscar van primero, y cada receta abre su detalle.</p>
+    </div>
+  </div>
+
+  <div class="compare">
+    <div class="side">
+      <div class="label"><span class="tag">Tablet</span>Nueva receta</div>
+      <figure class="tablet"><img class="only-light" src="img/tablet_receta_dosis.jpg" alt="Dosificación debajo del catálogo en la app de tablet"><img class="only-dark" src="img/tablet_receta_dosis_dark.jpg" alt="Dosificación debajo del catálogo en la app de tablet"></figure>
+      <p>En la tablet, la dosis de cada medicamento se llena debajo del catálogo, después de agregarlo.</p>
+    </div>
+    <div class="side" style="justify-items:center">
+      <div class="label"><span class="tag new">Teléfono</span></div>
+      <div class="phone still" data-p="heroDose"></div>
+      <p style="max-width:240px">En el teléfono, la dosis se elige en una hoja antes de agregarlo.</p>
+    </div>
+  </div>
+</section>
+
+<section id="prototipo" class="chapter" data-prototype>
+  <div class="chap-head">
+    <div class="kicker">Prototipo</div>
+    <h2>Pruébelo usted mismo</h2>
+    <p class="lede">Este teléfono funciona. Con los datos de prueba se puede crear una receta completa y ver cuántos toques hacen falta.</p>
+  </div>
+  <div class="proto">
+    <div class="phone proto-phone" data-proto></div>
+    <div class="panel">
+      <h3>Recorrido sugerido</h3>
+      <ol>
+        <li>Toque <b>Recetas</b> en la barra y luego <b>Nueva prescripción</b>.</li>
+        <li>Elija a <b>Laura Gómez</b>.</li>
+        <li>Toque <b>Agregar</b> en un medicamento.</li>
+        <li>Elija dosis, frecuencia y duración, y toque <b>Agregar a la receta</b>.</li>
+        <li>Toque <b>Continuar</b> y luego <b>Crear receta</b>.</li>
+      </ol>
+      <div class="now" aria-live="polite"><span>Ahora</span><span data-out="hint" style="font:inherit;letter-spacing:0;text-transform:none;color:inherit;margin:0"></span></div>
+      <div class="counter"><div><span>Toques</span><b data-out="taps">0</b></div><div><span>Tiempo</span><b data-out="time">0:00</b></div></div>
+      <div class="result" data-out="result" aria-live="polite"></div>
+      <div class="controls">
+        <span class="fine">Tema</span>
+        <div class="seg" role="group" aria-label="Tema"><button type="button" data-theme-set="light" aria-pressed="false">Claro</button><button type="button" data-theme-set="dark" aria-pressed="false">Oscuro</button></div>
+      </div>
+      <div class="controls">
+        <span class="fine">Cifras del Dashboard</span>
+        <div class="seg" role="group" aria-label="Tamaño de las cifras"><button type="button" data-numbers="small" aria-pressed="true">Normales</button><button type="button" data-numbers="large" aria-pressed="false">Grandes</button></div>
+      </div>
+      <div class="controls"><button type="button" class="btn small" data-fill hidden>Completar con datos de prueba</button><button type="button" class="btn small" data-reset>Reiniciar</button></div>
+      <p class="fine">Pacientes, medicamentos y cifras son datos de prueba.</p>
+    </div>
+  </div>
+</section>
+
+<section id="cierre" class="chapter">
+  <div class="chap-head">
+    <div class="kicker">Para terminar</div>
+    <h2>Lo que gana el médico</h2>
+  </div>
+  <div class="benefits">
+    <div class="principle"><span class="ico"><svg class="ic" aria-hidden="true"><use href="#i-pen"/></svg></span><b>Recetar desde cualquier lugar</b><p>En el pasillo, entre consultas o en casa, en tres pasos y unos pocos toques.</p></div>
+    <div class="principle"><span class="ico"><svg class="ic" aria-hidden="true"><use href="#i-checkc"/></svg></span><b>Menos errores</b><p>La dosis se indica al agregar cada medicamento, y la receta se revisa completa antes de crearla.</p></div>
+    <div class="principle"><span class="ico"><svg class="ic" aria-hidden="true"><use href="#i-house"/></svg></span><b>Nada nuevo que aprender</b><p>Las mismas secciones, la misma cuenta y la misma información que ya usa en la tablet.</p></div>
+  </div>
+
+  <h3 style="margin-top:70px">Cómo lo hacemos realidad</h3>
+  <ol class="plan">
+    <li><span><b>Aprobación de esta propuesta.</b> Con sus comentarios se cierran los detalles de cada pantalla.</span></li>
+    <li><span><b>Primera entrega: Recetas y Nueva prescripción</b>, el corazón de la app.</span></li>
+    <li><span><b>Segunda entrega:</b> Dashboard, Citas, Pacientes, Billetera y Perfil.</span></li>
+    <li><span><b>Pruebas con médicos</b> y publicación en App Store y Google Play.</span></li>
+  </ol>
+  <p class="lede" style="margin-top:28px">La versión móvil se construye sobre la app que ya existe. Es una sola app: en la tablet se sigue viendo como hoy, y en el teléfono se ve como en esta propuesta.</p>
+</section>
+
+<footer class="fin">
+  <p>Datos de prueba: los pacientes, medicamentos y cifras de esta propuesta son inventados. Las capturas de tablet son de la app actual, cargada con esos mismos datos de prueba.</p>
+  <p>Las pantallas del teléfono están dibujadas a la escala de un iPhone de 6,1 pulgadas.</p>
+  <p>Propuesta preparada por Agner Díaz · <a href="https://agnerdiaz.com/">agnerdiaz.com</a></p>
+</footer>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
